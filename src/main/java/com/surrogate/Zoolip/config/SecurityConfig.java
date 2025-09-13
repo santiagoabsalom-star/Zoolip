@@ -1,6 +1,7 @@
 package com.surrogate.Zoolip.config;
 
 import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
+import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -28,19 +29,25 @@ import java.util.Arrays;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JWTAuthFilter jwtAuthFilter;
+    private final LoggingFilter loggingFilter;
+    private final UserDetailsServiceWithId userDetailsService;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/login/**").permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
                 .xssProtection(HeadersConfigurer.XXssConfig::disable)
                 .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(logginFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 

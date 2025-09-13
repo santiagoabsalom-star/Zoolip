@@ -2,7 +2,7 @@ package com.surrogate.Zoolip.config;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
-import com.surrogate.Zoolip.services.auth.JWTService;
+import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
 import io.jsonwebtoken.JwtException;

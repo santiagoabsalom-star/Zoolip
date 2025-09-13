@@ -1,11 +1,11 @@
-package com.surrogate.Zoolip.services.auth;
+package com.surrogate.Zoolip.services.auth.JWT;
 
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
