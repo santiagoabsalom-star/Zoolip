@@ -16,6 +16,7 @@
 
 package com.surrogate.Zoolip.utils;
 
+import lombok.Getter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -73,6 +74,7 @@ public abstract class AbstractUserDetailsAuthenticationProviderWithId
 
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     protected boolean hideUserNotFoundExceptions = true;
+    @Getter
     private UserCacheWithId userCache = new NullUserCacheWithId();
     private boolean forcePrincipalAsString = false;
     private UserDetailsCheckerWithId preAuthenticationChecks = new DefaultPreAuthenticationChecks();
@@ -190,10 +192,6 @@ public abstract class AbstractUserDetailsAuthenticationProviderWithId
 
 
     protected void doAfterPropertiesSet() throws Exception {
-    }
-
-    public UserCacheWithId getUserCache() {
-        return this.userCache;
     }
 
     public void setUserCache(UserCacheWithId userCache) {

@@ -13,13 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.List;
 
-public class UserPrincipal implements UserDetailsWithId {
-
-    public Usuario usuario;
-
-    public UserPrincipal(Usuario usuario) {
-        this.usuario = usuario;
-    }
+public record UserPrincipal(Usuario usuario) implements UserDetailsWithId {
 
 
     public Collection<? extends GrantedAuthority> getAuthorities() {

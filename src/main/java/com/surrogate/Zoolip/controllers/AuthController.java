@@ -4,7 +4,6 @@ import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
 import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.models.register.RegisterResponse;
-import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
 
-    public AuthController(AuthService authService, UsuarioRepository usuarioRepository) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
 
 

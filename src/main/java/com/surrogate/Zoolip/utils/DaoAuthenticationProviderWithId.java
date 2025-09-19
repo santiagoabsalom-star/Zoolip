@@ -28,6 +28,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
+import java.util.Objects;
+
 /**
  * An {@link AuthenticationProvider} implementation that retrieves user details from a
  * {@link UserDetailsService}.
@@ -121,7 +123,7 @@ public class DaoAuthenticationProviderWithId extends AbstractUserDetailsAuthenti
         boolean upgradeEncoding = this.userDetailsPasswordService != null
                 && this.passwordEncoder.upgradeEncoding(user.getPassword());
         if (upgradeEncoding) {
-            String presentedPassword = authentication.getCredentials().toString();
+            String presentedPassword = Objects.requireNonNull(authentication.getCredentials()).toString();
             String newPassword = this.passwordEncoder.encode(presentedPassword);
             user = this.userDetailsPasswordService.updatePassword(user, newPassword);
         }

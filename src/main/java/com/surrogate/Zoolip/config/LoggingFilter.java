@@ -18,8 +18,8 @@ public class LoggingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request,
-                                    @NotNull HttpServletResponse response,
-                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NotNull @org.jetbrains.annotations.NotNull HttpServletResponse response,
+                                    @NotNull @org.jetbrains.annotations.NotNull FilterChain filterChain) throws ServletException, IOException {
         long startTime = System.currentTimeMillis();
 
 

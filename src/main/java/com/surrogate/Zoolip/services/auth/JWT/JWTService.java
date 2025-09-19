@@ -31,7 +31,7 @@ public class JWTService {
 
     private SecretKey key;
 
-    public JWTService(){;
+    public JWTService(){
     }
 
 
