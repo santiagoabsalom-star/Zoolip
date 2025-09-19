@@ -2,9 +2,7 @@ package com.surrogate.Zoolip.models.peticiones;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-
 import lombok.Setter;
-
 @Getter
 @Setter
 public class Response {
