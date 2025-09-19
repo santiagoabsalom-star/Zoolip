@@ -56,17 +56,15 @@ public class SecurityConfig {
 
     }
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"
-        ,
-                "http://172.18.0.1:5173"));
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:5173",
                 "http://127.0.0.1:5173",
-                "http://172.18.0.1:5173",
                 "http://192.168.0.45:5173",
-                "null"
+                "http://localhost:5174",
+                "null",
+                "http://172.18.0.1:5173"
         ));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -81,6 +79,7 @@ public class SecurityConfig {
                 "Access-Control-Allow-Origin",
                 "Access-Control-Request-Headers",
                 "X-Requested-With"
+
         ));
         configuration.setExposedHeaders(List.of("Authorization"));
 
