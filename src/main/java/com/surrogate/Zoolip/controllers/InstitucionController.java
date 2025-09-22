@@ -1,6 +1,7 @@
 package com.surrogate.Zoolip.controllers;
 
 
+import com.surrogate.Zoolip.models.DTO.InstitucionDTO;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.bussiness.InstitucionService;
@@ -8,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -64,12 +67,12 @@ public class InstitucionController {
             return ResponseEntity.status(500).body(new Response(e.getMessage()));
         }
     }
-    @GetMapping("/obtenerTodas")
-    public ResponseEntity<?> obtenerInstituciones(){
+    @GetMapping(value="/obtenerTodas" ,  produces = "application/json")
+    public ResponseEntity<List<InstitucionDTO>> obtenerInstituciones(){
         try{
             return ResponseEntity.ok(institucionService.getInstituciones());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new Response(e.getMessage()));
+            return ResponseEntity.internalServerError().build();
         }
 
     }

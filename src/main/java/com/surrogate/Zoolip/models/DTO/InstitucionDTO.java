@@ -5,7 +5,7 @@ import com.surrogate.Zoolip.models.bussiness.Institucion.Tipo;
 import java.util.Date;
 
 public interface InstitucionDTO {
-    public long getId_institucion();
+    public Long getId_institucion();
     public String getNombre();
     public Tipo getTipo();
     public String getDescripcion();
