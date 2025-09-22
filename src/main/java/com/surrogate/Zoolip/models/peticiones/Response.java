@@ -27,6 +27,9 @@ public class Response {
     }
     public Response(){
     }
+    public Response(String status) {
+        this.status = status;
+    }
 
 
     public Response(String status, String message) {

@@ -1,17 +1,14 @@
 package com.surrogate.Zoolip.models.bussiness;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-
+@Data
 @Table(name = "usuarios", schema = "zoolip", uniqueConstraints = {
         @UniqueConstraint(name = "usuario", columnNames = {"nombre"})
 })

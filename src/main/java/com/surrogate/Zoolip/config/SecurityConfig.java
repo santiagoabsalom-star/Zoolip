@@ -42,7 +42,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs.yaml").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                         .anyRequest().authenticated())
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
@@ -64,7 +70,8 @@ public class SecurityConfig {
                 "http://192.168.0.45:5173",
                 "http://localhost:5174",
                 "null",
-                "http://172.18.0.1:5173"
+                "http://172.18.0.1:5173",
+                "http://172.18.0.1:3000"
         ));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

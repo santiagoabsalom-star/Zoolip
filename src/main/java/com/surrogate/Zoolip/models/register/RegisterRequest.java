@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.surrogate.Zoolip.models.peticiones.Request;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +12,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class RegisterRequest extends Request {
+    @NotBlank
     private String rol;
     private String username;
+
     private String password;
 
     @JsonCreator

@@ -82,7 +82,7 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest registerRequest) {
         try {
             if (!isValidRegisterRequest(registerRequest)) {
-                return new RegisterResponse("error", "Parámetros inválidos");
+                return new RegisterResponse("La contrasenia tiene que tener mas de 8 caracteres", "401");
             }
 
             Usuario existingUsuario = usuarioRepository.findByNombre(registerRequest.getUsername());

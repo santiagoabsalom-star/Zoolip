@@ -58,15 +58,14 @@ public class AuthController {
         try {
             RegisterResponse response = authService.register(registerRequest);
             if ("success".equals(response.getStatus())) {
-                return ResponseEntity.status(200)
+                return ResponseEntity.status(HttpStatus.CREATED)
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(response);
 
             }
-
-            return ResponseEntity.status(401)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .header("X-Content-Type-Options", "nosniff")
                     .header("X-Frame-Options", "DENY")
                     .header("X-XSS-Protection", "1; mode=block")
