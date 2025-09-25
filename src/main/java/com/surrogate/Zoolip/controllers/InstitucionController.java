@@ -60,7 +60,7 @@ public class InstitucionController {
                 return ResponseEntity.ok(response);
 
             }
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.status(401).body(response);
 
         }
         catch (Exception e) {

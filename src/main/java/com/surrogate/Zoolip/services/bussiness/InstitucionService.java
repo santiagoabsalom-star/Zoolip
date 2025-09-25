@@ -19,7 +19,7 @@ public class InstitucionService {
     private final InstitucionRepository institucionRepository;
     private final UsuarioRepository usuarioRepository;
 
-
+    
     public Response crear(Institucion institucion) {
         Response response = comprobarInst(institucion);
         log.info("El nombre de la institucion es: {}", institucion.getNombre());
