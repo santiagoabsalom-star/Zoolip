@@ -4,7 +4,8 @@ import com.surrogate.Zoolip.models.bussiness.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 
 @Getter
@@ -35,10 +36,10 @@ public class Institucion {
     private String descripcion;
 
     @Column(name="horario_inicio", nullable = false)
-    private Date horario_inicio;
+    private LocalDateTime horario_inicio;
 
     @Column(name="horario_fin", nullable = false)
-    private Date horario_fin;
+    private LocalDateTime horario_fin;
 
 
 }

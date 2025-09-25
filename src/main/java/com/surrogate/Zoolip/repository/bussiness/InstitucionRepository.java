@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface InstitucionRepository extends JpaRepository<Institucion, Long> {
     @Query("SELECT i.id_institucion as id_institucion" +
-            ", i.id_usuario.nombre as nombreUsuario" +
+            ", i.id_usuario.nombre as nombreAdministrador" +
             ", i.nombre as nombre" +
             ", i.tipo as tipo" +
             ",i.descripcion as descripcion"+
@@ -21,7 +21,7 @@ public interface InstitucionRepository extends JpaRepository<Institucion, Long> 
     List<InstitucionDTO> findAllDTO();
 
     @Query(value = "SELECT i.id_institucion as id_institucion" +
-            ", i.id_usuario.nombre as nombreUsuario" +
+            ", i.id_usuario.nombre as nombreAdministrador" +
             ", i.nombre as nombre" +
             ", i.tipo as tipo" +
             ", i.descripcion as descripcion"+

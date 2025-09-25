@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
-        // Verifica si la causa es que se esperaba JSON pero llegó texto plano
         if (ex.getCause() instanceof MismatchedInputException) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
