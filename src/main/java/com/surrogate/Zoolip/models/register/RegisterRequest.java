@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class RegisterRequest extends Request {
-    @NotBlank
+
     private String rol;
     private String username;
 
