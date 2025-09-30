@@ -103,11 +103,14 @@ public class AuthService {
             if (!isValidRegisterRequest(registerRequest)) {
                 return new RegisterResponse("error", "401","La constrasenia tiene que tener 8 digitos o mas" );
             }
+            if(registerRequest.getRol()==null || registerRequest.getRol().isEmpty() ) {
+                return new RegisterResponse("error", "401", "El rol es requerido");
+            }
 
             if(usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
                 return new RegisterResponse("error", "401","El nombre de usuario ya existe, pero la constrasenia no coincida");
             }
-            if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+            else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
                 return new RegisterResponse("error","409","El nombre ya existe");
 
