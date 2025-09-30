@@ -10,7 +10,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(callSuper = true)  // <-- necesario para puto jackson de re mierda jackson puto
+@ToString(callSuper = true)
 public class LoginResponse extends Response {
 
     public LoginResponse(String status, String token, String username, Long id) {

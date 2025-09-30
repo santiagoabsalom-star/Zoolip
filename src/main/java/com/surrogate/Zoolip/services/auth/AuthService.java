@@ -30,17 +30,18 @@ public class AuthService {
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_]{3,20}$";
     private final BCryptPasswordEncoder encryptor = new BCryptPasswordEncoder(8);
     private final JWTService jwtService;
-
+    private final MyUsrDtlsService myUsrDtlsService;
 
     private final AuthenticationManager authManager;
 
 
     private final UsuarioRepository usuarioRepository;
 
-    public AuthService(JWTService jwtService, AuthenticationManager authManager, UsuarioRepository usuarioRepository) {
+    public AuthService(JWTService jwtService,MyUsrDtlsService myUsrDtlsService, AuthenticationManager authManager, UsuarioRepository usuarioRepository) {
         this.jwtService = jwtService;
         this.authManager = authManager;
         this.usuarioRepository = usuarioRepository;
+        this.myUsrDtlsService = myUsrDtlsService;
     }
 
     @Transactional
@@ -100,17 +101,23 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest registerRequest) {
         try {
             if (!isValidRegisterRequest(registerRequest)) {
-                return new RegisterResponse("La contrasenia tiene que tener mas de 8 caracteres", "401");
+                return new RegisterResponse("error", "401","La constrasenia tiene que tener 8 digitos o mas" );
             }
 
-
+            if(usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
+                return new RegisterResponse("error", "401","El nombre de usuario ya existe, pero la constrasenia no coincida");
+            }
             if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+
                 return new RegisterResponse("error","409","El nombre ya existe");
+
             }
+
 
             Usuario newUsuario = new Usuario();
             newUsuario.setNombre(registerRequest.getUsername());
             newUsuario.setPasswordHash(encryptor.encode(registerRequest.getPassword()));
+
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
 
             usuarioRepository.save(newUsuario);
@@ -126,8 +133,8 @@ public class AuthService {
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token no puede ser nulo o vacío");
         }
-        String m = jwtService.InvalidateToken(token);
-        if (m.equals("success")) {
+        String response = jwtService.InvalidateToken(token);
+        if (response.equals("success")) {
             return "success";
         }
 
@@ -146,6 +153,10 @@ public class AuthService {
                 request.getUsername().matches(USERNAME_PATTERN) &&
                 StringUtils.hasText(request.getPassword()) &&
                 request.getPassword().length() >= MIN_PASSWORD_LENGTH;
+    }
+    private boolean isValidPasswordOnRegister(String username, String password){
+        return password.equals(myUsrDtlsService.loadUserByUsername(username).getPassword());
+
     }
 
 

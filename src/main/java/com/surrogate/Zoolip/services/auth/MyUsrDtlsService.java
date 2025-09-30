@@ -5,11 +5,13 @@ import com.surrogate.Zoolip.models.login.UserPrincipal;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class MyUsrDtlsService implements UserDetailsServiceWithId {
 
     private final UsuarioRepository usuariorepository;
@@ -28,7 +30,7 @@ public class MyUsrDtlsService implements UserDetailsServiceWithId {
         long startTime = System.currentTimeMillis();
         Usuario usuario = usuariorepository.findByNombre(username);
         long endTime = System.currentTimeMillis();
-        System.out.println("Tiempo de busqueda de usuario: " + (endTime - startTime) + "ms");
+       log.info("Tiempo de busqueda de usuario: " + (endTime - startTime) + "ms");
 
         // Si no se encuentra el usuario, lanzamos una fuckin excepción
 
