@@ -35,6 +35,7 @@ public class SecurityConfig {
     private final JWTAuthFilter jwtAuthFilter;
     private final LoggingFilter loggingFilter;
     private final UserDetailsServiceWithId userDetailsService;
+    private final CustomOAuth2LoginSuccessHandler loginSuccessHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -53,7 +54,11 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN",  "ADMINISTRADOR")
                         .anyRequest().authenticated())
-
+                .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(endpoint -> endpoint.baseUri("/oauth2/authorization"))
+                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code/*"))
+                        .successHandler(loginSuccessHandler)
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
