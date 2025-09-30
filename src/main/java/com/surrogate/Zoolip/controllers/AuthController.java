@@ -90,7 +90,15 @@ public class AuthController {
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(response);
             }
-            else{
+            else if(response.getHttpError().equals("401")){
+                return ResponseEntity.status(401)
+                        .header("X-Content-Type-Options", "nosniff")
+                        .header("X-Frame-Options", "DENY")
+                        .header("X-XSS-Protection", "1; mode=block")
+                        .body(response);
+
+            }
+            else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .header("X-Content-Type-Options", "nosniff")
                     .header("X-Frame-Options", "DENY")
