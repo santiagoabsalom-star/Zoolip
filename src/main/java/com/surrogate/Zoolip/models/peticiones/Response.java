@@ -39,9 +39,9 @@ public class Response {
      
 
 
-    public Response(String status, String numero, String message) {
+    public Response(String status, String httpError, String message) {
         this.status = status;
-        this.httpError = numero;
+        this.httpError = httpError;
         this.message = message;
 
 

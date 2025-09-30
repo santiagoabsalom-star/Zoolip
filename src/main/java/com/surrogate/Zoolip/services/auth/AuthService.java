@@ -8,6 +8,8 @@ import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,6 +25,8 @@ import org.springframework.util.StringUtils;
 @Service
 public class AuthService {
     private static final int MIN_PASSWORD_LENGTH = 8;
+    private static final int MAX_USERNAME_LENGTH = 20;
+    private static final int MIN_USERNAME_LENGTH = 3;
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_]{3,20}$";
     private final BCryptPasswordEncoder encryptor = new BCryptPasswordEncoder(8);
     private final JWTService jwtService;
@@ -43,8 +47,21 @@ public class AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
 
         try {
+            if(loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty() ) {
+                return new LoginResponse("error", "422", "El nombre de usuario es requerido");
+            }
+            if(loginRequest.getUsername().length() < MIN_PASSWORD_LENGTH && loginRequest.getUsername().length() > MAX_USERNAME_LENGTH) {
+                return new LoginResponse("error","422","El nombre de usuario debe tener entre 3 y 20 caracteres alfanuméricos");
+            }
+            if(loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty() ) {
+                return new LoginResponse("error", "422", "La constrasenia es requerida");
+            }
+
             if (!isValidLoginRequest(loginRequest)) {
                 return new LoginResponse("error", "422", "Parámetros inválidos");
+            }
+            if(!usuarioRepository.existsByNombre(loginRequest.getUsername())){
+                return new LoginResponse("error", "404", "Usuario no encontrado");
             }
 
 
