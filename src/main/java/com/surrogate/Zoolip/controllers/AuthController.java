@@ -39,6 +39,13 @@ public class AuthController {
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(new LoginResponse(response.getStatus(), response.getMessage(), response.getUsername()));
+            } else if (response.getHttpError().equals("403")) {
+                return ResponseEntity.status(403)
+                        .header("X-Content-Type-Options", "nosniff")
+                        .header("X-Frame-Options", "DENY")
+                        .header("X-XSS-Protection", "1; mode=block")
+                        .body(response);
+
             } else if (response.getHttpError().equals("404")) {
                 return ResponseEntity.status(404)
                         .header("X-Content-Type-Options", "nosniff")

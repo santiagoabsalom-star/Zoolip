@@ -50,9 +50,7 @@ public class AuthService {
             if(loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty() ) {
                 return new LoginResponse("error", "422", "El nombre de usuario es requerido");
             }
-            if(loginRequest.getUsername().length() < MIN_PASSWORD_LENGTH && loginRequest.getUsername().length() > MAX_USERNAME_LENGTH) {
-                return new LoginResponse("error","422","El nombre de usuario debe tener entre 3 y 20 caracteres alfanuméricos");
-            }
+
             if(loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty() ) {
                 return new LoginResponse("error", "422", "La constrasenia es requerida");
             }
@@ -92,7 +90,7 @@ public class AuthService {
 
             return new LoginResponse("error", "401", "Autenticación fallida");
         } catch (BadCredentialsException e) {
-            return new LoginResponse("error", "401", "Credenciales inválidas");
+            return new LoginResponse("error", "403", "Contrasenia incorrecta");
         } catch (Exception e) {
             return new LoginResponse("error", "500", "Error en el servidor: " + e.getMessage());
         }
