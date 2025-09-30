@@ -23,8 +23,6 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
-
-
     }
 
 
@@ -40,7 +38,7 @@ public class AuthController {
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
+                        .body(new LoginResponse(response.getStatus(), response.getMessage(), response.getUsername()));
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .header("X-Content-Type-Options", "nosniff")
@@ -65,11 +63,20 @@ public class AuthController {
                         .body(response);
 
             }
+            else if(response.getHttpError().equals("409")){
+                return ResponseEntity.status(409)
+                        .header("X-Content-Type-Options", "nosniff")
+                        .header("X-Frame-Options", "DENY")
+                        .header("X-XSS-Protection", "1; mode=block")
+                        .body(response);
+            }
+            else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .header("X-Content-Type-Options", "nosniff")
                     .header("X-Frame-Options", "DENY")
                     .header("X-XSS-Protection", "1; mode=block")
                     .body(response);
+            }
         } catch (Exception e) {
 
             return ResponseEntity.status(500)

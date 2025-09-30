@@ -58,6 +58,9 @@ public class InstitucionService {
         }
 
         public InstitucionDTO getInstitucion(Long id){
+        if(!institucionRepository.existsById(id)){
+            return null;
+        }
         return institucionRepository.findInstitucionDTOById(id);
         }
     public Response comprobarInst(Institucion institucion) {
@@ -86,7 +89,7 @@ public class InstitucionService {
 
         if(institucionRepository.existsById(institucion.getId_institucion())){
             log.info("{} ya existe", institucion.getNombre());
-            return new Response("error", "La instutucion ya existe");
+            return new Response("error", "La institucion ya existe");
         }
         if(institucionRepository.existsByNombre(institucion.getNombre())){
             log.info("{} ya existe", institucion.getNombre());

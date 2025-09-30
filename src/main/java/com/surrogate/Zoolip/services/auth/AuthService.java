@@ -8,6 +8,7 @@ import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+@Slf4j
 @Service
 public class AuthService {
     private static final int MIN_PASSWORD_LENGTH = 8;
@@ -63,9 +65,10 @@ public class AuthService {
                         .map(GrantedAuthority::getAuthority)
                         .orElse("ROLE_USER");
                 long endTimeauth = System.currentTimeMillis();
-                System.out.println("Tiempo de espera de autenticacion: " + (endTimeauth - startTimeauth) + "ms");
+                log.info("Tiempo de espera de autenticacion: " + (endTimeauth - startTimeauth) + "ms");
 
                 String token = jwtService.generateToken(userDetails.getUsername(), role);
+
 
                 return new LoginResponse("success", token, userDetails.getUsername(), userDetails.getId());
             }
@@ -85,9 +88,9 @@ public class AuthService {
                 return new RegisterResponse("La contrasenia tiene que tener mas de 8 caracteres", "401");
             }
 
-            Usuario existingUsuario = usuarioRepository.findByNombre(registerRequest.getUsername());
-            if (existingUsuario != null) {
-                return new RegisterResponse("error", "El usuario ya existe");
+
+            if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+                return new RegisterResponse("error","409","El nombre ya existe");
             }
 
             Usuario newUsuario = new Usuario();
@@ -103,7 +106,7 @@ public class AuthService {
     }
 
     public String logout(String token) {
-        System.out.println(token);
+        log.info("Este es el token del usuario: {}", token);
 
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token no puede ser nulo o vacío");

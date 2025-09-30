@@ -77,11 +77,12 @@ public class InstitucionController {
 
     }
     @GetMapping("/obtenerPorId")
-    public ResponseEntity<?> obtenerInstitucionPorId(@RequestParam("id") long id){
+    public ResponseEntity<InstitucionDTO> obtenerInstitucionPorId(@RequestParam("id") long id){
         try {
             return ResponseEntity.ok(institucionService.getInstitucion(id));
+
         }catch (Exception e){
-            return ResponseEntity.status(500).body(new Response(e.getMessage()));
+            return ResponseEntity.status(500).build();
         }
 
     }

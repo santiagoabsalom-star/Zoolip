@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.function.Function;
 
 @Slf4j
 @Service
+@NoArgsConstructor
 public class JWTService {
 
     private final HashSet<String> tokens= new HashSet<>();
@@ -26,13 +28,11 @@ public class JWTService {
     //Esto es una mala practica ya que hardcodea la jwt secret key
     @Value("${jwt.secret}")
     private String secretKey;
-    @Value("${jwt.expiration:86400000}") // 24 horas por defecto
+    @Value("${jwt.expiration:86400000}")
     private long jwtExpiration;
-
     private SecretKey key;
 
-    public JWTService(){
-    }
+
 
 
     @PostConstruct
@@ -59,13 +59,13 @@ public class JWTService {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
-        System.out.println(claims);
+        log.info(claims.toString());
         String token = createToken(claims, username);
-        System.out.println(token);
+        log.info(token);
         try {
             tokens.add(token);
         } catch (Exception e) {
-            System.out.println("Error al guardar el token en Redis: " + e.getMessage());
+            log.info("Error al guardar el token en Redis: " + e.getMessage());
         }
         return token;
     }
@@ -73,7 +73,7 @@ public class JWTService {
 
     public boolean validateToken(String token, UserDetailsWithId userDetails) {
         if(tokens.contains(token)) {
-            System.out.println("Token encontrado");
+            log.info("Token encontrado");
             if (token == null || token.isEmpty()) {
                 throw new IllegalArgumentException("Token cannot be null or empty");
             }
@@ -84,7 +84,7 @@ public class JWTService {
 
         try {
             final String username = extractUsername(token);
-            System.out.println("Username extraído del token: " + username);
+            log.info("Username extraído del token: " + username);
             return username.equals(userDetails.getUsername()) && isValidTokenFormat(token);
 
         }
@@ -108,7 +108,7 @@ public class JWTService {
         }
     }
     protected String createToken(Map<String, Object> claims, String subject) {
-        System.out.println(claims + subject);
+        log.info(claims + subject);
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -136,14 +136,14 @@ public class JWTService {
             throw new IllegalArgumentException("Token cannot be null or empty");
         }
         if(token.startsWith("\"") && token.endsWith("\"")) {
-            System.out.println("Token con comillas detectado, eliminando comillas...");
+            log.info("Token con comillas detectado, eliminando comillas...");
             token = token.trim().replace("\"", "");
         }
         if(!isValidTokenFormat(token)) {
-            System.out.println("Token no válido o no almacenado: " + token);
+            log.info("Token no válido o no almacenado: " + token);
             return "error";
         }
-        System.out.println("Invalidando token: [" + token + "]");
+        log.info("Invalidando token: [" + token + "]");
         tokens.remove(token);
         return "success";
     }
@@ -152,7 +152,7 @@ public class JWTService {
             throw new IllegalArgumentException("Token cannot be null or empty");
         }
         if(token.startsWith("\"") && token.endsWith("\"")) {
-            System.out.println("Token con comillas detectado, eliminando comillas...");
+            log.info("Token con comillas detectado, eliminando comillas");
             token = token.trim().replace("\"", "");
         }
         return tokens.contains(token);

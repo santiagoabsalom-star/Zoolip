@@ -65,10 +65,20 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         try {
             final String authHeader = request.getHeader("Authorization");
+            String path = request.getServletPath();
 
+            if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            if (path.startsWith("/actuator") || path.startsWith("/favicon") || path.startsWith("/api/auth")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 sendError(response, "El header tiene que venir con el token malparido", HttpServletResponse.SC_UNAUTHORIZED);
-                filterChain.doFilter(request, response);
+
                 return;
             }
 

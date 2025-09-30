@@ -21,10 +21,13 @@ public class RegisterRequest extends Request {
     @JsonCreator
     public RegisterRequest(@JsonProperty("username") String username,
                            @JsonProperty("password") String password,
-                           @JsonProperty("rol") String rol) {
+                           @JsonProperty("rol") String rol
+                          ) {
+
         this.username = username;
         this.password = password;
         this.rol = rol;
+
     }
 
     public RegisterRequest() {
