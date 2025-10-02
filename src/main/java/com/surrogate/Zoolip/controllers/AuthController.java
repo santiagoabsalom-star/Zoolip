@@ -35,10 +35,11 @@ public class AuthController {
                 return ResponseEntity.ok()
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + response.getToken())
                         .header("Id-Usuario", String.valueOf(response.getId()))
+                        .header("Nombre-Usuario", response.getUsername())
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
-                        .body(new LoginResponse(response.getStatus()));
+                        .body(new LoginResponse(response.getStatus(), "Inicio de sesion exitoso"));
             } else if (response.getHttpError().equals("403")) {
                 return ResponseEntity.status(403)
                         .header("X-Content-Type-Options", "nosniff")

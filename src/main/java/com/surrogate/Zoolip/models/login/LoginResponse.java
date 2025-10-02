@@ -23,6 +23,10 @@ public class LoginResponse extends Response {
     public LoginResponse(String status) {
         super(status);
     }
+
+    public LoginResponse(String status, String message) {
+        super(status, message);
+    }
 }
 
 
