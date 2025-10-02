@@ -5,10 +5,11 @@ import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+@Repository
 public interface InstitucionRepository extends JpaRepository<Institucion, Long> {
     @Query("SELECT i.id_institucion as id_institucion" +
             ", i.id_usuario.nombre as nombreAdministrador" +

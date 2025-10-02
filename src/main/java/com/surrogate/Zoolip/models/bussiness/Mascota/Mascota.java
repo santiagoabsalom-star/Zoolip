@@ -1,0 +1,35 @@
+package com.surrogate.Zoolip.models.bussiness.Mascota;
+
+import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "mascota", schema="zoolip")
+public class Mascota {
+    @Id
+    @Column(name = "id_mascota", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "tamanio", nullable = false)
+    private Tamanio tamanio;
+    @Column(name = "estado_adopcion", nullable = false)
+    private EstadoAdopcion estadoAdopcion;
+    @Column(name="estado_salud", nullable = false)
+    private EstadoSalud estadoSalud;
+    @Column(name="edad", nullable = false)
+    private Integer edad;
+    @Column(name="raza", nullable = false)
+    private String raza;
+    @Column(name = "especie", nullable = false)
+    private String especie;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_institucion",unique = true, nullable = false)
+    private Institucion id_institucion;
+
+}

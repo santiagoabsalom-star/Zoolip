@@ -69,6 +69,8 @@ public class InstitucionService {
                 log.info("Usuario no encontrado");
                 return new Response("error", "Usuario no encontrado");
             }
+
+
             institucion.setId_usuario(usuarioRepository.findById(institucion.getId_usuario().getId()).orElse(null));
 
         }

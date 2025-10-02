@@ -65,7 +65,7 @@ public class JWTService {
         try {
             tokens.add(token);
         } catch (Exception e) {
-            log.info("Error al guardar el token en Redis: " + e.getMessage());
+            log.info("Error al guardar el token en Redis: {} ", e.getMessage());
         }
         return token;
     }
@@ -84,7 +84,7 @@ public class JWTService {
 
         try {
             final String username = extractUsername(token);
-            log.info("Username extraído del token: " + username);
+            log.info("Username extraído del token: {} " , username);
             return username.equals(userDetails.getUsername()) && isValidTokenFormat(token);
 
         }
@@ -108,7 +108,7 @@ public class JWTService {
         }
     }
     protected String createToken(Map<String, Object> claims, String subject) {
-        log.info(claims + subject);
+        log.info("Claims: {}, Subject: {}",claims, subject);
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -140,10 +140,10 @@ public class JWTService {
             token = token.trim().replace("\"", "");
         }
         if(!isValidTokenFormat(token)) {
-            log.info("Token no válido o no almacenado: " + token);
+            log.info("Token no válido o no almacenado: {}" , token);
             return "error";
         }
-        log.info("Invalidando token: [" + token + "]");
+        log.info("Invalidando token: [  {}  ]", token);
         tokens.remove(token);
         return "success";
     }
