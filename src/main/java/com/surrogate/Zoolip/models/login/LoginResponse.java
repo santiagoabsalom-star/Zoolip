@@ -20,6 +20,9 @@ public class LoginResponse extends Response {
         super(status, httpError, response);
     }
 
+    public LoginResponse(String status) {
+        super(status);
+    }
 }
 
 
