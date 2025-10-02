@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
+
 
 @Data
 @NoArgsConstructor
@@ -28,8 +28,8 @@ public class Mascota {
     private String raza;
     @Column(name = "especie", nullable = false)
     private String especie;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_institucion",unique = true, nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_institucion", nullable = false)
     private Institucion id_institucion;
 
 }
