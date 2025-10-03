@@ -101,7 +101,7 @@ public class SecurityConfig {
                 "X-Requested-With"
 
         ));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setExposedHeaders(List.of("Authorization", "Id-Usuario", "Nombre-Usuario"));
 
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
