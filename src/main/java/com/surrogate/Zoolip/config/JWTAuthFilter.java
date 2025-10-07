@@ -9,9 +9,11 @@ import io.jsonwebtoken.JwtException;
 import jakarta.annotation.PostConstruct;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -23,10 +25,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JWTAuthFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserDetailsServiceWithId userDetailsService;
@@ -67,7 +72,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         try {
             final String authHeader = request.getHeader("Authorization");
             String path = request.getServletPath();
-
+            final Cookie[] authCookie = request.getCookies();
+            String authTokenFromCookie= authCookie!=null ? authCookie[0].getValue() : null;
             if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
                 filterChain.doFilter(request, response);
                 return;
@@ -77,13 +83,26 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            if (authTokenFromCookie == null) {
+
                 sendError(response, "El header tiene que venir con el token malparido", HttpServletResponse.SC_UNAUTHORIZED);
 
                 return;
             }
+            String jwt = null;
+            try{
 
-            final String jwt = authHeader.substring(7);
+                if(authHeader==null) {
+                    jwt=authTokenFromCookie;
+                    log.info("Bearer token from cookie: {}", jwt);
+                }
+                else{
+                    jwt = authHeader.substring(7);
+                }
+            } catch (Exception e) {
+                log.info(e.getMessage());
+            }
+
 
             if (jwt.isBlank()) {
                 sendError(response, "El header no puede estar vacio", HttpServletResponse.SC_UNAUTHORIZED);
@@ -96,7 +115,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             }
 
             String username = jwtService.extractUsername(jwt);
-            System.out.println(username);
+            log.info("Username : {}",username);
             if (username != null) {
 
                 UserDetailsWithId userDetails = userDetailsCache.getIfPresent(username);

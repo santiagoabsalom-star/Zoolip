@@ -10,11 +10,14 @@ import com.surrogate.Zoolip.services.auth.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,11 +37,19 @@ public class AuthController {
             LoginResponse response = authService.login(loginRequest);
 
             if (response.getStatus().equals("success")) {
+                ResponseCookie cookie= ResponseCookie.from("AUTH_TOKEN", response.getToken())
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("Strict")
+                    .maxAge(Duration.ofMinutes(90))
+                    .build();
                 return ResponseEntity.ok()
 
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + response.getToken())
+                        .header(HttpHeaders.SET_COOKIE, cookie.toString())
                         .header("Id-Usuario", String.valueOf(response.getId()))
                         .header("Nombre-Usuario", response.getUsername())
+
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
