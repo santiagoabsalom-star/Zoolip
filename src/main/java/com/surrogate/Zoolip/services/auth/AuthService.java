@@ -106,7 +106,9 @@ public class AuthService {
             if(registerRequest.getRol()==null || registerRequest.getRol().isEmpty() ) {
                 return new RegisterResponse("error", 401, "El rol es requerido");
             }
-
+            if(registerRequest.getRol().equals("ADMINISTRADOR")){
+                return new RegisterResponse("error", 403, "El rol no puede ser administrador");
+            }
             if(usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
                 return new RegisterResponse("error", 401,"El nombre de usuario ya existe, pero la constrasenia no coincida");
             }
@@ -130,6 +132,41 @@ public class AuthService {
         }
     }
 
+    @Transactional
+    public RegisterResponse registerAdmin(RegisterRequest registerRequest) {
+        try {
+            if (!isValidRegisterRequest(registerRequest)) {
+                return new RegisterResponse("error", 401,"La constrasenia tiene que tener 8 digitos o mas" );
+            }
+            if(registerRequest.getRol()==null || registerRequest.getRol().isEmpty() ) {
+                return new RegisterResponse("error", 401, "El rol es requerido");
+            }
+            if(!registerRequest.getRol().equals("ADMINISTRADOR")){
+                return new RegisterResponse("error", 403, "El rol tiene que ser administrador");
+            }
+
+            if(usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
+                return new RegisterResponse("error", 401,"El nombre de usuario ya existe, pero la constrasenia no coincida");
+            }
+            else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+
+                return new RegisterResponse("error",409,"El nombre ya existe");
+
+            }
+
+
+            Usuario newUsuario = new Usuario();
+            newUsuario.setNombre(registerRequest.getUsername());
+            newUsuario.setPasswordHash(encryptor.encode(registerRequest.getPassword()));
+
+            newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
+
+            usuarioRepository.save(newUsuario);
+            return new RegisterResponse("success", "Registro exitoso");
+        } catch (Exception e) {
+            return new RegisterResponse("error", "Error en el registro: " + e.getMessage());
+        }
+    }
     public String logout(String token) {
         log.info("Este es el token del usuario: {}", token);
 

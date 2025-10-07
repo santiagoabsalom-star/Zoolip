@@ -93,6 +93,33 @@ public class AuthController {
 
         }
     }
+    @PostMapping(value = "/admin/register", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<RegisterResponse> registerAdmin(@Valid @RequestBody RegisterRequest registerRequest) {
+        try {
+            RegisterResponse response = authService.registerAdmin(registerRequest);
+            if ("success".equals(response.getStatus())) {
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .header("X-Content-Type-Options", "nosniff")
+                        .header("X-Frame-Options", "DENY")
+                        .header("X-XSS-Protection", "1; mode=block")
+                        .body(response);
+
+            }
+            else {
+                return ResponseEntity.status(response.getHttpError())
+                        .header("X-Content-Type-Options", "nosniff")
+                        .header("X-Frame-Options", "DENY")
+                        .header("X-XSS-Protection", "1; mode=block")
+                        .body(response);
+            }
+        } catch (Exception e) {
+
+            return ResponseEntity.status(500)
+                    .body(new RegisterResponse("error", "Error interno del servidor"));
+
+        }
+    }
+
 
     @PostMapping(value = "/logout", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> logout(@Valid @RequestBody String token) {
