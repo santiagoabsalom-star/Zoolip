@@ -16,7 +16,7 @@ public class LoginResponse extends Response {
     public LoginResponse(String status, String token, String username, Long id) {
         super(status, token, username, id);
     }
-    public LoginResponse(String status, String httpError, String response) {
+    public LoginResponse(String status, Integer httpError, String response) {
         super(status, httpError, response);
     }
 

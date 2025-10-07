@@ -1,7 +1,9 @@
 package com.surrogate.Zoolip.controllers;
 
+import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
+import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.services.auth.AuthService;
@@ -31,8 +33,9 @@ public class AuthController {
         try {
             LoginResponse response = authService.login(loginRequest);
 
-            if ("success".equals(response.getStatus())) {
+            if (response.getStatus().equals("success")) {
                 return ResponseEntity.ok()
+
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + response.getToken())
                         .header("Id-Usuario", String.valueOf(response.getId()))
                         .header("Nombre-Usuario", response.getUsername())
@@ -40,35 +43,16 @@ public class AuthController {
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(new LoginResponse(response.getStatus(), "Inicio de sesion exitoso"));
-            } else if (response.getHttpError().equals("403")) {
-                return ResponseEntity.status(403)
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
-
-            } else if (response.getHttpError().equals("404")) {
-                return ResponseEntity.status(404)
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
-
-            } else if (response.getHttpError().equals("422")) {
-                return ResponseEntity.status(422)
+            } else {
+                return ResponseEntity.status(response.getHttpError())
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(response);
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .header("X-Content-Type-Options", "nosniff")
-                    .header("X-Frame-Options", "DENY")
-                    .header("X-XSS-Protection", "1; mode=block")
-                    .body(response);
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                    .body(new LoginResponse("error", "500", "Error interno del servidor"));
+                    .body(new LoginResponse("error", 500, "Error interno del servidor"));
         }
     }
 
@@ -84,27 +68,12 @@ public class AuthController {
                         .body(response);
 
             }
-            else if(response.getHttpError().equals("409")){
-                return ResponseEntity.status(409)
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
-            }
-            else if(response.getHttpError().equals("401")){
-                return ResponseEntity.status(401)
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
-
-            }
             else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .header("X-Content-Type-Options", "nosniff")
-                    .header("X-Frame-Options", "DENY")
-                    .header("X-XSS-Protection", "1; mode=block")
-                    .body(response);
+                return ResponseEntity.status(response.getHttpError())
+                        .header("X-Content-Type-Options", "nosniff")
+                        .header("X-Frame-Options", "DENY")
+                        .header("X-XSS-Protection", "1; mode=block")
+                        .body(response);
             }
         } catch (Exception e) {
 
@@ -129,9 +98,11 @@ public class AuthController {
                         .body("Logout success");
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+
                     .header("X-Content-Type-Options", "nosniff")
                     .header("X-Frame-Options", "DENY")
                     .header("X-XSS-Protection", "1; mode=block")
+
                     .body("Logout fallido: Token inválido o no encontrado");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -142,6 +113,14 @@ public class AuthController {
 
         }
     }
+@PostMapping(value = "/me", consumes ="application/json",produces = "application/json")
 
+    public ResponseEntity<Usuario> me(@RequestBody Long iduser) {
+    Usuario usuario = authService.me(iduser);
+    if (usuario == null) {
+        return ResponseEntity.notFound().build();
 
+    }
+    return ResponseEntity.status(HttpStatus.ACCEPTED).body(usuario);
+}
 }

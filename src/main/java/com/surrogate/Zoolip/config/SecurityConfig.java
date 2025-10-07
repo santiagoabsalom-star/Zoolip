@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN",  "ADMINISTRADOR")
+                        .requestMatchers("/api/mascotas/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(endpoint -> endpoint.baseUri("/oauth2/authorization"))
@@ -84,7 +85,9 @@ public class SecurityConfig {
                 "http://localhost:5174",
                 "null",
                 "http://172.18.0.1:5173",
-                "http://172.18.0.1:3000"
+                "http://172.18.0.1:3000",
+                "http://172.20.10.8:5173"
+
         ));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -101,8 +104,7 @@ public class SecurityConfig {
                 "X-Requested-With"
 
         ));
-        configuration.setExposedHeaders(List.of("Authorization", "Id-Usuario", "Nombre-Usuario"));
-
+        configuration.setExposedHeaders(List.of("Authorization","Id-Usuario","Nombre-Usuario"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

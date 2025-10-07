@@ -15,7 +15,7 @@ public class Response {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String httpError;
+    private Integer httpError;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String username;
 
@@ -39,7 +39,7 @@ public class Response {
      
 
 
-    public Response(String status, String httpError, String message) {
+    public Response(String status, Integer httpError, String message) {
         this.status = status;
         this.httpError = httpError;
         this.message = message;

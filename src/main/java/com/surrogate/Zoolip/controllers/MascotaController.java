@@ -17,7 +17,6 @@ import java.util.List;
 
 public class MascotaController {
     private final MascotaService mascotaService;
-
     @PostMapping("/aniadir")
     public ResponseEntity<Response> createMascota(@RequestBody Mascota mascota) {
         Response response= mascotaService.agregarMascota(mascota);
@@ -25,7 +24,7 @@ public class MascotaController {
             return ResponseEntity.ok(new Response("success", "La mascota ha sido agregada"));
 
         }
-        else if(response.getHttpError().equals("400")) {
+        else if(response.getHttpError().equals(400)) {
             return ResponseEntity.badRequest().body(response);
         }
         else {
@@ -39,7 +38,7 @@ public class MascotaController {
             return ResponseEntity.ok(new Response("success", "La mascota ha sido modificada"));
 
         }
-        else if(response.getHttpError().equals("400")) {
+        else if(response.getHttpError().equals(400)) {
             return ResponseEntity.badRequest().body(response);
         }
         else {
@@ -55,7 +54,7 @@ public class MascotaController {
         if(response.getStatus().equals("success")) {
             return ResponseEntity.ok(new Response("success", "La mascota ha sido elimada"));
         }
-        else if(response.getHttpError().equals("400")) {
+        else if(response.getHttpError().equals(400)) {
     return ResponseEntity.badRequest().body(response);
         }
         else{
@@ -74,6 +73,7 @@ public class MascotaController {
     @GetMapping("/obtenerPorId")
     public ResponseEntity<MascotaDTO> getMascotaById(@RequestParam Long id) {
         try{
+
             return ResponseEntity.ok(mascotaService.buscarById(id));
 
         } catch (Exception e) {

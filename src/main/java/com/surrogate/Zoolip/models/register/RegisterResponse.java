@@ -17,8 +17,8 @@ public class RegisterResponse extends Response {
         super(message, status);
 
     }
-  public RegisterResponse(String status,String message, String httpError  ) {
-        super(status, message, httpError);
+  public RegisterResponse(String status,Integer httpError, String message  ) {
+        super(status,httpError,  message);
   }
 public RegisterResponse(){
 

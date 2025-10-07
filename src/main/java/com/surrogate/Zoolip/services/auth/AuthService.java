@@ -49,18 +49,18 @@ public class AuthService {
 
         try {
             if(loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty() ) {
-                return new LoginResponse("error", "422", "El nombre de usuario es requerido");
+                return new LoginResponse("error", 422, "El nombre de usuario es requerido");
             }
 
             if(loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty() ) {
-                return new LoginResponse("error", "422", "La constrasenia es requerida");
+                return new LoginResponse("error", 422, "La constrasenia es requerida");
             }
 
             if (!isValidLoginRequest(loginRequest)) {
-                return new LoginResponse("error", "422", "Parámetros inválidos");
+                return new LoginResponse("error", 422, "Parámetros inválidos");
             }
             if(!usuarioRepository.existsByNombre(loginRequest.getUsername())){
-                return new LoginResponse("error", "404", "Usuario no encontrado");
+                return new LoginResponse("error", 404, "Usuario no encontrado");
             }
 
 
@@ -89,11 +89,11 @@ public class AuthService {
                 return new LoginResponse("success", token, userDetails.getUsername(), userDetails.getId());
             }
 
-            return new LoginResponse("error", "401", "Autenticación fallida");
+            return new LoginResponse("error", 401, "Autenticación fallida");
         } catch (BadCredentialsException e) {
-            return new LoginResponse("error", "403", "Contrasenia incorrecta");
+            return new LoginResponse("error", 403, "Contrasenia incorrecta");
         } catch (Exception e) {
-            return new LoginResponse("error", "500", "Error en el servidor: " + e.getMessage());
+            return new LoginResponse("error", 500, "Error en el servidor: " + e.getMessage());
         }
     }
 
@@ -101,18 +101,18 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest registerRequest) {
         try {
             if (!isValidRegisterRequest(registerRequest)) {
-                return new RegisterResponse("error", "401","La constrasenia tiene que tener 8 digitos o mas" );
+                return new RegisterResponse("error", 401,"La constrasenia tiene que tener 8 digitos o mas" );
             }
             if(registerRequest.getRol()==null || registerRequest.getRol().isEmpty() ) {
-                return new RegisterResponse("error", "401", "El rol es requerido");
+                return new RegisterResponse("error", 401, "El rol es requerido");
             }
 
             if(usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
-                return new RegisterResponse("error", "401","El nombre de usuario ya existe, pero la constrasenia no coincida");
+                return new RegisterResponse("error", 401,"El nombre de usuario ya existe, pero la constrasenia no coincida");
             }
             else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
-                return new RegisterResponse("error","409","El nombre ya existe");
+                return new RegisterResponse("error",409,"El nombre ya existe");
 
             }
 
@@ -142,6 +142,9 @@ public class AuthService {
         }
 
         return "error";
+    }
+    public Usuario me(Long id){
+        return usuarioRepository.findById(id).orElse(null);
     }
 
     private boolean isValidLoginRequest(LoginRequest request) {

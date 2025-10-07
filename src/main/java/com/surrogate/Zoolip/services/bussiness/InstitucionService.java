@@ -74,6 +74,7 @@ public class InstitucionService {
             institucion.setId_usuario(usuarioRepository.findById(institucion.getId_usuario().getId()).orElse(null));
 
         }
+        assert institucion.getId_usuario() != null;
         if(institucionRepository.findByU(institucion.getId_usuario().getId())!=null){
             log.info("Este administrador ya administra una institucion");
             return new Response("error", "Este administrador ya administra una institucion");
