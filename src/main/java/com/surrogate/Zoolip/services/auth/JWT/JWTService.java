@@ -46,6 +46,9 @@ public class JWTService {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+    public Integer extractId(String token) {
+        return (Integer) extractClaim(token, Claims-> Claims.get("id_usuario"));
+    }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 
@@ -61,11 +64,36 @@ public class JWTService {
         claims.put("role", role);
         log.info(claims.toString());
         String token = createToken(claims, username);
-        log.info(token);
+        log.info("Claim=id_usuario: {}", extractId(token));
+
         try {
             tokens.add(token);
         } catch (Exception e) {
-            log.info("Error al guardar el token en Redis: {} ", e.getMessage());
+            log.error("Error al guardar el token {} ", e.getMessage());
+        }
+        return token;
+    }
+
+    /**
+     * With id_usuario para el caprichoso de horacio :D
+     * @param username
+     * @param role
+     * @param id_usuario
+     * @return String token
+     */
+    public String generateTokenWithId(String username, String role, Integer id_usuario) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        claims.put("id_usuario", id_usuario);
+        log.info("Claims: {}", claims);
+        String token = createToken(claims, username);
+
+        log.info(token);
+
+        try {
+            tokens.add(token);
+        } catch (Exception e) {
+            log.error("Error al guardar el token: {} ", e.getMessage());
         }
         return token;
     }
@@ -108,7 +136,7 @@ public class JWTService {
         }
     }
     protected String createToken(Map<String, Object> claims, String subject) {
-        log.info("Claims: {}, Subject: {}",claims, subject);
+
         return Jwts.builder()
                 .claims()
                 .add(claims)

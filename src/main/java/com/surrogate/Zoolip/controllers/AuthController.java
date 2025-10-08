@@ -47,8 +47,6 @@ public class AuthController {
                 return ResponseEntity.ok()
 
                         .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                        .header("Id-Usuario", String.valueOf(response.getId()))
-                        .header("Nombre-Usuario", response.getUsername())
 
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
