@@ -3,13 +3,11 @@ package com.surrogate.Zoolip.services.auth;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
-import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.models.register.RegisterRequest;
+import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,7 +35,7 @@ public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public AuthService(JWTService jwtService,MyUsrDtlsService myUsrDtlsService, AuthenticationManager authManager, UsuarioRepository usuarioRepository) {
+    public AuthService(JWTService jwtService, MyUsrDtlsService myUsrDtlsService, AuthenticationManager authManager, UsuarioRepository usuarioRepository) {
         this.jwtService = jwtService;
         this.authManager = authManager;
         this.usuarioRepository = usuarioRepository;
@@ -48,18 +46,18 @@ public class AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
 
         try {
-            if(loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty() ) {
+            if (loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty()) {
                 return new LoginResponse("error", 422, "El nombre de usuario es requerido");
             }
 
-            if(loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty() ) {
+            if (loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
                 return new LoginResponse("error", 422, "La constrasenia es requerida");
             }
 
             if (!isValidLoginRequest(loginRequest)) {
                 return new LoginResponse("error", 422, "Parámetros inválidos");
             }
-            if(!usuarioRepository.existsByNombre(loginRequest.getUsername())){
+            if (!usuarioRepository.existsByNombre(loginRequest.getUsername())) {
                 return new LoginResponse("error", 404, "Usuario no encontrado");
             }
 
@@ -101,20 +99,19 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest registerRequest) {
         try {
             if (!isValidRegisterRequest(registerRequest)) {
-                return new RegisterResponse("error", 401,"La constrasenia tiene que tener 8 digitos o mas" );
+                return new RegisterResponse("error", 401, "La constrasenia tiene que tener 8 digitos o mas");
             }
-            if(registerRequest.getRol()==null || registerRequest.getRol().isEmpty() ) {
+            if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
                 return new RegisterResponse("error", 401, "El rol es requerido");
             }
-            if(registerRequest.getRol().equals("ADMINISTRADOR")){
+            if (registerRequest.getRol().equals("ADMINISTRADOR")) {
                 return new RegisterResponse("error", 403, "El rol no puede ser administrador");
             }
-            if(usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
-                return new RegisterResponse("error", 401,"El nombre de usuario ya existe, pero la constrasenia no coincida");
-            }
-            else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+            if (usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
+                return new RegisterResponse("error", 401, "El nombre de usuario ya existe, pero la constrasenia no coincida");
+            } else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
-                return new RegisterResponse("error",409,"El nombre ya existe");
+                return new RegisterResponse("error", 409, "El nombre ya existe");
 
             }
 
@@ -136,21 +133,20 @@ public class AuthService {
     public RegisterResponse registerAdmin(RegisterRequest registerRequest) {
         try {
             if (!isValidRegisterRequest(registerRequest)) {
-                return new RegisterResponse("error", 401,"La constrasenia tiene que tener 8 digitos o mas" );
+                return new RegisterResponse("error", 401, "La constrasenia tiene que tener 8 digitos o mas");
             }
-            if(registerRequest.getRol()==null || registerRequest.getRol().isEmpty() ) {
+            if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
                 return new RegisterResponse("error", 401, "El rol es requerido");
             }
-            if(!registerRequest.getRol().equals("ADMINISTRADOR")){
+            if (!registerRequest.getRol().equals("ADMINISTRADOR")) {
                 return new RegisterResponse("error", 403, "El rol tiene que ser administrador");
             }
 
-            if(usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
-                return new RegisterResponse("error", 401,"El nombre de usuario ya existe, pero la constrasenia no coincida");
-            }
-            else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+            if (usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
+                return new RegisterResponse("error", 401, "El nombre de usuario ya existe, pero la constrasenia no coincida");
+            } else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
-                return new RegisterResponse("error",409,"El nombre ya existe");
+                return new RegisterResponse("error", 409, "El nombre ya existe");
 
             }
 
@@ -167,6 +163,7 @@ public class AuthService {
             return new RegisterResponse("error", "Error en el registro: " + e.getMessage());
         }
     }
+
     public String logout(String token) {
         log.info("Este es el token del usuario: {}", token);
 
@@ -180,7 +177,8 @@ public class AuthService {
 
         return "error";
     }
-    public Usuario me(Long id){
+
+    public Usuario me(Long id) {
         return usuarioRepository.findById(id).orElse(null);
     }
 
@@ -197,7 +195,8 @@ public class AuthService {
                 StringUtils.hasText(request.getPassword()) &&
                 request.getPassword().length() >= MIN_PASSWORD_LENGTH;
     }
-    private boolean isValidPasswordOnRegister(String username, String password){
+
+    private boolean isValidPasswordOnRegister(String username, String password) {
         return password.equals(myUsrDtlsService.loadUserByUsername(username).getPassword());
 
     }

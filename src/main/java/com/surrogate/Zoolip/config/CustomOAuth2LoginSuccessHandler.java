@@ -1,11 +1,9 @@
 package com.surrogate.Zoolip.config;
 
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -25,7 +23,7 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
     private final JWTService jwtService;
 
 
-    public CustomOAuth2LoginSuccessHandler(JWTService jwtService)  {
+    public CustomOAuth2LoginSuccessHandler(JWTService jwtService) {
         this.jwtService = jwtService;
 
     }
@@ -36,7 +34,7 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
         if (authentication instanceof OAuth2AuthenticationToken oauth2Token) {
             OAuth2User oauth2User = oauth2Token.getPrincipal();
             Map<String, Object> attributes = oauth2User.getAttributes();
-           log.info("user attributes: {}", attributes);
+            log.info("user attributes: {}", attributes);
 
             String email = (String) attributes.get("email");
             String name = (String) attributes.get("name");
@@ -47,7 +45,7 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
 
 
             String jwt = jwtService.generateToken(name, "USUARIO");
-            log.info("Token generado: {}" , jwt);
+            log.info("Token generado: {}", jwt);
 
 
             String frontendRedirectUrl = "http://localhost:3050/api/auth/login";

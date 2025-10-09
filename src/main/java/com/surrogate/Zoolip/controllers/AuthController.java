@@ -3,7 +3,6 @@ package com.surrogate.Zoolip.controllers;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
-import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.services.auth.AuthService;
@@ -20,11 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Duration;
 
 @RestController
+
 @RequestMapping("/api/auth")
 public class AuthController {
-
     private final AuthService authService;
-
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -37,13 +35,13 @@ public class AuthController {
             LoginResponse response = authService.login(loginRequest);
 
             if (response.getStatus().equals("success")) {
-                ResponseCookie cookie= ResponseCookie.from("AUTH_TOKEN", response.getToken())
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .sameSite("Strict")
-                    .maxAge(Duration.ofMinutes(90))
-                    .build();
+                ResponseCookie cookie = ResponseCookie.from("AUTH_TOKEN", response.getToken())
+                        .httpOnly(true)
+                        .secure(true)
+                        .path("/")
+                        .sameSite("Strict")
+                        .maxAge(Duration.ofMinutes(90))
+                        .build();
                 return ResponseEntity.ok()
 
                         .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -76,8 +74,7 @@ public class AuthController {
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(response);
 
-            }
-            else {
+            } else {
                 return ResponseEntity.status(response.getHttpError())
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
@@ -91,6 +88,7 @@ public class AuthController {
 
         }
     }
+
     @PostMapping(value = "/admin/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity<RegisterResponse> registerAdmin(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
@@ -102,8 +100,7 @@ public class AuthController {
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(response);
 
-            }
-            else {
+            } else {
                 return ResponseEntity.status(response.getHttpError())
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
@@ -149,14 +146,15 @@ public class AuthController {
 
         }
     }
-@PostMapping(value = "/me", consumes ="application/json",produces = "application/json")
+
+    @PostMapping(value = "/me", consumes = "application/json", produces = "application/json")
 
     public ResponseEntity<Usuario> me(@RequestBody Long iduser) {
-    Usuario usuario = authService.me(iduser);
-    if (usuario == null) {
-        return ResponseEntity.notFound().build();
+        Usuario usuario = authService.me(iduser);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
 
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(usuario);
     }
-    return ResponseEntity.status(HttpStatus.ACCEPTED).body(usuario);
-}
 }

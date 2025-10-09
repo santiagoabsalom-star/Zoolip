@@ -2,10 +2,11 @@ package com.surrogate.Zoolip.models.bussiness.Institucion;
 
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-
 
 
 @Getter
@@ -16,29 +17,29 @@ import java.time.LocalDateTime;
 public class Institucion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_institucion", unique = true, nullable = false)
+    @Column(name = "id_institucion", unique = true, nullable = false)
     private long id_institucion;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", unique = true, nullable = false)
     private Usuario id_usuario;
 
-    @Column(name="nombre", nullable = false)
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name="tipo", nullable = false)
+    @Column(name = "tipo", nullable = false)
     private Tipo tipo;
 
-    @Column(name="email", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name="descripcion", nullable = false)
+    @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
-    @Column(name="horario_inicio", nullable = false)
+    @Column(name = "horario_inicio", nullable = false)
     private LocalDateTime horario_inicio;
 
-    @Column(name="horario_fin", nullable = false)
+    @Column(name = "horario_fin", nullable = false)
     private LocalDateTime horario_fin;
 
 

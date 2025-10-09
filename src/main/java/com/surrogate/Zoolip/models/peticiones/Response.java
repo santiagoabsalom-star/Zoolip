@@ -3,6 +3,7 @@ package com.surrogate.Zoolip.models.peticiones;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
 public class Response {
@@ -20,13 +21,15 @@ public class Response {
     private String username;
 
     public Response(String status, String token, String username, Long id) {
-        this.username= username;
+        this.username = username;
         this.status = status;
         this.token = token;
         this.id = id;
     }
-    public Response(){
+
+    public Response() {
     }
+
     public Response(String status) {
         this.status = status;
     }
@@ -36,7 +39,6 @@ public class Response {
         this.status = status;
         this.message = message;
     }
-     
 
 
     public Response(String status, Integer httpError, String message) {

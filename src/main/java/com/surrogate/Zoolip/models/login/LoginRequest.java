@@ -2,7 +2,6 @@ package com.surrogate.Zoolip.models.login;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import com.surrogate.Zoolip.models.peticiones.Request;
 import lombok.Getter;
 import lombok.Setter;

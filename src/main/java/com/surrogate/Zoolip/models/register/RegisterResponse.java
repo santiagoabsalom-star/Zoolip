@@ -1,8 +1,6 @@
 package com.surrogate.Zoolip.models.register;
 
 
-
-
 import com.surrogate.Zoolip.models.peticiones.Response;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,11 +15,13 @@ public class RegisterResponse extends Response {
         super(message, status);
 
     }
-  public RegisterResponse(String status,Integer httpError, String message  ) {
-        super(status,httpError,  message);
-  }
-public RegisterResponse(){
 
-}
+    public RegisterResponse(String status, Integer httpError, String message) {
+        super(status, httpError, message);
+    }
+
+    public RegisterResponse() {
+
+    }
 }
 

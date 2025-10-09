@@ -1,10 +1,8 @@
 package com.surrogate.Zoolip.models.login;
 
 
-
 import com.surrogate.Zoolip.models.peticiones.Response;
 import lombok.Getter;
-
 import lombok.Setter;
 import lombok.ToString;
 
@@ -16,6 +14,7 @@ public class LoginResponse extends Response {
     public LoginResponse(String status, String token, String username, Long id) {
         super(status, token, username, id);
     }
+
     public LoginResponse(String status, Integer httpError, String response) {
         super(status, httpError, response);
     }

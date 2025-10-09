@@ -1,13 +1,12 @@
 package com.surrogate.Zoolip.config;
+
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
 import io.jsonwebtoken.JwtException;
 import jakarta.annotation.PostConstruct;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -71,7 +69,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             final String authHeader = request.getHeader("Authorization");
             String path = request.getServletPath();
             final Cookie[] authCookie = request.getCookies();
-            String authTokenFromCookie= authCookie!=null ? authCookie[0].getValue() : null;
+            String authTokenFromCookie = authCookie != null ? authCookie[0].getValue() : null;
             if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
                 filterChain.doFilter(request, response);
                 return;
@@ -88,13 +86,12 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 return;
             }
             String jwt = null;
-            try{
+            try {
 
-                if(authHeader==null) {
-                    jwt=authTokenFromCookie;
+                if (authHeader == null) {
+                    jwt = authTokenFromCookie;
                     log.info("Bearer token from cookie: {}", jwt);
-                }
-                else{
+                } else {
                     jwt = authHeader.substring(7);
                 }
             } catch (Exception e) {
@@ -102,6 +99,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             }
 
 
+            assert jwt != null;
             if (jwt.isBlank()) {
                 sendError(response, "El header no puede estar vacio", HttpServletResponse.SC_UNAUTHORIZED);
                 return;
@@ -113,9 +111,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             }
 
             String username = jwtService.extractUsername(jwt);
-            log.info("Username : {}",username);
+            log.info("Username : {}", username);
             if (username != null) {
-
                 UserDetailsWithId userDetails = userDetailsCache.getIfPresent(username);
                 if (userDetails == null) {
                     userDetails = userDetailsService.loadUserByUsername(username);

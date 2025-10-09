@@ -4,10 +4,8 @@ import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -36,6 +34,7 @@ public class SecurityConfig {
     private final LoggingFilter loggingFilter;
     private final UserDetailsServiceWithId userDetailsService;
     private final CustomOAuth2LoginSuccessHandler loginSuccessHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -52,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs.yaml").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN",  "ADMINISTRADOR")
+                        .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                         .requestMatchers("/api/mascotas/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
@@ -62,9 +61,9 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-                .xssProtection(HeadersConfigurer.XXssConfig::disable)
-                .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")))
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
+                        .xssProtection(HeadersConfigurer.XXssConfig::disable)
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -72,7 +71,6 @@ public class SecurityConfig {
 
 
     }
-
 
 
     @Bean
@@ -104,7 +102,7 @@ public class SecurityConfig {
                 "X-Requested-With"
 
         ));
-        configuration.setExposedHeaders(List.of("Authorization","Id-Usuario","Nombre-Usuario"));
+        configuration.setExposedHeaders(List.of("Authorization", "Id-Usuario", "Nombre-Usuario"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
@@ -112,6 +110,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProviderWithId authProvider = new DaoAuthenticationProviderWithId();
@@ -121,7 +120,6 @@ public class SecurityConfig {
 
         return authProvider;
     }
-
 
 
     @Bean

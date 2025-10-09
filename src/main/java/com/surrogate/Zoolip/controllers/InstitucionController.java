@@ -32,14 +32,15 @@ public class InstitucionController {
             }
             return ResponseEntity.badRequest().body(response);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(500).body(new Response(e.getMessage()));
 
         }
     }
+
     @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarInstitucion(@RequestBody Institucion institucion) {
-        try{
+        try {
             Response response = institucionService.actualizar(institucion);
             if (response.getStatus().equals("success")) {
                 return ResponseEntity.ok(response);
@@ -47,14 +48,14 @@ public class InstitucionController {
             }
             return ResponseEntity.badRequest().body(response);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(500).body(new Response(e.getMessage()));
         }
     }
+
     @PostMapping("/eliminar")
     public ResponseEntity<Response> eliminarInstitucion(@RequestBody long id_institucion) {
-        try{
+        try {
             Response response = institucionService.eliminar(id_institucion);
             if (response.getStatus().equals("success")) {
                 return ResponseEntity.ok(response);
@@ -62,26 +63,27 @@ public class InstitucionController {
             }
             return ResponseEntity.status(401).body(response);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(500).body(new Response(e.getMessage()));
         }
     }
-    @GetMapping(value="/obtenerTodas" ,  produces = "application/json")
-    public ResponseEntity<List<InstitucionDTO>> obtenerInstituciones(){
-        try{
+
+    @GetMapping(value = "/obtenerTodas", produces = "application/json")
+    public ResponseEntity<List<InstitucionDTO>> obtenerInstituciones() {
+        try {
             return ResponseEntity.ok(institucionService.getInstituciones());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
 
     }
+
     @GetMapping("/obtenerPorId")
-    public ResponseEntity<InstitucionDTO> obtenerInstitucionPorId(@RequestParam("id") long id){
+    public ResponseEntity<InstitucionDTO> obtenerInstitucionPorId(@RequestParam("id") long id) {
         try {
             return ResponseEntity.ok(institucionService.getInstitucion(id));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(500).build();
         }
 

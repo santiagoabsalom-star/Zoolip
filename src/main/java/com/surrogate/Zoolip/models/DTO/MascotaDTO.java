@@ -1,13 +1,20 @@
 package com.surrogate.Zoolip.models.DTO;
 
 public interface MascotaDTO {
-    public Long getId_Mascota();
-    public String getTamanio();
-    public String getEspecie();
-    public String getRaza();
-    public Integer getEdad();
-    public String getEstadoAdopcion();
-    public String getEstadoSalud();
-    public String getNombreInstitucion();
+    Long getId_Mascota();
+
+    String getTamanio();
+
+    String getEspecie();
+
+    String getRaza();
+
+    Integer getEdad();
+
+    String getEstadoAdopcion();
+
+    String getEstadoSalud();
+
+    String getNombreInstitucion();
 
 }

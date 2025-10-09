@@ -6,11 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "mascota", schema="zoolip")
+@Table(name = "mascota", schema = "zoolip")
 public class Mascota {
     @Id
     @Column(name = "id_mascota", nullable = false, unique = true)
@@ -20,11 +19,11 @@ public class Mascota {
     private Tamanio tamanio;
     @Column(name = "estado_adopcion", nullable = false)
     private EstadoAdopcion estadoAdopcion;
-    @Column(name="estado_salud", nullable = false)
+    @Column(name = "estado_salud", nullable = false)
     private EstadoSalud estadoSalud;
-    @Column(name="edad", nullable = false)
+    @Column(name = "edad", nullable = false)
     private Integer edad;
-    @Column(name="raza", nullable = false)
+    @Column(name = "raza", nullable = false)
     private String raza;
     @Column(name = "especie", nullable = false)
     private String especie;
