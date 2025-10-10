@@ -107,9 +107,7 @@ public class AuthService {
             if (registerRequest.getRol().equals("ADMINISTRADOR")) {
                 return new RegisterResponse("error", 403, "El rol no puede ser administrador");
             }
-            if (usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
-                return new RegisterResponse("error", 401, "El nombre de usuario ya existe, pero la constrasenia no coincida");
-            } else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+            if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
                 return new RegisterResponse("error", 409, "El nombre ya existe");
 
@@ -142,9 +140,7 @@ public class AuthService {
                 return new RegisterResponse("error", 403, "El rol tiene que ser administrador");
             }
 
-            if (usuarioRepository.existsByNombre(registerRequest.getUsername()) && !isValidPasswordOnRegister(registerRequest.getUsername(), registerRequest.getPassword())) {
-                return new RegisterResponse("error", 401, "El nombre de usuario ya existe, pero la constrasenia no coincida");
-            } else if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
+            if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
                 return new RegisterResponse("error", 409, "El nombre ya existe");
 
@@ -194,11 +190,6 @@ public class AuthService {
                 request.getUsername().matches(USERNAME_PATTERN) &&
                 StringUtils.hasText(request.getPassword()) &&
                 request.getPassword().length() >= MIN_PASSWORD_LENGTH;
-    }
-
-    private boolean isValidPasswordOnRegister(String username, String password) {
-        return password.equals(myUsrDtlsService.loadUserByUsername(username).getPassword());
-
     }
 
 

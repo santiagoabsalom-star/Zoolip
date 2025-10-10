@@ -13,10 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Slf4j
@@ -26,7 +23,8 @@ import java.util.function.Function;
 public class JWTService {
 
     private final HashSet<String> tokens = new HashSet<>();
-
+    private final HashSet<Integer> authtokens = new HashSet<>();
+    private final Random random = new Random();
     //Esto es una mala practica ya que hardcodea la jwt secret key
     @Value("${jwt.secret}")
     private String secretKey;
@@ -43,8 +41,12 @@ public class JWTService {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
     @Scheduled(fixedRate = 1000*60*60)
-    private void Token(){
-        log.info("Token cambiado a {}", System.currentTimeMillis() / 1000);
+    private void Token()
+    {
+        authtokens.clear();
+        Integer integer= random.nextInt();
+        authtokens.add(integer);
+        log.info("Token cambiado a {}", integer);
     }
 
     public String extractUsername(String token) {
