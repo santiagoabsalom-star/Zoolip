@@ -8,8 +8,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -19,9 +17,8 @@ import java.util.function.Function;
 @Slf4j
 @Service
 @NoArgsConstructor
-@EnableScheduling
 public class JWTService {
-
+    private final Map<String, Object> claims = new HashMap<>();
     private final HashSet<String> tokens = new HashSet<>();
     private final HashSet<Integer> authtokens = new HashSet<>();
     private final Random random = new Random();
@@ -40,15 +37,16 @@ public class JWTService {
         }
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
-    @Scheduled(fixedRate = 1000*60*60)
-    private void Token()
-    {
+    /** Para implementar despues.
+      @Scheduled(fixedRate = 1000*60*60)
+    private void Token() {
         authtokens.clear();
         Integer integer= random.nextInt();
         authtokens.add(integer);
         log.info("Token cambiado a {}", integer);
+        authtokens.iterator().forEachRemaining(authtoken -> log.info("Token {}", authtoken));
     }
-
+**/
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -67,12 +65,11 @@ public class JWTService {
 
     public String generateToken(String username, String role) {
 
-        Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         log.info(claims.toString());
         String token = createToken(claims, username);
         log.info("Claim=id_usuario: {}", extractId(token));
-
+        claims.clear();
         try {
             tokens.add(token);
         } catch (Exception e) {
@@ -90,12 +87,11 @@ public class JWTService {
      * @return String token
      */
     public String generateTokenWithId(String username, String role, Integer id_usuario) {
-        Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         claims.put("id_usuario", id_usuario);
         log.info("Claims: {}", claims);
         String token = createToken(claims, username);
-
+        claims.clear();
         log.info(token);
 
         try {

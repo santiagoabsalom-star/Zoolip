@@ -1,5 +1,5 @@
 package com.surrogate.Zoolip.config;
-
+/** Para implementar despues:D
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
@@ -23,3 +23,4 @@ public class ScheduleConfig {
         Thread.sleep(100);
     }
 }
+**/

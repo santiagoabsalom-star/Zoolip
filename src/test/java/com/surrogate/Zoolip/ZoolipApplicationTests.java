@@ -8,37 +8,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Slf4j
 @SpringBootTest
 class ZoolipApplicationTests {
-    static int i = 0;
+
+    static int i= 0;
+    static Random random= new Random();
+    static Map<String, Object> claims = new HashMap<>();
     static HashSet<String> tokens = new HashSet<>();
     static SecretKey key = Keys.hmacShaKeyFor("secret19910920990219102ncjnncjalmkcsalklkasc".getBytes());
+    static String[] names= "RAPIST,NIGGER,DOWNI,MONGOLOID,STRING,PORNO,SEXO,PORNA,SUNX,PORIOQL,NMSIAM,KALAKL,KAAKAAKAAKAA,NEGRODEMIERDAAA,PORCULOTELADAN".split(",");
+    static String[] roles= "ADMINISTRADOR,USUARIO,NIGGER".split(",");
 
     public static void main(String[] args) {
-        while (i <= 500000) {
-            i = i + 5;
-            String token = generateTokenWithId("UNARANDY", "ADMINISTRADOR", i);
-            log.info("Id_usuario: {}", extractId(token));
-
-        }
+            while(i<=10) {
+                i++;
+                long current = System.currentTimeMillis();
+                String token = generateTokenWithId(names[random.nextInt(names.length)],roles[random.nextInt(roles.length)], i);
+                long dur = System.currentTimeMillis() - current;
+                log.info("nombre extraido del token, {}", extractUsername(token));
+                log.info("Duracion de generacion de token {} ms", dur);
+                log.info("Id_usuario: {}", extractId(token));
+            }
     }
 
     public static String generateTokenWithId(String username, String role, Integer id_usuario) {
-        Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         claims.put("id_usuario", id_usuario);
         log.info("Claims: {}", claims);
         String token = createToken(claims, username);
+        claims.clear();
 
         log.info(token);
-
         try {
             tokens.add(token);
         } catch (Exception e) {
@@ -80,4 +84,8 @@ class ZoolipApplicationTests {
                 .getPayload();
 
     }
+    public static String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
 }
