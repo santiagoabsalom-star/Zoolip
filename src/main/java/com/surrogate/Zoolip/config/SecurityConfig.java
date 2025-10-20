@@ -43,7 +43,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/admin/register").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/api/auth/admin/register").permitAll()
+                        .requestMatchers("/api/auth/hola").permitAll()
+
                         .requestMatchers("/actuator").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
@@ -68,7 +70,7 @@ public class SecurityConfig {
                         .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
-
+log.info("SecurityFilterChain initialized");
         return http.build();
 
 
@@ -110,16 +112,15 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+        log.info("Cors initialized");
         return source;
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProviderWithId authProvider = new DaoAuthenticationProviderWithId();
-
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
-
         return authProvider;
     }
 
@@ -131,6 +132,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        log.info("PasswordEncoder initialized");
         return new BCryptPasswordEncoder(8);
     }
 }

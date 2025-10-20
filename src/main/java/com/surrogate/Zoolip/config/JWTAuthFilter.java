@@ -39,7 +39,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 .expireAfterWrite(60, TimeUnit.MINUTES)
                 .maximumSize(100)
                 .build();
-
+                log.info("UserDetailsCache initialized");
 
     }
 

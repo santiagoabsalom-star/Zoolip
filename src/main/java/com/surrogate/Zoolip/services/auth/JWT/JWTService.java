@@ -20,8 +20,8 @@ import java.util.function.Function;
 public class JWTService {
     private final Map<String, Object> claims = new HashMap<>();
     private final HashSet<String> tokens = new HashSet<>();
-    private final HashSet<Integer> authtokens = new HashSet<>();
-    private final Random random = new Random();
+    //private final HashSet<Integer> authtokens = new HashSet<>();
+    //private final Random random = new Random();
     //Esto es una mala practica ya que hardcodea la jwt secret key
     @Value("${jwt.secret}")
     private String secretKey;
@@ -177,6 +177,7 @@ public class JWTService {
             log.info("Token no válido o no almacenado: {}", token);
             return "error";
         }
+
         log.info("Invalidando token: [  {}  ]", token);
         tokens.remove(token);
         return "success";

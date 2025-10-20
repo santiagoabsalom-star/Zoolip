@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -23,23 +24,17 @@ import org.springframework.util.StringUtils;
 @Service
 public class AuthService {
     private static final int MIN_PASSWORD_LENGTH = 8;
-    private static final int MAX_USERNAME_LENGTH = 20;
-    private static final int MIN_USERNAME_LENGTH = 3;
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_]{3,20}$";
-    private final BCryptPasswordEncoder encryptor = new BCryptPasswordEncoder(8);
+    private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
-    private final MyUsrDtlsService myUsrDtlsService;
-
     private final AuthenticationManager authManager;
-
-
     private final UsuarioRepository usuarioRepository;
 
-    public AuthService(JWTService jwtService, MyUsrDtlsService myUsrDtlsService, AuthenticationManager authManager, UsuarioRepository usuarioRepository) {
+    public AuthService(JWTService jwtService,PasswordEncoder passwordEncoder, AuthenticationManager authManager, UsuarioRepository usuarioRepository) {
         this.jwtService = jwtService;
         this.authManager = authManager;
+        this.passwordEncoder= passwordEncoder;
         this.usuarioRepository = usuarioRepository;
-        this.myUsrDtlsService = myUsrDtlsService;
     }
 
     @Transactional
@@ -116,7 +111,7 @@ public class AuthService {
 
             Usuario newUsuario = new Usuario();
             newUsuario.setNombre(registerRequest.getUsername());
-            newUsuario.setPasswordHash(encryptor.encode(registerRequest.getPassword()));
+            newUsuario.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
 
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
 
@@ -149,7 +144,7 @@ public class AuthService {
 
             Usuario newUsuario = new Usuario();
             newUsuario.setNombre(registerRequest.getUsername());
-            newUsuario.setPasswordHash(encryptor.encode(registerRequest.getPassword()));
+            newUsuario.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
 
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
 
