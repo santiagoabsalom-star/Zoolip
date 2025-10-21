@@ -75,7 +75,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 return;
             }
 
-            if (path.startsWith("/actuator") || path.startsWith("/favicon") || path.startsWith("/api/auth")) {
+            if (path.startsWith("/favicon.ico") || path.startsWith("/actuator") || path.startsWith("/favicon") || path.startsWith("/web/main") || path.startsWith("/api/auth")) {
                 filterChain.doFilter(request, response);
                 return;
             }

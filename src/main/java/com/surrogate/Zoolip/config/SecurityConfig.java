@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/admin/register").permitAll()
                         .requestMatchers("/api/auth/hola").permitAll()
-
+                        .requestMatchers("/web/main").permitAll()
                         .requestMatchers("/actuator").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
@@ -133,6 +133,7 @@ log.info("SecurityFilterChain initialized");
     @Bean
     public PasswordEncoder passwordEncoder() {
         log.info("PasswordEncoder initialized");
+
         return new BCryptPasswordEncoder(8);
     }
 }
