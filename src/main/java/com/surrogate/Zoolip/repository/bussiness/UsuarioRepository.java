@@ -1,11 +1,14 @@
 package com.surrogate.Zoolip.repository.bussiness;
 
+import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,11 +20,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT u.id FROM Usuario u WHERE LOWER(u.nombre) = LOWER(:nombre)")
     Long getIdUsuario(@Param("nombre") String nombre);
 
+    @Query("SELECT new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol) " +
+            "FROM Usuario u " +
+            "WHERE NOT EXISTS (SELECT i FROM Institucion i WHERE i.id_usuario = u)")
+    List<UsuarioDto> findAvailableUserDtos();
+
     Usuario getUsuarioById(Long idUsuario);
 
     Usuario findByNombre(String nombre);
 
     boolean existsByNombre(String nombre);
-
 
 }

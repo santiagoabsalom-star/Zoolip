@@ -15,10 +15,13 @@ public class Mascota {
     @Column(name = "id_mascota", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Enumerated(EnumType.STRING)
     @Column(name = "tamanio", nullable = false)
     private Tamanio tamanio;
+    @Enumerated(EnumType.STRING)
     @Column(name = "estado_adopcion", nullable = false)
     private EstadoAdopcion estadoAdopcion;
+    @Enumerated(EnumType.STRING)
     @Column(name = "estado_salud", nullable = false)
     private EstadoSalud estadoSalud;
     @Column(name = "edad", nullable = false)

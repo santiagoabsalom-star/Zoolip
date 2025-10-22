@@ -62,6 +62,9 @@ public class MascotaService {
         }
         return mascotaRepository.findAllMascotasDTO();
     }
+    public List<Mascota> buscarMascotas() {
+        return mascotaRepository.buscarMascotas();
+    }
 
 
     private Response verificarMascota(Mascota mascota) {

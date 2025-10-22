@@ -1,5 +1,7 @@
 package com.surrogate.Zoolip.services.auth;
 
+import com.surrogate.Zoolip.events.UsuarioCreado;
+import com.surrogate.Zoolip.events.UsuarioNotifier;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
@@ -9,6 +11,7 @@ import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,10 +32,14 @@ public class AuthService {
     private final JWTService jwtService;
     private final AuthenticationManager authManager;
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioNotifier usuarioNotifier;
 
-    public AuthService(JWTService jwtService,PasswordEncoder passwordEncoder, AuthenticationManager authManager, UsuarioRepository usuarioRepository) {
+
+    public AuthService(JWTService jwtService , PasswordEncoder passwordEncoder, AuthenticationManager authManager, UsuarioRepository usuarioRepository, UsuarioNotifier usuarioNotifier) {
         this.jwtService = jwtService;
         this.authManager = authManager;
+        this.usuarioNotifier = usuarioNotifier;
+
         this.passwordEncoder= passwordEncoder;
         this.usuarioRepository = usuarioRepository;
     }
@@ -116,6 +123,7 @@ public class AuthService {
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
 
             usuarioRepository.save(newUsuario);
+
             return new RegisterResponse("success", "Registro exitoso");
         } catch (Exception e) {
             return new RegisterResponse("error", "Error en el registro: " + e.getMessage());
@@ -149,9 +157,10 @@ public class AuthService {
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
 
             usuarioRepository.save(newUsuario);
-            return new RegisterResponse("success", "Registro exitoso");
+            usuarioNotifier.publish(new UsuarioCreado(newUsuario));
+            return new RegisterResponse("success",200, "Registro exitoso");
         } catch (Exception e) {
-            return new RegisterResponse("error", "Error en el registro: " + e.getMessage());
+            return new RegisterResponse("error",500, "Error en el registro: " + e.getMessage());
         }
     }
 

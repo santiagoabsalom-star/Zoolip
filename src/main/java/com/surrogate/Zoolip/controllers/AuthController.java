@@ -92,7 +92,7 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> registerAdmin(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             RegisterResponse response = authService.registerAdmin(registerRequest);
-            if ("success".equals(response.getStatus())) {
+            if (200==(response.getHttpError())) {
                 return ResponseEntity.status(HttpStatus.CREATED)
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
@@ -109,7 +109,7 @@ public class AuthController {
         } catch (Exception e) {
 
             return ResponseEntity.status(500)
-                    .body(new RegisterResponse("error", "Error interno del servidor"));
+                    .body(new RegisterResponse("error", "Error interno del servidor" + e.getMessage()));
 
         }
     }

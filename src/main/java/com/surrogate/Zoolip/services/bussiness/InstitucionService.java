@@ -67,6 +67,9 @@ public class InstitucionService {
         }
         return institucionRepository.findInstitucionDTOById(id);
     }
+    public List<Institucion> buscarInstituciones() {
+        return institucionRepository.buscarInstituciones();
+    }
 
     public Response comprobarInst(Institucion institucion) {
         if (institucion.getId_usuario() != null) {

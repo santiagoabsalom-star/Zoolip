@@ -22,8 +22,6 @@ public class Usuario {
 
     @Column(name = "nombre", nullable = false, length = 150)
     private String nombre;
-
-    private String password;
     @Lob
     @Column(name = "rol", nullable = false)
     private String rol;

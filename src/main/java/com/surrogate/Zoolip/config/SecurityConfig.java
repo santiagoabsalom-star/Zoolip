@@ -2,6 +2,8 @@ package com.surrogate.Zoolip.config;
 
 import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -42,10 +44,24 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers(
+                                "/VAADIN/**",
+                                "/frontend/**",
+                                "/webjars/**",
+                                "/images/**",
+                                "/icons/**",
+                                "/themes/**",
+                                "/manifest.webmanifest",
+                                "/sw.js",
+                                "/offline-page.html"
+                        ).permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/admin/register").permitAll()
                         .requestMatchers("/api/auth/hola").permitAll()
                         .requestMatchers("/web/main").permitAll()
+                        .requestMatchers("/web/**").permitAll()
+                        .requestMatchers("/.well-known/appspecific/com.chrome.devtools.json").permitAll()
+                        .requestMatchers("/web/main/**").permitAll()
                         .requestMatchers("/actuator").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
@@ -67,7 +83,12 @@ public class SecurityConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
                         .xssProtection(HeadersConfigurer.XXssConfig::disable)
-                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")))
+                        .contentSecurityPolicy(csp -> csp.policyDirectives((
+                                "default-src 'self'; " +
+                                        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                                        "style-src 'self' 'unsafe-inline'; " +
+                                        "font-src 'self' data:;"
+                        ))))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
 log.info("SecurityFilterChain initialized");
@@ -136,4 +157,5 @@ log.info("SecurityFilterChain initialized");
 
         return new BCryptPasswordEncoder(8);
     }
+
 }

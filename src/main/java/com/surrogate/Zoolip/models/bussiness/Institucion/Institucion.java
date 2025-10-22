@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Getter
@@ -37,10 +37,10 @@ public class Institucion {
     private String descripcion;
 
     @Column(name = "horario_inicio", nullable = false)
-    private LocalDateTime horario_inicio;
+    private LocalTime horario_inicio;
 
     @Column(name = "horario_fin", nullable = false)
-    private LocalDateTime horario_fin;
+    private LocalTime horario_fin;
 
 
 }

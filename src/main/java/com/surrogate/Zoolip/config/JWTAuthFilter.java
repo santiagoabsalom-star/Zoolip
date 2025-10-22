@@ -68,14 +68,15 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         try {
             final String authHeader = request.getHeader("Authorization");
             String path = request.getServletPath();
+            log.info("Path requested: {}", path);
             final Cookie[] authCookie = request.getCookies();
             String authTokenFromCookie = authCookie != null ? authCookie[0].getValue() : null;
-            if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+            if (path.startsWith("/swagger-ui") || path.startsWith("/web") || path.startsWith("/v3/api-docs") || path.startsWith("/VAADIN/") || path.startsWith("/frontend/") || path.startsWith("/webjars/") || path.startsWith("/public/") || path.startsWith("/chat/")) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            if (path.startsWith("/favicon.ico") || path.startsWith("/actuator") || path.startsWith("/favicon") || path.startsWith("/web/main") || path.startsWith("/api/auth")) {
+            if (path.startsWith("/favicon.ico") || path.startsWith("/actuator") || path.startsWith("/favicon") || path.startsWith("/web/**") || path.startsWith("/api/auth")) {
                 filterChain.doFilter(request, response);
                 return;
             }

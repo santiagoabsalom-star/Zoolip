@@ -21,7 +21,11 @@ public class LoggingFilter extends OncePerRequestFilter {
                                     @NotNull @org.jetbrains.annotations.NotNull HttpServletResponse response,
                                     @NotNull @org.jetbrains.annotations.NotNull FilterChain filterChain) throws ServletException, IOException {
         long startTime = System.currentTimeMillis();
-
+        String path = request.getRequestURI();
+        if (path.startsWith("/web/") || path.startsWith("/VAADIN/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         logger.info("Incoming request: {} {} from IP {}", request.getMethod(), request.getRequestURI(), request.getRemoteAddr());
 
