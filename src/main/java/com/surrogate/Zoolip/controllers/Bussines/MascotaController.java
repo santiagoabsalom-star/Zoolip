@@ -1,4 +1,4 @@
-package com.surrogate.Zoolip.controllers;
+package com.surrogate.Zoolip.controllers.Bussines;
 
 import com.surrogate.Zoolip.models.DTO.MascotaDTO;
 import com.surrogate.Zoolip.models.bussiness.Mascota.Mascota;

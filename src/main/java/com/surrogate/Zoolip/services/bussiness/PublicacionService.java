@@ -56,6 +56,9 @@ public class PublicacionService {
         }
 
         public Response verifyPublicacion(@NotNull Publicacion publicacion){
+            if(publicacion.getId_usuario()==null){
+                return new Response("error", 404, "El usuario no existe");
+            }
             assert publicacion.getId_usuario().getId()!=null;
 log.info("Id de usuario que hizo la publicacion: {}" , publicacion.getId_usuario().getId());
             if (!usuarioRepository.existsById(publicacion.getId_usuario().getId())) {
@@ -74,6 +77,7 @@ log.info("Id de usuario que hizo la publicacion: {}" , publicacion.getId_usuario
             return new Response("success", 200, "Operacion hecha con exito");
         }
         private Usuario verifyUser(Long id_usuario){
+
             return usuarioRepository.findById(id_usuario).orElse(null);
 
         }

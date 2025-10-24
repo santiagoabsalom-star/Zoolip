@@ -1,4 +1,4 @@
-package com.surrogate.Zoolip.controllers;
+package com.surrogate.Zoolip.controllers.Auth;
 
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
