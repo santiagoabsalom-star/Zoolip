@@ -72,6 +72,8 @@ public class AuthService {
                     )
             );
 
+
+
             if (authentication.isAuthenticated()) {
                 UserDetailsWithId userDetails = (UserDetailsWithId) authentication.getPrincipal();
 

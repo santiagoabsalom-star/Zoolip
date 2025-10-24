@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.List;
 
+
 public record UserPrincipal(Usuario usuario) implements UserDetailsWithId {
 
 
