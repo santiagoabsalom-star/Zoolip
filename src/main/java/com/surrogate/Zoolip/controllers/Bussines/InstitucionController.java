@@ -6,6 +6,7 @@ import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.bussiness.InstitucionService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/institucion")
 public class InstitucionController {
@@ -22,50 +23,20 @@ public class InstitucionController {
 
     @PostMapping("/agregar")
     public ResponseEntity<Response> agregarInstitucion(@RequestBody Institucion institucion) {
-        try {
-
-            log.info(institucion.getNombre());
-
-            Response response = institucionService.crear(institucion);
-            if (response.getStatus().equals("success")) {
-                return ResponseEntity.ok(response);
-            }
-            return ResponseEntity.badRequest().body(response);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new Response(e.getMessage()));
-
-        }
+        Response response = institucionService.crear(institucion);
+        return ResponseEntity.status(response.getHttpError()).body(response);
     }
 
     @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarInstitucion(@RequestBody Institucion institucion) {
-        try {
-            Response response = institucionService.actualizar(institucion);
-            if (response.getStatus().equals("success")) {
-                return ResponseEntity.ok(response);
-
-            }
-            return ResponseEntity.badRequest().body(response);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new Response(e.getMessage()));
-        }
+       Response response = institucionService.actualizar(institucion);
+       return ResponseEntity.status(response.getHttpError()).body(response);
     }
 
     @PostMapping("/eliminar")
     public ResponseEntity<Response> eliminarInstitucion(@RequestBody long id_institucion) {
-        try {
-            Response response = institucionService.eliminar(id_institucion);
-            if (response.getStatus().equals("success")) {
-                return ResponseEntity.ok(response);
-
-            }
-            return ResponseEntity.status(401).body(response);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new Response(e.getMessage()));
-        }
+     Response response = institucionService.eliminar(id_institucion);
+     return ResponseEntity.status(response.getHttpError()).body(response);
     }
 
     @GetMapping(value = "/obtenerTodas", produces = "application/json")

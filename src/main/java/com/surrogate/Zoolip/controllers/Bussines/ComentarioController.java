@@ -39,7 +39,6 @@ public class ComentarioController {
             List<ComentarioDTO> comentarios= comentarioService.buscarComentarios();
             if(comentarios.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
             }
             return new ResponseEntity<>(comentarios, HttpStatus.OK);
         }

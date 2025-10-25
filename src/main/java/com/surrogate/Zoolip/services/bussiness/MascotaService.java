@@ -23,21 +23,20 @@ public class MascotaService {
 
     public Response agregarMascota(Mascota mascota) {
         Response response = verificarMascota(mascota);
-        if (response.getStatus().equals("error")) {
+        if (response.getHttpError()!=200) {
             return response;
         }
         mascotaRepository.save(mascota);
-        return new Response("success", "La mascota ha sido agregado");
+        return new Response("success",200, "La mascota ha sido agregado");
     }
 
     public Response actualizarMascota(Mascota mascota) {
         Response response = verificarMascota(mascota);
-        if (response.getStatus().equals("error")) {
+        if (response.getHttpError()!=200) {
             return response;
-
         }
         mascotaRepository.save(mascota);
-        return new Response("success", "La mascota ha sido actualizada");
+        return new Response("success",200, "La mascota ha sido actualizada");
     }
 
     public Response eliminarMascota(Long id_mascota) {
@@ -45,7 +44,7 @@ public class MascotaService {
             return new Response("error", 404, "La mascota no existe");
         }
         mascotaRepository.deleteById(id_mascota);
-        return new Response("success", "La mascota eliminada");
+        return new Response("success",200, "La mascota eliminada");
 
     }
 

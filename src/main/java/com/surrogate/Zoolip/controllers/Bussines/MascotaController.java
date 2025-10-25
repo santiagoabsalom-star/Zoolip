@@ -20,27 +20,13 @@ public class MascotaController {
     @PostMapping("/aniadir")
     public ResponseEntity<Response> createMascota(@RequestBody Mascota mascota) {
         Response response = mascotaService.agregarMascota(mascota);
-        if (response.getStatus().equals("success")) {
-            return ResponseEntity.ok(new Response("success", "La mascota ha sido agregada"));
-
-        } else if (response.getHttpError().equals(400)) {
-            return ResponseEntity.badRequest().body(response);
-        } else {
-            return ResponseEntity.status(500).body(new Response("error", "Error del servidor"));
-        }
+      return ResponseEntity.status(response.getHttpError()).body(response);
     }
 
     @PostMapping("/actualizar")
     public ResponseEntity<Response> updateMascota(@RequestBody Mascota mascota) {
         Response response = mascotaService.actualizarMascota(mascota);
-        if (response.getStatus().equals("success")) {
-            return ResponseEntity.ok(new Response("success", "La mascota ha sido modificada"));
-
-        } else if (response.getHttpError().equals(400)) {
-            return ResponseEntity.badRequest().body(response);
-        } else {
-            return ResponseEntity.status(500).body(new Response("error", "Error del servidor"));
-        }
+        return ResponseEntity.status(response.getHttpError()).body(response);
 
 
     }
@@ -48,13 +34,7 @@ public class MascotaController {
     @PostMapping("/eliminar")
     public ResponseEntity<Response> deleteMascota(@RequestBody Mascota mascota) {
         Response response = mascotaService.eliminarMascota(mascota.getId());
-        if (response.getStatus().equals("success")) {
-            return ResponseEntity.ok(new Response("success", "La mascota ha sido elimada"));
-        } else if (response.getHttpError().equals(400)) {
-            return ResponseEntity.badRequest().body(response);
-        } else {
-            return ResponseEntity.status(500).body(new Response("error", "Error del servidor"));
-        }
+        return ResponseEntity.status(response.getHttpError()).body(response);
     }
 
     @GetMapping("/obtenerTodas")
