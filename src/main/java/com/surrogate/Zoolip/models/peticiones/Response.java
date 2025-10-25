@@ -33,7 +33,9 @@ public class Response {
     public Response(String status) {
         this.status = status;
     }
-
+    public Response(Integer httpError) {
+        this.httpError = httpError;
+    }
 
     public Response(String status, String message) {
         this.status = status;
