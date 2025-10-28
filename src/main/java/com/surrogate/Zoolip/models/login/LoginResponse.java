@@ -26,6 +26,10 @@ public class LoginResponse extends Response {
     public LoginResponse(String status, String message) {
         super(status, message);
     }
+
+    public LoginResponse(String status, int httpCode, String token, String username, long id) {
+        super(status, httpCode, token, username, id);
+    }
 }
 
 

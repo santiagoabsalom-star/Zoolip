@@ -157,5 +157,12 @@ log.info("SecurityFilterChain initialized");
 
         return new BCryptPasswordEncoder(8);
     }
-
+    @Bean
+    public String success(){
+        return "success";
+    }
+    @Bean
+    public String error(){
+        return "error";
+    }
 }

@@ -20,11 +20,13 @@ import java.util.List;
 public class PublicacionService {
         private final PublicacionRepository publicacionRepository;
         private final UsuarioRepository usuarioRepository;
+        private final String error;
+        private final String success;
 
         public Response crear(Publicacion publicacion) {
             publicacion.setId_usuario(verifyUser(publicacion.getId_usuario().getId()));
             Response response= verifyPublicacion(publicacion);
-            if(response.getHttpError()==200){
+            if(response.getHttpCode()==200){
                 publicacionRepository.save(publicacion);
                 return response;
             }
@@ -33,7 +35,7 @@ public class PublicacionService {
         }
         public Response actualizar(Publicacion publicacion) {
             Response response= verifyPublicacion(publicacion);
-            if(response.getHttpError()==200){
+            if(response.getHttpCode()==200){
                 publicacionRepository.saveAndFlush(publicacion);
             }
             return response;
@@ -41,9 +43,9 @@ public class PublicacionService {
         public Response eliminar(Long id_publicacion) {
             if(publicacionRepository.existsById(id_publicacion)){
                 publicacionRepository.deleteById(id_publicacion);
-                return new Response("success", 200, "El publicacion se ha eliminado correctamente");
+                return new Response(success, 200, "El publicacion se ha eliminado correctamente");
                         }
-            return new Response("success", 404, "El publicacion no existe");
+            return new Response(success, 404, "El publicacion no existe");
 
         }
         @Transactional
@@ -57,24 +59,24 @@ public class PublicacionService {
 
         public Response verifyPublicacion(@NotNull Publicacion publicacion){
             if(publicacion.getId_usuario()==null){
-                return new Response("error", 404, "El usuario no existe");
+                return new Response(error, 404, "El usuario no existe");
             }
-            assert publicacion.getId_usuario().getId()!=null;
-log.info("Id de usuario que hizo la publicacion: {}" , publicacion.getId_usuario().getId());
+
+            log.info("Id de usuario que hizo la publicacion: {}" , publicacion.getId_usuario().getId());
             if (!usuarioRepository.existsById(publicacion.getId_usuario().getId())) {
-                return new Response("error", 403, "El usuario no existe o no se encuentra");
+                return new Response(error, 403, "El usuario no existe o no se encuentra");
             }
 
                 if(publicacion.getContenido() == null){
-                    return new Response("error",403, "El comentario no puede no tener contenido mongoloid" );
+                    return new Response(error,403, "El comentario no puede no tener contenido mongoloid" );
                 }
 
             int wordCount = publicacion.getContenido().trim().split("\\s+").length;
 
             if (wordCount > 200) {
-                return new Response("error", 403, "El comentario no puede tener más de 200 palabras (" + wordCount + " encontradas)");
+                return new Response(error, 403, "El comentario no puede tener más de 200 palabras (" + wordCount + " encontradas)");
             }
-            return new Response("success", 200, "Operacion hecha con exito");
+            return new Response(success, 200, "Operacion hecha con exito");
         }
         private Usuario verifyUser(Long id_usuario){
 

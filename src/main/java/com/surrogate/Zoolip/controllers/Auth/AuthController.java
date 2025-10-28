@@ -7,6 +7,7 @@ import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.services.auth.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -18,14 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Duration;
 
 @RestController
-
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
+    private final String error;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
@@ -33,7 +32,7 @@ public class AuthController {
         try {
             LoginResponse response = authService.login(loginRequest);
 
-            if (response.getStatus().equals("success")) {
+            if (response.getHttpCode()==200) {
                 ResponseCookie cookie = ResponseCookie.from("AUTH_TOKEN", response.getToken())
                         .httpOnly(true)
                         .secure(true)
@@ -50,7 +49,7 @@ public class AuthController {
                         .header("X-XSS-Protection", "1; mode=block")
                         .body(new LoginResponse(response.getStatus(), "Inicio de sesion exitoso"));
             } else {
-                return ResponseEntity.status(response.getHttpError())
+                return ResponseEntity.status(response.getHttpCode())
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
@@ -58,7 +57,7 @@ public class AuthController {
             }
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                    .body(new LoginResponse("error", 500, "Error interno del servidor"));
+                    .body(new LoginResponse(error, 500, "Error interno del servidor"));
         }
     }
 
@@ -74,7 +73,7 @@ public class AuthController {
                         .body(response);
 
             } else {
-                return ResponseEntity.status(response.getHttpError())
+                return ResponseEntity.status(response.getHttpCode())
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
@@ -83,7 +82,7 @@ public class AuthController {
         } catch (Exception e) {
 
             return ResponseEntity.status(500)
-                    .body(new RegisterResponse("error", "Error interno del servidor"));
+                    .body(new RegisterResponse(error, "Error interno del servidor"));
 
         }
     }
@@ -92,7 +91,7 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> registerAdmin(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             RegisterResponse response = authService.registerAdmin(registerRequest);
-            if (200==(response.getHttpError())) {
+            if (200==(response.getHttpCode())) {
                 return ResponseEntity.status(HttpStatus.CREATED)
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
@@ -100,7 +99,7 @@ public class AuthController {
                         .body(response);
 
             } else {
-                return ResponseEntity.status(response.getHttpError())
+                return ResponseEntity.status(response.getHttpCode())
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
                         .header("X-XSS-Protection", "1; mode=block")
@@ -109,7 +108,7 @@ public class AuthController {
         } catch (Exception e) {
 
             return ResponseEntity.status(500)
-                    .body(new RegisterResponse("error", "Error interno del servidor" + e.getMessage()));
+                    .body(new RegisterResponse(error, "Error interno del servidor" + e.getMessage()));
 
         }
     }

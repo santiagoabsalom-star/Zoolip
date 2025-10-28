@@ -10,6 +10,7 @@ import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class AuthService {
     private static final int MIN_PASSWORD_LENGTH = 8;
@@ -33,34 +35,26 @@ public class AuthService {
     private final AuthenticationManager authManager;
     private final UsuarioRepository usuarioRepository;
     private final UsuarioNotifier usuarioNotifier;
-
-
-    public AuthService(JWTService jwtService , PasswordEncoder passwordEncoder, AuthenticationManager authManager, UsuarioRepository usuarioRepository, UsuarioNotifier usuarioNotifier) {
-        this.jwtService = jwtService;
-        this.authManager = authManager;
-        this.usuarioNotifier = usuarioNotifier;
-
-        this.passwordEncoder= passwordEncoder;
-        this.usuarioRepository = usuarioRepository;
-    }
+    private final String success;
+    private final String error;
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
 
         try {
             if (loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty()) {
-                return new LoginResponse("error", 422, "El nombre de usuario es requerido");
+                return new LoginResponse(error, 422, "El nombre de usuario es requerido");
             }
 
             if (loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
-                return new LoginResponse("error", 422, "La constrasenia es requerida");
+                return new LoginResponse(error, 422, "La constrasenia es requerida");
             }
 
             if (!isValidLoginRequest(loginRequest)) {
-                return new LoginResponse("error", 422, "Parámetros inválidos");
+                return new LoginResponse(error, 422, "Parámetros inválidos");
             }
             if (!usuarioRepository.existsByNombre(loginRequest.getUsername())) {
-                return new LoginResponse("error", 404, "Usuario no encontrado");
+                return new LoginResponse(error, 404, "Usuario no encontrado");
             }
 
 
@@ -88,14 +82,14 @@ public class AuthService {
                 String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId());
 
 
-                return new LoginResponse("success", token, userDetails.getUsername(), (long) userDetails.getId());
+                return new LoginResponse(success,200, token, userDetails.getUsername(), (long) userDetails.getId());
             }
 
-            return new LoginResponse("error", 401, "Autenticación fallida");
+            return new LoginResponse(error, 401, "Autenticación fallida");
         } catch (BadCredentialsException e) {
-            return new LoginResponse("error", 403, "Contrasenia incorrecta");
+            return new LoginResponse(error, 403, "Contrasenia incorrecta");
         } catch (Exception e) {
-            return new LoginResponse("error", 500, "Error en el servidor: " + e.getMessage());
+            return new LoginResponse(error, 500, "Error en el servidor: " + e.getMessage());
         }
     }
 
@@ -103,17 +97,17 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest registerRequest) {
         try {
             if (!isValidRegisterRequest(registerRequest)) {
-                return new RegisterResponse("error", 401, "La constrasenia tiene que tener 8 digitos o mas");
+                return new RegisterResponse(error, 401, "La constrasenia tiene que tener 8 digitos o mas");
             }
             if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
-                return new RegisterResponse("error", 401, "El rol es requerido");
+                return new RegisterResponse(error, 401, "El rol es requerido");
             }
             if (registerRequest.getRol().equals("ADMINISTRADOR")) {
-                return new RegisterResponse("error", 403, "El rol no puede ser administrador");
+                return new RegisterResponse(error, 403, "El rol no puede ser administrador");
             }
             if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
-                return new RegisterResponse("error", 409, "El nombre ya existe");
+                return new RegisterResponse(error, 409, "El nombre ya existe");
 
             }
 
@@ -126,9 +120,9 @@ public class AuthService {
 
             usuarioRepository.save(newUsuario);
 
-            return new RegisterResponse("success", "Registro exitoso");
+            return new RegisterResponse(success, "Registro exitoso");
         } catch (Exception e) {
-            return new RegisterResponse("error", "Error en el registro: " + e.getMessage());
+            return new RegisterResponse(error, 200,"Error en el registro: " + e.getMessage());
         }
     }
 
@@ -136,18 +130,18 @@ public class AuthService {
     public RegisterResponse registerAdmin(RegisterRequest registerRequest) {
         try {
             if (!isValidRegisterRequest(registerRequest)) {
-                return new RegisterResponse("error", 401, "La constrasenia tiene que tener 8 digitos o mas");
+                return new RegisterResponse(error, 401, "La constrasenia tiene que tener 8 digitos o mas");
             }
             if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
-                return new RegisterResponse("error", 401, "El rol es requerido");
+                return new RegisterResponse(error, 401, "El rol es requerido");
             }
             if (!registerRequest.getRol().equals("ADMINISTRADOR")) {
-                return new RegisterResponse("error", 403, "El rol tiene que ser administrador");
+                return new RegisterResponse(error, 403, "El rol tiene que ser administrador");
             }
 
             if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
-                return new RegisterResponse("error", 409, "El nombre ya existe");
+                return new RegisterResponse(error, 409, "El nombre ya existe");
 
             }
 
@@ -160,9 +154,9 @@ public class AuthService {
 
             usuarioRepository.save(newUsuario);
             usuarioNotifier.publish(new UsuarioCreado(newUsuario));
-            return new RegisterResponse("success",200, "Registro exitoso");
+            return new RegisterResponse(success,200, "Registro exitoso");
         } catch (Exception e) {
-            return new RegisterResponse("error",500, "Error en el registro: " + e.getMessage());
+            return new RegisterResponse(error,500, "Error en el registro: " + e.getMessage());
         }
     }
 
@@ -173,11 +167,11 @@ public class AuthService {
             throw new IllegalArgumentException("Token no puede ser nulo o vacío");
         }
         String response = jwtService.InvalidateToken(token);
-        if (response.equals("success")) {
-            return "success";
+        if (response.equals(success)) {
+            return success;
         }
 
-        return "error";
+        return error;
     }
 
     public Usuario me(Long id) {

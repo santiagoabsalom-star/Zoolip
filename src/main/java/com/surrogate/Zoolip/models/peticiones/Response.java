@@ -16,7 +16,7 @@ public class Response {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer httpError;
+    private Integer httpCode;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String username;
 
@@ -33,8 +33,8 @@ public class Response {
     public Response(String status) {
         this.status = status;
     }
-    public Response(Integer httpError) {
-        this.httpError = httpError;
+    public Response(Integer httpCode) {
+        this.httpCode = httpCode;
     }
 
     public Response(String status, String message) {
@@ -43,12 +43,19 @@ public class Response {
     }
 
 
-    public Response(String status, Integer httpError, String message) {
+    public Response(String status, Integer httpCode, String message) {
         this.status = status;
-        this.httpError = httpError;
+        this.httpCode = httpCode;
         this.message = message;
 
 
     }
 
+    public Response(String status, int httpCode, String token, String username, long id) {
+        this.status = status;
+        this.httpCode = httpCode;
+        this.token = token;
+        this.username = username;
+        this.id = id;
+    }
 }

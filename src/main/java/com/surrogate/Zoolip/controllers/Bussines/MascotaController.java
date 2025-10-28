@@ -20,13 +20,13 @@ public class MascotaController {
     @PostMapping("/aniadir")
     public ResponseEntity<Response> createMascota(@RequestBody Mascota mascota) {
         Response response = mascotaService.agregarMascota(mascota);
-      return ResponseEntity.status(response.getHttpError()).body(response);
+      return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @PostMapping("/actualizar")
     public ResponseEntity<Response> updateMascota(@RequestBody Mascota mascota) {
         Response response = mascotaService.actualizarMascota(mascota);
-        return ResponseEntity.status(response.getHttpError()).body(response);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
 
 
     }
@@ -34,7 +34,7 @@ public class MascotaController {
     @PostMapping("/eliminar")
     public ResponseEntity<Response> deleteMascota(@RequestBody Mascota mascota) {
         Response response = mascotaService.eliminarMascota(mascota.getId());
-        return ResponseEntity.status(response.getHttpError()).body(response);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @GetMapping("/obtenerTodas")

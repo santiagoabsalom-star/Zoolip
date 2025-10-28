@@ -22,17 +22,17 @@ public class PublicacionController {
     public ResponseEntity<Response> crearPublicacion(@RequestBody Publicacion publicacion){
         log.info("Id de usuario: {} ", publicacion.getId_usuario().getId());
            Response response= publicacionService.crear(publicacion);
-        return ResponseEntity.status(response.getHttpError()).body(response);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
     @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarPublicacion(@RequestBody Publicacion publicacion){
         Response response= publicacionService.actualizar(publicacion);
-        return ResponseEntity.status(response.getHttpError()).body(response);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
     @DeleteMapping("/eliminar")
     public ResponseEntity<Response> eliminarPublicacion(@RequestBody Long id_publicacion){
         Response response= publicacionService.eliminar(id_publicacion);
-        return ResponseEntity.status(response.getHttpError()).body(response);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @GetMapping("/obtenerTodas")

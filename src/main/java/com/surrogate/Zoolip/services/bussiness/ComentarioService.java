@@ -8,12 +8,10 @@ import com.surrogate.Zoolip.repository.bussiness.PublicacionRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +19,12 @@ public class ComentarioService  {
     private final ComentarioRepository comentarioRepository;
     private final PublicacionRepository publicacionRepository;
     private final UsuarioRepository usuarioRepository;
-
+    private final String error;
+    private final String success;
+    
     public Response comentar(Comentario comentario){
         Response response = verificarComentario(comentario);
-        if(response.getHttpError()==200) {
+        if(response.getHttpCode()==200) {
             comentario.setFecha_comentario(LocalDateTime.now());
             comentarioRepository.save(comentario);
             return response;
@@ -34,7 +34,7 @@ public class ComentarioService  {
     public Response actualizar(Comentario comentario){
         Response response = verificarComentario(comentario);
 
-        if(response.getHttpError()==200) {
+        if(response.getHttpCode()==200) {
 
 
             comentarioRepository.save(comentario);
@@ -44,7 +44,7 @@ public class ComentarioService  {
     }
     public Response eliminar(Comentario comentario){
         Response response = verificarComentario(comentario);
-        if(response.getHttpError()==200) {
+        if(response.getHttpCode()==200) {
             comentarioRepository.delete(comentario);
             return response;
         }
@@ -55,14 +55,14 @@ public class ComentarioService  {
     return comentarioRepository.findAllComentariosDTO();
 
     }
-    public ComentarioDTO BuscarComentario(Long id_comentario){
+    public ComentarioDTO buscarComentario(Long id_comentario){
     return comentarioRepository.findComentarioDTOById(id_comentario);
     }
     public Response verificarComentario(Comentario comentario){
-            if(!verifyUsuario(comentario.getId_usuario().getId())) return new Response("error", 404, "Usuario no encontrado");
-            if(!verifyPublicacion(comentario.getId_publicacion().getId_publicacion())) return new Response("error", 404, "Publicacion no encontrada");
-            if(comentario.getContenido()==null) return new Response("error",403,"El contenido del mensaje no puede ser nulo");
-            return new Response("success", 200, "Operacion hecha con exito");
+            if(!verifyUsuario(comentario.getId_usuario().getId())) return new Response(error, 404, "Usuario no encontrado");
+            if(!verifyPublicacion(comentario.getId_publicacion().getId_publicacion())) return new Response(error, 404, "Publicacion no encontrada");
+            if(comentario.getContenido()==null) return new Response(error,403,"El contenido del mensaje no puede ser nulo");
+            return new Response(success, 200, "Operacion hecha con exito");
     }
 public boolean verifyPublicacion(Long id_publicacion){
         return publicacionRepository.existsById(id_publicacion);

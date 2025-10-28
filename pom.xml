@@ -54,7 +54,6 @@
 		</dependency>
 
 
-		<!-- Springdoc OpenAPI para Spring Boot 4 -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

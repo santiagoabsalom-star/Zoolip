@@ -5,7 +5,6 @@ import com.surrogate.Zoolip.models.DTO.InstitucionDTO;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.bussiness.InstitucionService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,19 +23,19 @@ public class InstitucionController {
     @PostMapping("/agregar")
     public ResponseEntity<Response> agregarInstitucion(@RequestBody Institucion institucion) {
         Response response = institucionService.crear(institucion);
-        return ResponseEntity.status(response.getHttpError()).body(response);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarInstitucion(@RequestBody Institucion institucion) {
        Response response = institucionService.actualizar(institucion);
-       return ResponseEntity.status(response.getHttpError()).body(response);
+       return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @PostMapping("/eliminar")
     public ResponseEntity<Response> eliminarInstitucion(@RequestBody long id_institucion) {
      Response response = institucionService.eliminar(id_institucion);
-     return ResponseEntity.status(response.getHttpError()).body(response);
+     return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @GetMapping(value = "/obtenerTodas", produces = "application/json")

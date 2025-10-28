@@ -22,17 +22,17 @@ public class ComentarioController {
     public ResponseEntity<Response> crear(@RequestBody Comentario comentario){
 
             Response response= comentarioService.comentar(comentario);
-            return ResponseEntity.status(response.getHttpError()).body(response);
+            return ResponseEntity.status(response.getHttpCode()).body(response);
         }
         @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizar(@RequestBody Comentario comentario){
             Response response= comentarioService.actualizar(comentario);
-            return ResponseEntity.status(response.getHttpError()).body(response);
+            return ResponseEntity.status(response.getHttpCode()).body(response);
         }
         @DeleteMapping("/eliminar")
     public ResponseEntity<Response> delete(@RequestBody Comentario comentario){
             Response response = comentarioService.eliminar(comentario);
-            return ResponseEntity.status(response.getHttpError()).body(response);
+            return ResponseEntity.status(response.getHttpCode()).body(response);
         }
         @GetMapping("/obtenerTodos")
     public ResponseEntity<List<ComentarioDTO>> obtenerTodos(){
@@ -44,7 +44,7 @@ public class ComentarioController {
         }
         @GetMapping("/obtenerPorId")
     public ResponseEntity<ComentarioDTO> obtenerPorId(Long id_comentario){
-            ComentarioDTO comentarioDTO= comentarioService.BuscarComentario(id_comentario);
+            ComentarioDTO comentarioDTO= comentarioService.buscarComentario(id_comentario);
             if(comentarioDTO==null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
