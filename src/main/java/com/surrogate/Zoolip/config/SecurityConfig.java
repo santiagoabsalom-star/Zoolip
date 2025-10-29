@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/hola").permitAll()
                         .requestMatchers("/web/main").permitAll()
                         .requestMatchers("/web/**").permitAll()
+                        .requestMatchers("/api/auth/me").permitAll()
                         .requestMatchers("/.well-known/appspecific/com.chrome.devtools.json").permitAll()
                         .requestMatchers("/web/main/**").permitAll()
                         .requestMatchers("/actuator").permitAll()

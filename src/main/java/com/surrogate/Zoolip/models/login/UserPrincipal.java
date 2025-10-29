@@ -56,4 +56,8 @@ public record UserPrincipal(Usuario usuario) implements UserDetailsWithId {
     public boolean isEnabled() {
         return true;
     }
+    @Override
+    public String getEmail() {
+        return usuario.getEmail();
+    }
 }

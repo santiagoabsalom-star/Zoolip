@@ -79,10 +79,10 @@ public class AuthService {
                 long endTimeauth = System.currentTimeMillis();
                 log.info("Tiempo de espera de autenticacion: " + (endTimeauth - startTimeauth) + "ms");
 
-                String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId());
+                String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId(), userDetails.getEmail());
 
 
-                return new LoginResponse(success,200, token, userDetails.getUsername(), (long) userDetails.getId());
+                return new LoginResponse(success,200, token, userDetails.getUsername(), userDetails.getId());
             }
 
             return new LoginResponse(error, 401, "Autenticación fallida");

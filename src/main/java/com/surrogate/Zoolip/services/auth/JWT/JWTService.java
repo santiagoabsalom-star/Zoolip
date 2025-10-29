@@ -18,6 +18,7 @@ import java.util.function.Function;
 @Service
 @NoArgsConstructor
 public class JWTService {
+    private final Map<String, String> ipToken= new HashMap<>();
     private final Map<String, Object> claims = new HashMap<>();
     private final HashSet<String> tokens = new HashSet<>();
     //private final HashSet<Integer> authtokens = new HashSet<>();
@@ -37,6 +38,11 @@ public class JWTService {
         }
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
+    public void setIpToken(String token, String ip) {
+        this.ipToken.put(token, ip);
+
+    }
+
     /** Para implementar despues.
       @Scheduled(fixedRate = 1000*60*60)
     private void Token() {
@@ -47,6 +53,9 @@ public class JWTService {
         authtokens.iterator().forEachRemaining(authtoken -> log.info("Token {}", authtoken));
     }
 **/
+    public String extractEmail(String token) {
+        return (String) extractClaim(token, Claims-> Claims.get("email"));
+    }
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -61,7 +70,9 @@ public class JWTService {
 
         return claimsResolver.apply(claims);
     }
-
+    public boolean isTokenFromIp(String ip, String token) {
+        return ipToken.containsKey(ip) && ipToken.get(ip).equals(token);
+    }
 
     public String generateToken(String username, String role) {
 
@@ -86,8 +97,9 @@ public class JWTService {
      * @param id_usuario
      * @return String token
      */
-    public String generateTokenWithId(String username, String role, Integer id_usuario) {
+    public String generateTokenWithId(String username, String role, Integer id_usuario, String email) {
         claims.put("role", role);
+        claims.put("email", email);
         claims.put("id_usuario", id_usuario);
         log.info("Claims: {}", claims);
         String token = createToken(claims, username);

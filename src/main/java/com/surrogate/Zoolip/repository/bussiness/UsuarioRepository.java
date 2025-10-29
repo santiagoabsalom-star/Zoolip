@@ -20,11 +20,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT u.id FROM Usuario u WHERE LOWER(u.nombre) = LOWER(:nombre)")
     Long getIdUsuario(@Param("nombre") String nombre);
 
-    @Query("SELECT new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol) " +
+    @Query("SELECT new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol, u.email) " +
             "FROM Usuario u " +
             "WHERE NOT EXISTS (SELECT i FROM Institucion i WHERE i.id_usuario = u)")
     List<UsuarioDto> findAvailableUserDtos();
 
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol, u.email) from Usuario u")
+    UsuarioDto getUserById(Long id);
+
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u where u.email=:email")
+    List<UsuarioDto> findAllByEmail(String email);
     Usuario getUsuarioById(Long idUsuario);
 
     Usuario findByNombre(String nombre);

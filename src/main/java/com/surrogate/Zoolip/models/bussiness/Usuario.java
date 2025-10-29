@@ -25,7 +25,8 @@ public class Usuario {
     @Lob
     @Column(name = "rol", nullable = false)
     private String rol;
-
+    @Column(name="email", nullable = false)
+    private String email;
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 

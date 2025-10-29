@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -39,7 +40,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 .expireAfterWrite(60, TimeUnit.MINUTES)
                 .maximumSize(100)
                 .build();
-                log.info("UserDetailsCache initialized");
 
     }
 
@@ -110,6 +110,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 sendError(response, "Token invalidado", HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
+            if(!jwtService.isTokenFromIp(request.getRemoteAddr(), jwt)){
+                jwtService.InvalidateToken(jwt);
+                sendError(response, "Distinta ip para token", HttpServletResponse.SC_UNAUTHORIZED);
+            }
 
             String username = jwtService.extractUsername(jwt);
             log.info("Username : {}", username);
@@ -123,7 +127,9 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 if (!jwtService.validateToken(jwt, userDetails)) {
                     sendError(response, "Token expirado o invalidado", HttpServletResponse.SC_UNAUTHORIZED);
                 }
+                jwtService.setIpToken(jwt, request.getRemoteAddr());
                 setAuthentication(userDetails, request);
+
             }
             filterChain.doFilter(request, response);
         } catch (JwtException | AuthenticationException e) {

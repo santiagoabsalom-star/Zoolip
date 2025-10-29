@@ -98,5 +98,5 @@ public interface UserDetailsWithId extends Serializable {
 
     int getId();
 
-
+    String getEmail();
 }
