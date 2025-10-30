@@ -21,40 +21,44 @@ public class AtencionController {
     private final AtencionService atencionService;
 
     @PostMapping("/empezar")
-    public ResponseEntity<Response> empezar(Atiende atiende){
+    public ResponseEntity<Response> empezar(Atiende atiende) {
         Response response = atencionService.empezar(atiende);
         return ResponseEntity.status(response.getHttpCode()).body(response);
 
     }
+
     @PostMapping("/actualizar")
-    public ResponseEntity<Response> actualizar(Atiende atiende){
+    public ResponseEntity<Response> actualizar(Atiende atiende) {
         Response response = atencionService.actualizar(atiende);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
+
     @DeleteMapping("/eliminar")
-    public ResponseEntity<Response> eliminar(Atiende atiende){
+    public ResponseEntity<Response> eliminar(Atiende atiende) {
         Response response = atencionService.eliminar(atiende);
         return ResponseEntity.status(response.getHttpCode()).body(response);
 
     }
+
     @PostMapping("/completar")
-    public ResponseEntity<Response> completar(Atiende atiende){
+    public ResponseEntity<Response> completar(Atiende atiende) {
         Response response = atencionService.completar(atiende);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
+
     @GetMapping("/obtenerTodas")
-    public ResponseEntity<List<AtiendeDTO>> obtenerTodas(){
+    public ResponseEntity<List<AtiendeDTO>> obtenerTodas() {
         List<AtiendeDTO> atenciones = atencionService.obtenerTodas();
-        if(atenciones==null) {
+        if (atenciones == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(atenciones, HttpStatus.OK);
     }
+
     @GetMapping("/obtenerPorId")
-    public ResponseEntity<AtiendeDTO> obtenerPorId(AtiendeId atiendeId)
-    {
+    public ResponseEntity<AtiendeDTO> obtenerPorId(AtiendeId atiendeId) {
         AtiendeDTO atiendeDTO = atencionService.obtenerPorId(atiendeId);
-        if(atiendeDTO==null) {
+        if (atiendeDTO == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(atiendeDTO, HttpStatus.OK);

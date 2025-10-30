@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 public class Comentario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_comentario",nullable = false)
+    @Column(name = "id_comentario", nullable = false)
     private Long id_comentario;
-    @JoinColumn(name="id_publicacion")
+    @JoinColumn(name = "id_publicacion")
     @ManyToOne(fetch = FetchType.LAZY)
     private Publicacion id_publicacion;
-    @Column(name="contenido")
+    @Column(name = "contenido")
     private String contenido;
-    @Column(name="fecha_comentario")
+    @Column(name = "fecha_comentario")
     private LocalDateTime fecha_comentario;
-    @JoinColumn(name="id_usuario")
+    @JoinColumn(name = "id_usuario")
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario id_usuario;
 

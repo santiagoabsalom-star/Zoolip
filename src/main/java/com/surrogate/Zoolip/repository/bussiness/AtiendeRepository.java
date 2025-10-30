@@ -13,6 +13,7 @@ import java.util.List;
 public interface AtiendeRepository extends JpaRepository<Atiende, AtiendeId> {
     @Query("Select new com.surrogate.Zoolip.models.DTO.AtiendeDTO(a.diagnostico.id_diagnostico, a.mascota.id, a.veterinario.id_veterinario, a.fecha_inicio, a.motivo_consulta, a.fecha_final) from Atiende a")
     List<AtiendeDTO> getAtenciones();
+
     @Query("Select new com.surrogate.Zoolip.models.DTO.AtiendeDTO(a.diagnostico.id_diagnostico, a.mascota.id, a.veterinario.id_veterinario, a.fecha_inicio, a.motivo_consulta, a.fecha_final) from Atiende a where a.id=:id")
     AtiendeDTO getAtencionesById(AtiendeId id);
 }

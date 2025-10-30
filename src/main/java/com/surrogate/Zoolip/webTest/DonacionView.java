@@ -29,8 +29,6 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.stream.Collectors;
-
 @Slf4j
 @Route("donaciones")
 @UIScope
@@ -105,8 +103,9 @@ public class DonacionView extends FormLayout {
 
         binder.forField(usuario)
                 .asRequired("Usuario requerido")
-                .bind(d -> d.getId_usuario() == null ? null : new UsuarioDto(d.getId_usuario().getId(), d.getId_usuario().getNombre(), d.getId_usuario().getRol()),
-                        (d, u) -> {});
+                .bind(d -> d.getId_usuario() == null ? null : new UsuarioDto(d.getId_usuario().getId(), d.getId_usuario().getNombre(), d.getId_usuario().getRol(), "santiagoabsalom@gmail.com"),
+                        (d, u) -> {
+                        });
 
         binder.forField(institucion)
                 .asRequired("Institución requerida")
@@ -160,7 +159,10 @@ public class DonacionView extends FormLayout {
     }
 
     private void editByDto(DonacionDTO dto) {
-        if (dto == null) { edit(null); return; }
+        if (dto == null) {
+            edit(null);
+            return;
+        }
         Donacion d = new Donacion();
         d.setId_donacion(dto.idDonacion());
         d.setMonto(dto.monto());
@@ -238,10 +240,12 @@ public class DonacionView extends FormLayout {
         }
         try {
             usuario.setItems(usuarioService.findAvailableUsersInitialized());
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         try {
             institucion.setItems(institucionService.buscarInstituciones());
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 
     private void updateGridFilter() {

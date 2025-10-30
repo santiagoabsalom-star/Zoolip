@@ -2,7 +2,6 @@ package com.surrogate.Zoolip.repository.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,6 +29,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u where u.email=:email")
     List<UsuarioDto> findAllByEmail(String email);
+
     Usuario getUsuarioById(Long idUsuario);
 
     Usuario findByNombre(String nombre);

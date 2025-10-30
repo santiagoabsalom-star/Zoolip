@@ -3,7 +3,6 @@ package com.surrogate.Zoolip.services.auth;
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
-
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,19 +29,22 @@ public class UsuarioService {
         });
         return users;
     }
-    public UsuarioDto me(String token){
-    if(token == null){
-        return null;
-    }
-        return usuarioRepository.getUserById( (long) jwtService.extractId(token));
+
+    public UsuarioDto me(String token) {
+        if (token == null) {
+            return null;
+        }
+        return usuarioRepository.getUserById((long) jwtService.extractId(token));
 
     }
-    public List<UsuarioDto> findAllByEmail(String token){
-        if(token == null){
+
+    public List<UsuarioDto> findAllByEmail(String token) {
+        if (token == null) {
             return null;
         }
         return usuarioRepository.findAllByEmail(jwtService.extractEmail(token));
     }
+
     public Optional<Usuario> findById(Long uid) {
         return usuarioRepository.findById(uid);
     }

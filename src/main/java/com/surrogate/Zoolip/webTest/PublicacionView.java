@@ -1,9 +1,8 @@
 package com.surrogate.Zoolip.webTest;
 
 import com.surrogate.Zoolip.models.DTO.PublicacionDTO;
-import com.surrogate.Zoolip.models.bussiness.Publicacion.Publicacion;
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
-import com.surrogate.Zoolip.models.bussiness.Usuario;
+import com.surrogate.Zoolip.models.bussiness.Publicacion.Publicacion;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.auth.UsuarioService;
 import com.surrogate.Zoolip.services.bussiness.PublicacionService;
@@ -81,8 +80,9 @@ public class PublicacionView extends FormLayout {
 
         binder.forField(usuario)
                 .asRequired("Usuario requerido")
-                .bind(p -> p.getId_usuario() == null ? null : new UsuarioDto(p.getId_usuario().getId(), p.getId_usuario().getNombre(), p.getId_usuario().getRol()),
-                        (p, u) -> {});
+                .bind(p -> p.getId_usuario() == null ? null : new UsuarioDto(p.getId_usuario().getId(), p.getId_usuario().getNombre(), p.getId_usuario().getRol(), "santiagoabsalom@gmail.com"),
+                        (p, u) -> {
+                        });
 
         save.setEnabled(false);
         binder.addStatusChangeListener(s -> save.setEnabled(binder.isValid()));
@@ -127,7 +127,10 @@ public class PublicacionView extends FormLayout {
     }
 
     private void editByDto(PublicacionDTO dto) {
-        if (dto == null) { edit(null); return; }
+        if (dto == null) {
+            edit(null);
+            return;
+        }
         Publicacion p = new Publicacion();
         p.setId_publicacion(dto.idPublicacion());
         p.setContenido(dto.contenido());
@@ -198,6 +201,9 @@ public class PublicacionView extends FormLayout {
         } catch (Exception e) {
             log.error("Failed to refresh publicaciones", e);
         }
-        try { usuario.setItems(usuarioService.findAvailableUsersInitialized()); } catch (Exception ignored) {}
+        try {
+            usuario.setItems(usuarioService.findAvailableUsersInitialized());
+        } catch (Exception ignored) {
+        }
     }
 }

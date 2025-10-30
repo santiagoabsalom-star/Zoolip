@@ -18,36 +18,41 @@ import java.util.List;
 @RequestMapping("/api/comentario")
 public class ComentarioController {
     private final ComentarioService comentarioService;
-        @PostMapping("/crear")
-    public ResponseEntity<Response> crear(@RequestBody Comentario comentario){
 
-            Response response= comentarioService.comentar(comentario);
-            return ResponseEntity.status(response.getHttpCode()).body(response);
+    @PostMapping("/crear")
+    public ResponseEntity<Response> crear(@RequestBody Comentario comentario) {
+
+        Response response = comentarioService.comentar(comentario);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+
+    @PostMapping("/actualizar")
+    public ResponseEntity<Response> actualizar(@RequestBody Comentario comentario) {
+        Response response = comentarioService.actualizar(comentario);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+
+    @DeleteMapping("/eliminar")
+    public ResponseEntity<Response> delete(@RequestBody Comentario comentario) {
+        Response response = comentarioService.eliminar(comentario);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+
+    @GetMapping("/obtenerTodos")
+    public ResponseEntity<List<ComentarioDTO>> obtenerTodos() {
+        List<ComentarioDTO> comentarios = comentarioService.buscarComentarios();
+        if (comentarios.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        @PostMapping("/actualizar")
-    public ResponseEntity<Response> actualizar(@RequestBody Comentario comentario){
-            Response response= comentarioService.actualizar(comentario);
-            return ResponseEntity.status(response.getHttpCode()).body(response);
+        return new ResponseEntity<>(comentarios, HttpStatus.OK);
+    }
+
+    @GetMapping("/obtenerPorId")
+    public ResponseEntity<ComentarioDTO> obtenerPorId(Long id_comentario) {
+        ComentarioDTO comentarioDTO = comentarioService.buscarComentario(id_comentario);
+        if (comentarioDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        @DeleteMapping("/eliminar")
-    public ResponseEntity<Response> delete(@RequestBody Comentario comentario){
-            Response response = comentarioService.eliminar(comentario);
-            return ResponseEntity.status(response.getHttpCode()).body(response);
-        }
-        @GetMapping("/obtenerTodos")
-    public ResponseEntity<List<ComentarioDTO>> obtenerTodos(){
-            List<ComentarioDTO> comentarios= comentarioService.buscarComentarios();
-            if(comentarios.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(comentarios, HttpStatus.OK);
-        }
-        @GetMapping("/obtenerPorId")
-    public ResponseEntity<ComentarioDTO> obtenerPorId(Long id_comentario){
-            ComentarioDTO comentarioDTO= comentarioService.buscarComentario(id_comentario);
-            if(comentarioDTO==null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
+    }
 }

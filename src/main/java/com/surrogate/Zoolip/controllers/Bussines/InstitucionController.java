@@ -28,14 +28,14 @@ public class InstitucionController {
 
     @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarInstitucion(@RequestBody Institucion institucion) {
-       Response response = institucionService.actualizar(institucion);
-       return ResponseEntity.status(response.getHttpCode()).body(response);
+        Response response = institucionService.actualizar(institucion);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @PostMapping("/eliminar")
     public ResponseEntity<Response> eliminarInstitucion(@RequestBody long id_institucion) {
-     Response response = institucionService.eliminar(id_institucion);
-     return ResponseEntity.status(response.getHttpCode()).body(response);
+        Response response = institucionService.eliminar(id_institucion);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @GetMapping(value = "/obtenerTodas", produces = "application/json")

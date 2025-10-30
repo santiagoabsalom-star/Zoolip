@@ -25,29 +25,33 @@ public class VeterinarioController {
         return ResponseEntity.status(response.getHttpCode()).body(response);
 
     }
+
     @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarVeterinario(@RequestBody Veterinario veterinario) {
         Response response = veterinarioService.actualizar(veterinario);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
+
     @DeleteMapping("/eliminar")
     public ResponseEntity<Response> eliminarVeterinario(@RequestBody Long id_veterinario) {
         Response response = veterinarioService.eliminar(id_veterinario);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
+
     @GetMapping("/obtenerTodos")
     public ResponseEntity<List<VeterinarioDTO>> getVeterinarios() {
-        List<VeterinarioDTO> veterinarioDTOS= veterinarioService.obtenerVeterinarios();
-        if(veterinarioDTOS.isEmpty()){
+        List<VeterinarioDTO> veterinarioDTOS = veterinarioService.obtenerVeterinarios();
+        if (veterinarioDTOS.isEmpty()) {
             return ResponseEntity.ofNullable(null);
 
         }
         return ResponseEntity.ok(veterinarioDTOS);
     }
+
     @GetMapping("/obtenerPorId")
     public ResponseEntity<VeterinarioDTO> getVeterinarioById(@RequestParam Long id_veterinario) {
-        VeterinarioDTO veterinarioDTO= veterinarioService.obtenerVeterinario(id_veterinario);
-        if(veterinarioDTO==null){
+        VeterinarioDTO veterinarioDTO = veterinarioService.obtenerVeterinario(id_veterinario);
+        if (veterinarioDTO == null) {
             return ResponseEntity.ofNullable(null);
         }
         return ResponseEntity.ok(veterinarioDTO);

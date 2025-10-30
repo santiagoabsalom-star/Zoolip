@@ -19,35 +19,39 @@ import java.util.List;
 public class DonacionController {
     private final DonacionService donacionService;
 
-        @PostMapping("/crear")
+    @PostMapping("/crear")
     public ResponseEntity<Response> crearDonacion(@RequestBody Donacion donacion) {
-            Response response= donacionService.crearDonacion(donacion);
-            return ResponseEntity.status(response.getHttpCode()).body(response);
-        }
-        @PostMapping("/actualizar")
+        Response response = donacionService.crearDonacion(donacion);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+
+    @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarDonacion(@RequestBody Donacion donacion) {
-            Response response= donacionService.actualizarDonacion(donacion);
-            return ResponseEntity.status(response.getHttpCode()).body(response);
-        }
-        @DeleteMapping("/eliminar")
+        Response response = donacionService.actualizarDonacion(donacion);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+
+    @DeleteMapping("/eliminar")
     public ResponseEntity<Response> eliminarDonacion(@RequestBody Donacion donacion) {
-            Response response= donacionService.eliminarDonacion(donacion);
-            return ResponseEntity.status(response.getHttpCode()).body(response);
+        Response response = donacionService.eliminarDonacion(donacion);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+
+    @GetMapping("/obtenerTodas")
+    public ResponseEntity<List<DonacionDTO>> obtenerTodas() {
+        List<DonacionDTO> donaciones = donacionService.obtenerDonaciones();
+        if (donaciones == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        @GetMapping("/obtenerTodas")
-        public ResponseEntity<List<DonacionDTO>> obtenerTodas() {
-            List<DonacionDTO> donaciones= donacionService.obtenerDonaciones();
-            if(donaciones==null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(donaciones, HttpStatus.OK);
-        }
-        @GetMapping("obtenerPorId")
+        return new ResponseEntity<>(donaciones, HttpStatus.OK);
+    }
+
+    @GetMapping("obtenerPorId")
     public ResponseEntity<DonacionDTO> obtenerPorId(Long idDonacion) {
-            DonacionDTO donaiconeDTO= donacionService.obtenerDonacionById(idDonacion);
-            if(donaiconeDTO==null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(donaiconeDTO, HttpStatus.OK);
+        DonacionDTO donaiconeDTO = donacionService.obtenerDonacionById(idDonacion);
+        if (donaiconeDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(donaiconeDTO, HttpStatus.OK);
+    }
 }

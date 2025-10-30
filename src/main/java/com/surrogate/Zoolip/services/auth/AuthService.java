@@ -12,13 +12,11 @@ import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +37,7 @@ public class AuthService {
     private final String error;
 
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, String ip) {
 
         try {
             if (loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty()) {
@@ -67,7 +65,6 @@ public class AuthService {
             );
 
 
-
             if (authentication.isAuthenticated()) {
                 UserDetailsWithId userDetails = (UserDetailsWithId) authentication.getPrincipal();
 
@@ -80,9 +77,9 @@ public class AuthService {
                 log.info("Tiempo de espera de autenticacion: " + (endTimeauth - startTimeauth) + "ms");
 
                 String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId(), userDetails.getEmail());
+                jwtService.setIpToken(ip, token);
 
-
-                return new LoginResponse(success,200, token, userDetails.getUsername(), userDetails.getId());
+                return new LoginResponse(success, 200, token, userDetails.getUsername(), userDetails.getId());
             }
 
             return new LoginResponse(error, 401, "Autenticación fallida");
@@ -122,7 +119,7 @@ public class AuthService {
 
             return new RegisterResponse(success, "Registro exitoso");
         } catch (Exception e) {
-            return new RegisterResponse(error, 200,"Error en el registro: " + e.getMessage());
+            return new RegisterResponse(error, 200, "Error en el registro: " + e.getMessage());
         }
     }
 
@@ -154,9 +151,9 @@ public class AuthService {
 
             usuarioRepository.save(newUsuario);
             usuarioNotifier.publish(new UsuarioCreado(newUsuario));
-            return new RegisterResponse(success,200, "Registro exitoso");
+            return new RegisterResponse(success, 200, "Registro exitoso");
         } catch (Exception e) {
-            return new RegisterResponse(error,500, "Error en el registro: " + e.getMessage());
+            return new RegisterResponse(error, 500, "Error en el registro: " + e.getMessage());
         }
     }
 

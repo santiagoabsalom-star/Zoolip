@@ -5,7 +5,6 @@ import com.surrogate.Zoolip.models.DTO.PublicacionDTO;
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Publicacion.Comentario;
 import com.surrogate.Zoolip.models.bussiness.Publicacion.Publicacion;
-import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.auth.UsuarioService;
 import com.surrogate.Zoolip.services.bussiness.ComentarioService;
@@ -83,12 +82,14 @@ public class ComentarioView extends FormLayout {
         // Keep selection validated but set actual Publicacion entity manually on save
         binder.forField(publicacion)
                 .asRequired("Publicación requerida")
-                .bind(c -> null, (c, dto) -> {});
+                .bind(c -> null, (c, dto) -> {
+                });
 
         binder.forField(usuario)
                 .asRequired("Usuario requerido")
-                .bind(c -> c.getId_usuario() == null ? null : new UsuarioDto(c.getId_usuario().getId(), c.getId_usuario().getNombre(), c.getId_usuario().getRol()),
-                        (c, u) -> {});
+                .bind(c -> c.getId_usuario() == null ? null : new UsuarioDto(c.getId_usuario().getId(), c.getId_usuario().getNombre(), c.getId_usuario().getRol(), "santiagoabsalom@gmail.com"),
+                        (c, u) -> {
+                        });
 
         save.setEnabled(false);
         binder.addStatusChangeListener(s -> save.setEnabled(binder.isValid()));
@@ -133,7 +134,10 @@ public class ComentarioView extends FormLayout {
     }
 
     private void editByDto(ComentarioDTO dto) {
-        if (dto == null) { edit(null); return; }
+        if (dto == null) {
+            edit(null);
+            return;
+        }
         Comentario c = new Comentario();
         c.setId_comentario(dto.idComentario());
         c.setContenido(dto.contenido());
@@ -210,7 +214,13 @@ public class ComentarioView extends FormLayout {
         } catch (Exception e) {
             log.error("Failed to refresh comentarios", e);
         }
-        try { publicacion.setItems(publicacionService.obtenerTodas()); } catch (Exception ignored) {}
-        try { usuario.setItems(usuarioService.findAvailableUsersInitialized()); } catch (Exception ignored) {}
+        try {
+            publicacion.setItems(publicacionService.obtenerTodas());
+        } catch (Exception ignored) {
+        }
+        try {
+            usuario.setItems(usuarioService.findAvailableUsersInitialized());
+        } catch (Exception ignored) {
+        }
     }
 }

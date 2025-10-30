@@ -1,15 +1,12 @@
 package com.surrogate.Zoolip.controllers.Auth;
 
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
-import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
 import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.services.auth.AuthService;
 import com.surrogate.Zoolip.services.auth.UsuarioService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +30,12 @@ public class AuthController {
     private final String error;
 
 
-
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         try {
-            LoginResponse response = authService.login(loginRequest);
+            LoginResponse response = authService.login(loginRequest, request.getRemoteAddr());
 
-            if (response.getHttpCode()==200) {
+            if (response.getHttpCode() == 200) {
                 ResponseCookie cookie = ResponseCookie.from("AUTH_TOKEN", response.getToken())
                         .httpOnly(true)
                         .secure(true)
@@ -98,7 +94,7 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> registerAdmin(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             RegisterResponse response = authService.registerAdmin(registerRequest);
-            if (200==(response.getHttpCode())) {
+            if (200 == (response.getHttpCode())) {
                 return ResponseEntity.status(HttpStatus.CREATED)
                         .header("X-Content-Type-Options", "nosniff")
                         .header("X-Frame-Options", "DENY")
@@ -122,8 +118,9 @@ public class AuthController {
 
 
     @PostMapping(value = "/logout", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<String> logout(@Valid @RequestBody String token) {
+    public ResponseEntity<String> logout(HttpServletRequest request) {
         try {
+            String token = Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
 
             String response = authService.logout(token);
 
@@ -154,37 +151,38 @@ public class AuthController {
 
     @GetMapping(value = "/me", produces = "application/json")
     public ResponseEntity<UsuarioDto> me(HttpServletRequest request) {
-        if(request.getCookies()==null|| request.getCookies().length==0){
+        if (request.getCookies() == null || request.getCookies().length == 0) {
             return ResponseEntity.ofNullable(null);
 
         }
-        String token= Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
-        if(token==null){
+        String token = Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
+        if (token == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        UsuarioDto usuarioDto=usuarioService.me(token);
-        if(usuarioDto==null){
+        UsuarioDto usuarioDto = usuarioService.me(token);
+        if (usuarioDto == null) {
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         }
         return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
     }
+
     @GetMapping("/accounts")
     public ResponseEntity<List<UsuarioDto>> getAccounts(HttpServletRequest request) {
 
-        if(request.getCookies()==null|| request.getCookies().length==0){
+        if (request.getCookies() == null || request.getCookies().length == 0) {
             return ResponseEntity.ofNullable(null);
 
         }
-        String token= Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
-        if(token==null){
+        String token = Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
+        if (token == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        List<UsuarioDto> usuarioDto=usuarioService.findAllByEmail(token);
-        if(usuarioDto==null){
+        List<UsuarioDto> usuarioDto = usuarioService.findAllByEmail(token);
+        if (usuarioDto == null) {
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
