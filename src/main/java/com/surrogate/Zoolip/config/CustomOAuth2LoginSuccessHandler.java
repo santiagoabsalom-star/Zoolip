@@ -25,10 +25,8 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
 
     private final JWTService jwtService;
     private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
-    public CustomOAuth2LoginSuccessHandler(JWTService jwtService, UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public CustomOAuth2LoginSuccessHandler(JWTService jwtService, UsuarioRepository usuarioRepository) {
         this.jwtService = jwtService;
-        this.passwordEncoder = passwordEncoder;
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -71,9 +69,7 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
                 Usuario newUsuario = new Usuario();
                 newUsuario.setNombre(nombre);
                 newUsuario.setEmail(email);
-
-                String randomPassword = java.util.UUID.randomUUID().toString();
-                newUsuario.setPasswordHash(passwordEncoder.encode(randomPassword));
+                newUsuario.setPasswordHash(java.util.UUID.randomUUID().toString());
                 newUsuario.setRol("USUARIOOAUTH");}
 
         }
