@@ -15,13 +15,14 @@ public class RegisterRequest extends Request {
     private String username;
 
     private String password;
-
+    private String email;
     @JsonCreator
     public RegisterRequest(@JsonProperty("username") String username,
                            @JsonProperty("password") String password,
-                           @JsonProperty("rol") String rol
+                           @JsonProperty("rol") String rol,
+                           @JsonProperty("email") String email
     ) {
-
+        this.email = email;
         this.username = username;
         this.password = password;
         this.rol = rol;

@@ -112,14 +112,14 @@ public class AuthService {
             Usuario newUsuario = new Usuario();
             newUsuario.setNombre(registerRequest.getUsername());
             newUsuario.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
-
+            newUsuario.setEmail(registerRequest.getEmail());
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
 
             usuarioRepository.save(newUsuario);
 
             return new RegisterResponse(success, "Registro exitoso");
         } catch (Exception e) {
-            return new RegisterResponse(error, 200, "Error en el registro: " + e.getMessage());
+            return new RegisterResponse(error, 500, "Error en el registro: " + e.getMessage());
         }
     }
 
@@ -146,6 +146,7 @@ public class AuthService {
             Usuario newUsuario = new Usuario();
             newUsuario.setNombre(registerRequest.getUsername());
             newUsuario.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
+            newUsuario.setEmail(registerRequest.getEmail());
 
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
 
