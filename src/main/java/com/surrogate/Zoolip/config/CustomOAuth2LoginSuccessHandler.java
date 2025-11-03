@@ -1,5 +1,6 @@
 package com.surrogate.Zoolip.config;
 
+import com.surrogate.Zoolip.services.auth.AuthService;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,11 +22,11 @@ import java.util.Map;
 public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JWTService jwtService;
+    private final AuthService authService;
 
-
-    public CustomOAuth2LoginSuccessHandler(JWTService jwtService) {
+    public CustomOAuth2LoginSuccessHandler(JWTService jwtService, AuthService authService) {
         this.jwtService = jwtService;
-
+        this.authService = authService;
     }
 
     @Override
@@ -52,6 +53,13 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
             String redirectUrl = frontendRedirectUrl + "#token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8);
             response.sendRedirect(redirectUrl);
 
+        }
+    }
+
+    public void registerIfNewUser(String nombre, String email){
+        if(!authService.userExists(nombre)){
+
+            authService.register();
         }
     }
 }
