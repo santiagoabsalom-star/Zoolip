@@ -11,13 +11,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j
 @Service
 @NoArgsConstructor
 public class JWTService {
+    private final Map<String, String> ipToken = new HashMap<>();
     private final Map<String, Object> claims = new HashMap<>();
     private final HashSet<String> tokens = new HashSet<>();
     //private final HashSet<Integer> authtokens = new HashSet<>();
@@ -37,16 +41,29 @@ public class JWTService {
         }
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
-    /** Para implementar despues.
-      @Scheduled(fixedRate = 1000*60*60)
-    private void Token() {
-        authtokens.clear();
-        Integer integer= random.nextInt();
-        authtokens.add(integer);
-        log.info("Token cambiado a {}", integer);
-        authtokens.iterator().forEachRemaining(authtoken -> log.info("Token {}", authtoken));
+
+    public void setIpToken(String ip, String token) {
+        log.info("Token: {} y ip: {} ", token, ip);
+        this.ipToken.put(ip, token);
+
     }
-**/
+
+    /**
+     * Para implementar despues.
+     *
+     * @Scheduled(fixedRate = 1000*60*60)
+     * private void Token() {
+     * authtokens.clear();
+     * Integer integer= random.nextInt();
+     * authtokens.add(integer);
+     * log.info("Token cambiado a {}", integer);
+     * authtokens.iterator().forEachRemaining(authtoken -> log.info("Token {}", authtoken));
+     * }
+     **/
+    public String extractEmail(String token) {
+        return (String) extractClaim(token, Claims -> Claims.get("email"));
+    }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -62,6 +79,10 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
+    public boolean isTokenFromIp(String ip, String token) {
+        log.info("el token asignado a la ip {} es {}", ip, ipToken.get(ip));
+        return ipToken.containsKey(ip) && ipToken.get(ip).equals(token);
+    }
 
     public String generateToken(String username, String role) {
 
@@ -86,8 +107,9 @@ public class JWTService {
      * @param id_usuario
      * @return String token
      */
-    public String generateTokenWithId(String username, String role, Integer id_usuario) {
+    public String generateTokenWithId(String username, String role, Integer id_usuario, String email) {
         claims.put("role", role);
+        claims.put("email", email);
         claims.put("id_usuario", id_usuario);
         log.info("Claims: {}", claims);
         String token = createToken(claims, username);
@@ -177,6 +199,7 @@ public class JWTService {
             log.info("Token no válido o no almacenado: {}", token);
             return "error";
         }
+        ipToken.remove(token);
 
         log.info("Invalidando token: [  {}  ]", token);
         tokens.remove(token);

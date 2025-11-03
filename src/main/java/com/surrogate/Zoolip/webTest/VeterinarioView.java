@@ -110,7 +110,10 @@ public class VeterinarioView extends FormLayout {
     }
 
     private void editByDto(VeterinarioDTO dto) {
-        if (dto == null) { edit(null); return; }
+        if (dto == null) {
+            edit(null);
+            return;
+        }
         Veterinario v = new Veterinario();
         v.setId_veterinario(dto.id());
         v.setNombre(dto.nombre());
@@ -180,7 +183,10 @@ public class VeterinarioView extends FormLayout {
         } catch (Exception e) {
             log.error("Failed to refresh veterinarios", e);
         }
-        try { institucion.setItems(institucionService.buscarInstituciones()); } catch (Exception ignored) {}
+        try {
+            institucion.setItems(institucionService.buscarInstituciones());
+        } catch (Exception ignored) {
+        }
     }
 }
 

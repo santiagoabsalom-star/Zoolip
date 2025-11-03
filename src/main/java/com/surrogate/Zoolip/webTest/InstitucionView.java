@@ -1,4 +1,3 @@
-
 package com.surrogate.Zoolip.webTest;
 
 import com.surrogate.Zoolip.events.UsuarioNotifier;
@@ -220,7 +219,7 @@ public class InstitucionView extends FormLayout {
                         .ifPresent(usuario::setValue);
 
                 if (usuario.getValue() == null) {
-                    usuarioService.findById(uid).ifPresent(u -> usuario.setValue(new UsuarioDto(u.getId(), u.getNombre(), u.getRol())));
+                    usuarioService.findById(uid).ifPresent(u -> usuario.setValue(new UsuarioDto(u.getId(), u.getNombre(), u.getRol(), "santiagoabsalom@gmail.com")));
                 }
             } else {
                 usuario.clear();

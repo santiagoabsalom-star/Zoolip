@@ -12,6 +12,7 @@ import java.util.List;
 public interface VeterinarioRepository extends JpaRepository<Veterinario, Long> {
     @Query("Select new com.surrogate.Zoolip.models.DTO.VeterinarioDTO(v.id_veterinario, v.nombre, v.id_institucion.nombre) from Veterinario v")
     List<VeterinarioDTO> findVeterinariosDTO();
+
     @Query("Select new com.surrogate.Zoolip.models.DTO.VeterinarioDTO(v.id_veterinario, v.nombre, v.id_institucion.nombre) from Veterinario v where v.id_veterinario = :id_veterinario")
     VeterinarioDTO findVeterinarioDTO(Long id_veterinario);
 }

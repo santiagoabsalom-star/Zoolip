@@ -39,7 +39,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 .expireAfterWrite(60, TimeUnit.MINUTES)
                 .maximumSize(100)
                 .build();
-                log.info("UserDetailsCache initialized");
 
     }
 
@@ -110,6 +109,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 sendError(response, "Token invalidado", HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
+            if (!jwtService.isTokenFromIp(request.getRemoteAddr(), jwt)) {
+                jwtService.InvalidateToken(jwt);
+                sendError(response, "Distinta ip para token", HttpServletResponse.SC_UNAUTHORIZED);
+            }
 
             String username = jwtService.extractUsername(jwt);
             log.info("Username : {}", username);
@@ -120,11 +123,15 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                     userDetailsCache.put(username, userDetails);
                 }
 
+
                 if (!jwtService.validateToken(jwt, userDetails)) {
                     sendError(response, "Token expirado o invalidado", HttpServletResponse.SC_UNAUTHORIZED);
                 }
+
                 setAuthentication(userDetails, request);
+
             }
+
             filterChain.doFilter(request, response);
         } catch (JwtException | AuthenticationException e) {
             sendError(response, "Authentication error: " + e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);

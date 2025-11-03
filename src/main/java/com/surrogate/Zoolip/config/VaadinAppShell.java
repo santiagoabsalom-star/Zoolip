@@ -7,4 +7,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Push(PushMode.AUTOMATIC)
-public class VaadinAppShell implements AppShellConfigurator { }
+public class VaadinAppShell implements AppShellConfigurator {
+}

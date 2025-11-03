@@ -20,7 +20,7 @@ public class MascotaController {
     @PostMapping("/aniadir")
     public ResponseEntity<Response> createMascota(@RequestBody Mascota mascota) {
         Response response = mascotaService.agregarMascota(mascota);
-      return ResponseEntity.status(response.getHttpCode()).body(response);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
     @PostMapping("/actualizar")

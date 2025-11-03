@@ -18,6 +18,7 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
 
     @Query("select m.id as id_Mascota, m.estadoAdopcion as estadoAdopcion, m.tamanio as tamanio, m.estadoSalud as estadoSalud, m.especie as especie, m.raza as raza, m.edad as edad, m.id_institucion.nombre as nombreInstitucion  from Mascota m")
     List<MascotaDTO> findAllMascotasDTO();
+
     @Query("Select m from Mascota m LEFT JOIN FETCH m.id_institucion")
     @NotNull List<Mascota> buscarMascotas();
 }

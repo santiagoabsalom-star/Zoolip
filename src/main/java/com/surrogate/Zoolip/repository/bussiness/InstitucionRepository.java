@@ -33,7 +33,9 @@ public interface InstitucionRepository extends JpaRepository<Institucion, Long> 
 
     @Query("Select  i.nombre from Institucion i where i.id_usuario.id = :id_usuario ")
     String findByU(@Param("id_usuario") Long id_usuario);
+
     @Query("SELECT i FROM Institucion i LEFT JOIN FETCH i.id_usuario")
     List<Institucion> buscarInstituciones();
+
     boolean existsByNombre(String nombre);
 }

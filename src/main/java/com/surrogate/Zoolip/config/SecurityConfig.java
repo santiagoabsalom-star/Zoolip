@@ -2,8 +2,6 @@ package com.surrogate.Zoolip.config;
 
 import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/hola").permitAll()
                         .requestMatchers("/web/main").permitAll()
                         .requestMatchers("/web/**").permitAll()
+                        .requestMatchers("/api/auth/me").permitAll()
                         .requestMatchers("/.well-known/appspecific/com.chrome.devtools.json").permitAll()
                         .requestMatchers("/web/main/**").permitAll()
                         .requestMatchers("/actuator").permitAll()
@@ -91,7 +90,7 @@ public class SecurityConfig {
                         ))))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
-log.info("SecurityFilterChain initialized");
+        log.info("SecurityFilterChain initialized");
         return http.build();
 
 
@@ -157,12 +156,14 @@ log.info("SecurityFilterChain initialized");
 
         return new BCryptPasswordEncoder(8);
     }
+
     @Bean
-    public String success(){
+    public String success() {
         return "success";
     }
+
     @Bean
-    public String error(){
+    public String error() {
         return "error";
     }
 }

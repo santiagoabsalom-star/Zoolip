@@ -6,13 +6,15 @@ import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
-
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+
 @Getter
 @Setter
 @Embeddable
 public class AtiendeId implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Column(name = "id_diagnostico")
@@ -24,7 +26,8 @@ public class AtiendeId implements Serializable {
     @Column(name = "id_mascota")
     private Long idMascota;
 
-    public AtiendeId() {}
+    public AtiendeId() {
+    }
 
     public AtiendeId(Long idDiagnostico, Long idVeterinario, Long idMascota) {
         this.idDiagnostico = idDiagnostico;
@@ -36,8 +39,7 @@ public class AtiendeId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AtiendeId)) return false;
-        AtiendeId that = (AtiendeId) o;
+        if (!(o instanceof AtiendeId that)) return false;
         return Objects.equals(idDiagnostico, that.idDiagnostico) &&
                 Objects.equals(idVeterinario, that.idVeterinario) &&
                 Objects.equals(idMascota, that.idMascota);

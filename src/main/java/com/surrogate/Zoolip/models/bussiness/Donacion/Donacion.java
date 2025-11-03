@@ -12,18 +12,18 @@ import java.time.LocalDateTime;
 public class Donacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "id_donacion")
+    @Column(name = "id_donacion")
     private Long id_donacion;
     @Column(name = "status")
     private ESTATUS status;
-    @Column(name="monto")
+    @Column(name = "monto")
     private Double monto;
-    @Column(name="fecha_inicio")
+    @Column(name = "fecha_inicio")
     private LocalDateTime fecha_inicio;
     @JoinColumn(name = "id_usuario")
     @OneToOne(fetch = FetchType.LAZY)
     private Usuario id_usuario;
-    @JoinColumn(name="id_institucion")
+    @JoinColumn(name = "id_institucion")
     @OneToOne(fetch = FetchType.LAZY)
     private Institucion id_institucion;
 }
