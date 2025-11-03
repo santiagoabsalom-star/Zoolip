@@ -5,7 +5,6 @@ import com.surrogate.Zoolip.events.UsuarioNotifier;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
-import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
@@ -159,25 +158,6 @@ public class AuthService {
     }
 
 
-    public boolean isGmailAssociated(String gmail) {
-        return usuarioRepository.existsByEmail(gmail);
-    }
-    public boolean registerOAuthUser(String gmail, String nombre) {
-        if (isGmailAssociated(gmail)) {
-            return false; // El Gmail ya está asociado a una cuenta
-        }
-
-        Usuario newUsuario = new Usuario();
-        newUsuario.setNombre(nombre);
-        newUsuario.set(gmail);
-
-        String randomPassword = java.util.UUID.randomUUID().toString();
-        newUsuario.setPasswordHash(passwordEncoder.encode(randomPassword));
-        newUsuario.setRol("USER");
-
-        usuarioRepository.save(newUsuario);
-        return true;
-    }
     public String logout(String token) {
         log.info("Este es el token del usuario: {}", token);
 
