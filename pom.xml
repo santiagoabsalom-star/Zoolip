@@ -183,6 +183,16 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<repositories>
+		<repository>
+			<id>maven-central</id>
+			<url>https://repo1.maven.org/maven2/</url>
+		</repository>
+		<repository>
+			<id>eclipse</id>
+			<url>https://repo.eclipse.org/content/groups/releases/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
