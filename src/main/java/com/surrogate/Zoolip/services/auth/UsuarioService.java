@@ -30,9 +30,12 @@ public class UsuarioService {
         return users;
     }
 
-    public UsuarioDto me(String token) {
+    public Optional<UsuarioDto> me(String token) {
         if (token == null) {
-            return null;
+            return Optional.empty();
+        }
+        if(!jwtService.isTokenStored(token)) {
+            return Optional.of(403).map(m -> null);
         }
         return usuarioRepository.getUserById((long) jwtService.extractId(token));
 

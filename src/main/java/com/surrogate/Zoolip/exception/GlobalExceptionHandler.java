@@ -154,7 +154,6 @@ public class GlobalExceptionHandler {
                 "Error al acceder a los datos", ex.getMostSpecificCause().getMessage());
     }
 
-    // 🔹 Helper centralizado
     private ResponseEntity<Map<String, Object>> buildError(HttpStatus status, String mensaje, Object detalle) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());

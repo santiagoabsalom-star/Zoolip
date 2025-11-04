@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -150,7 +151,7 @@ public class AuthController {
     }
 
     @GetMapping(value = "/me", produces = "application/json")
-    public ResponseEntity<UsuarioDto> me(HttpServletRequest request) {
+    public ResponseEntity<Optional<UsuarioDto>> me(HttpServletRequest request) {
         if (request.getCookies() == null || request.getCookies().length == 0) {
             return ResponseEntity.ofNullable(null);
 
@@ -160,11 +161,14 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        UsuarioDto usuarioDto = usuarioService.me(token);
-        if (usuarioDto == null) {
+        Optional<UsuarioDto> usuarioDto = usuarioService.me(token);
+        if (usuarioDto.isEmpty()) {
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+        }
+        if(usuarioDto.equals(Optional.of(403).map(e->null))){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
     }

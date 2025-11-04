@@ -61,4 +61,6 @@ public record UserPrincipal(Usuario usuario) implements UserDetailsWithId {
     public String getEmail() {
         return usuario.getEmail();
     }
+
+
 }
