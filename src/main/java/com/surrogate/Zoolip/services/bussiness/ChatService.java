@@ -34,7 +34,7 @@ public class ChatService {
         return response;
     }
     public Response verificarChat(Chat chat){
-        if(chatRepository.existByNombre(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre())){
+        if( Thread.currentThread().getStackTrace()[1].getMethodName().equals("crearChat") && chatRepository.existByNombre(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre())){
         return new Response(error, 409, "El chat ya existe");
 
     }
@@ -51,6 +51,17 @@ public class ChatService {
         return new Response(success, 200, "Operacion hecha correctamente");
 
     }
+    //Este metodo se va a usar para actualizar el nombre del chat en caso de que se cambie el nombre de algun usuario
+    public Response actualizarChat(Chat chat){
+        Response response = verificarChat(chat);
+        if(response.getHttpCode()!=200){
+            return response;
+        }
+        chat.setNombreChat(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre());
+        chatRepository.save(chat);
+        return response;
+
+    }
     public Response eliminarChat(Chat chat){
         if(!chatRepository.existByNombre(chat.getNombreChat())){
             return new Response(error, 404, "El chat no existe");
@@ -60,8 +71,12 @@ public class ChatService {
             return new Response(error, 404, "El chat no existe");
 
         }
-        mensajeRepository.deleteAllByIdChat(chat.getId_chat());
 
+       if(!(mensajeRepository.deleteAllByIdChat(chat.getId_chat())>0)){
+
+        return new Response(error,500,"Error eliminando los mensajes del chat" );
+
+       }
         chatRepository.delete(chat);
         return new Response(success, 200, "Chat eliminado correctamente");
     }

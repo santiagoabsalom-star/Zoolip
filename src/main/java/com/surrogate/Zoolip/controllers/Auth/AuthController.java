@@ -180,6 +180,7 @@ public class AuthController {
             return ResponseEntity.ofNullable(null);
 
         }
+
         String token = Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
         if (token == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
