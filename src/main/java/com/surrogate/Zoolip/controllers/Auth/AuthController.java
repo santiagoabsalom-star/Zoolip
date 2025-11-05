@@ -164,7 +164,7 @@ public class AuthController {
         Optional<UsuarioDto> usuarioDto = usuarioService.me(token);
         if (usuarioDto.isEmpty()) {
 
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT) ;
 
         }
         if(usuarioDto.equals(Optional.of(403).map(e->null))){
@@ -193,5 +193,6 @@ public class AuthController {
         }
         return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
     }
+
 }
 

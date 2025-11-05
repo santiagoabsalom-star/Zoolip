@@ -71,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                         .requestMatchers("/api/mascotas/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
+                        .requestMatchers("/api/auth/me").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(endpoint -> endpoint.baseUri("/oauth2/authorization"))
