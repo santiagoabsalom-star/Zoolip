@@ -9,14 +9,22 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 
 @RequiredArgsConstructor
 @Slf4j
 @Component
+
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
+    private final HashMap<String , String> Usuario_Chat = new HashMap<>();
+    //TODO: Implementar la logica del chat (>:D)
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
+    Usuario_Chat.put(Objects.requireNonNull(session.getUri()).getPath(),(String)session.getAttributes().get("nombre"));
+    ;
 
 
     }
