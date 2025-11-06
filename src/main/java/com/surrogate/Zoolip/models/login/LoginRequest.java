@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginRequest extends Request {
+public class   LoginRequest extends Request {
 
     private String username;
 

@@ -14,7 +14,7 @@ public class Mensaje {
     private Long id_mensaje;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="chat", nullable = false)
-    private Chat chat;
+    private Chat id_chat;
     @Column(name = "contenido", nullable = false)
     private String contenido;
     @Column(name="fecha_hora", nullable = false)

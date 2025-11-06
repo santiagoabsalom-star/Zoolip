@@ -3,6 +3,7 @@ package com.surrogate.Zoolip.models.DTO;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Tipo;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 public interface InstitucionDTO {
@@ -18,8 +19,8 @@ public interface InstitucionDTO {
 
     String getEmail();
 
-    LocalDateTime getHorario_Inicio();
+    LocalTime getHorario_Inicio();
 
-    LocalDateTime getHorario_Fin();
+    LocalTime getHorario_Fin();
 
 }

@@ -54,7 +54,6 @@ public class AtencionView extends FormLayout {
 
     private final Button save = new Button("Guardar", VaadinIcon.CHECK.create());
     private final Button delete = new Button("Eliminar", VaadinIcon.TRASH.create());
-    private final Button clear = new Button("Limpiar", VaadinIcon.ERASER.create());
 
     private final Grid<AtiendeDTO> grid = new Grid<>(AtiendeDTO.class, false);
 
@@ -106,6 +105,7 @@ public class AtencionView extends FormLayout {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button clear = new Button("Limpiar", VaadinIcon.ERASER.create());
         clear.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         HorizontalLayout actions = new HorizontalLayout(save, delete, clear);
