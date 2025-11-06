@@ -20,7 +20,7 @@ import java.util.Map;
 public class InterceptorJWT implements HandshakeInterceptor {
     private final JWTService jwtService;
     private final ObjectMapper objectMapper;
-    //todo implementar la validacion del token JWT en el beforeHandshake
+    //todo : implementar la validacion del token JWT en el beforeHandshake
     @Override
     public boolean beforeHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response, @NotNull WebSocketHandler wsHandler, @NotNull Map<String, Object> attributes) throws WebSocketHandshakeException {
     return true;
