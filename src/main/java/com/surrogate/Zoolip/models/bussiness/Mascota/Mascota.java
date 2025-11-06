@@ -15,6 +15,8 @@ public class Mascota {
     @Column(name = "id_mascota", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "nombre")
+    private String nombre;
     @Enumerated(EnumType.STRING)
     @Column(name = "tamanio", nullable = false)
     private Tamanio tamanio;

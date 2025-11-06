@@ -8,6 +8,12 @@ import com.surrogate.Zoolip.repository.bussiness.MascotaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationObservationContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +29,7 @@ public class MascotaService {
     private final InstitucionRepository institucionRepository;
     private final String error;
     private final String success;
+
 
     public Response agregarMascota(Mascota mascota) {
         Response response = verificarMascota(mascota);
@@ -76,6 +83,14 @@ public class MascotaService {
             return new Response(error, 400, "Tamanio no puede ser nulo");
 
         }
+
+        String rolUsuario = SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
+        if((!(rolUsuario.equals("ROLE_ADMIN") || rolUsuario.equals("ROLE_ADOPTANTE") || rolUsuario.equals("ROLE_ADMINISTRADOR"))) && mascota.getNombre()!=null) {
+
+            return new Response(error, 403, "No tienes permiso para asignar nombre a la mascota");
+
+        }
+
 
         if (mascota.getRaza() == null) {
             log.info("La mascota no tiene raza");

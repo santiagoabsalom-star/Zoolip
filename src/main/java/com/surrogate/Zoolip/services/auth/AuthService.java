@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AuthService {
+public class   AuthService {
     private static final int MIN_PASSWORD_LENGTH = 8;
     private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_]{3,20}$";
     private final PasswordEncoder passwordEncoder;
