@@ -13,7 +13,7 @@ public class Mensaje {
     @Column(name = "id_mensaje", nullable = false, unique = true)
     private Long id_mensaje;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="chat", nullable = false)
+    @JoinColumn(name="id_chat", nullable = false)
     private Chat id_chat;
     @Column(name = "contenido", nullable = false)
     private String contenido;

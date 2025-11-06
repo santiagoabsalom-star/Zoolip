@@ -152,11 +152,8 @@ public class AuthController {
 
     @GetMapping(value = "/me", produces = "application/json")
     public ResponseEntity<Optional<UsuarioDto>> me(HttpServletRequest request) {
-        if (request.getCookies() == null || request.getCookies().length == 0) {
-            return ResponseEntity.ofNullable(null);
 
-        }
-        String token = Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
+        String token = getTokenFromRequest(request);
         if (token == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -176,12 +173,7 @@ public class AuthController {
     @GetMapping("/accounts")
     public ResponseEntity<List<UsuarioDto>> getAccounts(HttpServletRequest request) {
 
-        if (request.getCookies() == null || request.getCookies().length == 0) {
-            return ResponseEntity.ofNullable(null);
-
-        }
-
-        String token = Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
+       String token = getTokenFromRequest(request);
         if (token == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -195,5 +187,16 @@ public class AuthController {
         return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
     }
 
+
+
+    private String getTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() == null || request.getCookies().length == 0) {
+
+        return null;
+        }
+
+        return Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
+
+    }
 }
 

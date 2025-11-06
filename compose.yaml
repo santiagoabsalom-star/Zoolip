@@ -25,6 +25,7 @@ services:
     container_name: zoolip
     ports:
       - "3050:3050"
+      - "9010:9010"
     depends_on:
       db:
         condition: service_healthy
