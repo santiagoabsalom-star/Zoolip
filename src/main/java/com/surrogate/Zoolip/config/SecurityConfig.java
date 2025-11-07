@@ -153,7 +153,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        log.info("PasswordEncoder initialized");
+        log.info("PasswordEncoder inicializado con Strength 8");  
 
         return new BCryptPasswordEncoder(8);
     }
