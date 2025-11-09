@@ -28,7 +28,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {;
         sesiones.add(session);
         String sesion_id = session.getId();
-        String nombre_usuario = (String) session.getAttributes().get("username");\
+        String nombre_usuario = (String) session.getAttributes().get("username");
 
         String nombre_chat= (String) session.getAttributes().get("chat_name");
         if (nombre_usuario == null || nombre_chat == null) {
