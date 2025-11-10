@@ -26,6 +26,7 @@ public class PostWebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper;
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
+
         sesiones.add(session);
         String nombre_usuario = (String) session.getAttributes().get("username");
 

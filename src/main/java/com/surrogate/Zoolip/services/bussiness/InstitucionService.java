@@ -82,12 +82,10 @@ public class InstitucionService {
         if(institucionSolicitud.getTelefono_contacto() == null || institucionSolicitud.getTelefono_contacto().isEmpty()) {
             return new Response(error, 400, "El telefono de contacto no puede ser nulo");
 
-        }try {
+        }
             institucionSolicitudRepository.save(institucionSolicitud);
 
-        }catch (Exception e){
-            return new Response(error, 500, e.getMessage());
-        }
+
         return new Response(success, 200, "Solicitud hecha con exito, quedas a la espera");
     }
     public List<InstitucionDTO> getInstituciones() {
