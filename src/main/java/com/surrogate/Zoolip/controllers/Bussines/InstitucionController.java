@@ -2,6 +2,7 @@ package com.surrogate.Zoolip.controllers.Bussines;
 
 
 import com.surrogate.Zoolip.models.DTO.InstitucionDTO;
+import com.surrogate.Zoolip.models.DTO.InstitucionSolicitudDTO;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
 import com.surrogate.Zoolip.models.bussiness.Institucion.InstitucionSolicitud;
 import com.surrogate.Zoolip.models.peticiones.Response;
@@ -52,6 +53,15 @@ public class InstitucionController {
             return ResponseEntity.internalServerError().build();
         }
 
+    }
+    @GetMapping("/obtenerSolicitudes")
+    public ResponseEntity<List<InstitucionSolicitudDTO>> obtenerSolicitudes() {
+        List<InstitucionSolicitudDTO> institucionSolicitudDTO= institucionService.findAllSolicitudes();
+        if(institucionSolicitudDTO.isEmpty()){
+            return ResponseEntity.ofNullable(null);
+
+        }
+        return ResponseEntity.ok(institucionSolicitudDTO);
     }
 
     @GetMapping("/obtenerPorId")

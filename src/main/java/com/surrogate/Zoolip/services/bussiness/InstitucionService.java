@@ -1,6 +1,7 @@
 package com.surrogate.Zoolip.services.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.InstitucionDTO;
+import com.surrogate.Zoolip.models.DTO.InstitucionSolicitudDTO;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
 import com.surrogate.Zoolip.models.bussiness.Institucion.InstitucionSolicitud;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
@@ -148,5 +149,9 @@ public class InstitucionService {
 
         }
         return new Response(success, 200, "Comprobacion sin errores");
+    }
+
+    public List<InstitucionSolicitudDTO> findAllSolicitudes() {
+        return institucionSolicitudRepository.findAllInstitucionSolicitud();
     }
 }
