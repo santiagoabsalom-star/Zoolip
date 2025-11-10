@@ -38,8 +38,8 @@ public class PublicacionController {
     }
 
     @GetMapping(value = "/obtenerTodas", produces = "Application/json")
-    public ResponseEntity<List<PublicacionDTO>> obtenerTodas() {
-        List<PublicacionDTO> publicaciones = publicacionService.obtenerTodas();
+    public ResponseEntity<List<PublicacionDTO>> obtenerTodas(@RequestParam long id_publicacion) {
+        List<PublicacionDTO> publicaciones = publicacionService.obtenerTodasPaginacion(id_publicacion);
         if (publicaciones == null || publicaciones.isEmpty()) {
             return ResponseEntity.ofNullable(null);
         }
@@ -48,11 +48,12 @@ public class PublicacionController {
 
 
     @GetMapping("/obtenerPorId")
-    public ResponseEntity<PublicacionDTO> obtenerPorId(@RequestBody Long id_publicacion) {
+    public ResponseEntity<PublicacionDTO> obtenerPorId(@RequestParam Long id_publicacion) {
         PublicacionDTO publicacion = publicacionService.obtenerPorId(id_publicacion);
         if (publicacion == null) {
             return ResponseEntity.status(404).body(null);
         }
         return ResponseEntity.ok(publicacion);
     }
+
 }

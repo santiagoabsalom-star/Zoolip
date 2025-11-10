@@ -25,10 +25,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         //TODO: Implementar la logica del chat (>:D)
 
     @Override
-    public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {;
+    public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
         sesiones.add(session);
         String sesion_id = session.getId();
-        String nombre_usuario = (String) session.getAttributes().get("username");\
+        String nombre_usuario = (String) session.getAttributes().get("username");
 
         String nombre_chat= (String) session.getAttributes().get("chat_name");
         if (nombre_usuario == null || nombre_chat == null) {
@@ -46,7 +46,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             try {
                 if(!sesion.getId().equals(session.getId())){
                     if(sesion.isOpen()){
-
                         if(chat_sesiones.containsKey(sesion.getAttributes().get("chat_name"))){
 
                             sesion.sendMessage(message);

@@ -4,6 +4,7 @@ import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -72,6 +73,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                         .requestMatchers("/api/mascotas/**").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO")
                         .requestMatchers("/api/auth/me").permitAll()
+                        .requestMatchers("api/publicacion/obtenerTodas").permitAll()
+                        .requestMatchers("api/publicacion/obtenerPorId").permitAll()
                         .requestMatchers("/api/auth/logout").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
@@ -91,7 +94,6 @@ public class SecurityConfig {
                         ))))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
-        log.info("SecurityFilterChain initialized");
         return http.build();
 
 
@@ -133,7 +135,6 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-        log.info("Cors initialized");
         return source;
     }
 
@@ -146,6 +147,7 @@ public class SecurityConfig {
     }
 
 
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -153,7 +155,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        log.info("PasswordEncoder inicializado con Strength 8");  
+
 
         return new BCryptPasswordEncoder(8);
     }

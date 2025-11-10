@@ -55,4 +55,13 @@ public class ComentarioController {
         }
         return new ResponseEntity<>(comentarioDTO, HttpStatus.OK);
     }
+        @GetMapping("/obtenerPorIdPublicacion")
+    public ResponseEntity<List<ComentarioDTO>> obtenerPorIdPublicacion(@RequestParam Long id_publicacion) {
+        List<ComentarioDTO> comentarios = comentarioService.buscarComentariosPorPublicacion(id_publicacion);
+        if (comentarios.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+        return new ResponseEntity<>(comentarios, HttpStatus.OK);
+    }
+
 }

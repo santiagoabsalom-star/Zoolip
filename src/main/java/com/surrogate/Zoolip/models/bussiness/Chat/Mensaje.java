@@ -19,10 +19,10 @@ public class Mensaje {
     private String contenido;
     @Column(name="fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
-    @JoinColumn(name="emisor", nullable = false)
+    @JoinColumn(name="id_emisor", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario emisor;
-    @JoinColumn
+    @JoinColumn(name = "id_receptor", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario receptor;
 

@@ -20,6 +20,7 @@ public class Publicacion {
     private Usuario id_usuario;
     @Column(name = "topico")
     private String topico;
+
     @Column(name = "contenido")
     private String contenido;
     @Column(name = "likes")

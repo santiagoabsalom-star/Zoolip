@@ -56,7 +56,12 @@ public class InstitucionService {
         }
     }
 
-
+    public InstitucionDTO getInstitucionById_Usuario(Long id_usuario) {
+        if (!usuarioRepository.existsById(id_usuario)) {
+            return null;
+        }
+        return institucionRepository.findInstitucionDTOById_usuario(id_usuario);
+    }
     public List<InstitucionDTO> getInstituciones() {
         return institucionRepository.findAllDTO();
 

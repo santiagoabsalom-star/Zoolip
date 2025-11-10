@@ -8,12 +8,7 @@ import com.surrogate.Zoolip.repository.bussiness.MascotaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationObservationContext;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +32,7 @@ public class MascotaService {
             return response;
         }
         mascotaRepository.save(mascota);
-        return new Response(success, 200, "La mascota ha sido agregado");
+        return new Response(success, 200, "La mascota ha sido agregada");
     }
 
     public Response actualizarMascota(Mascota mascota) {
@@ -64,6 +59,8 @@ public class MascotaService {
         }
         return mascotaRepository.findMascotaDTO(id_mascota);
     }
+
+
     @Cacheable(cacheNames = "mascotas", unless = "#result == null || #result.isEmpty()")
     public List<MascotaDTO> buscarMascotasDTO() {
         if (mascotaRepository.findAllMascotasDTO().isEmpty()) {
@@ -84,7 +81,7 @@ public class MascotaService {
 
         }
 
-        String rolUsuario = SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
+        String rolUsuario = getRoleUsuario();
         if((!(rolUsuario.equals("ROLE_ADMIN") || rolUsuario.equals("ROLE_ADOPTANTE") || rolUsuario.equals("ROLE_ADMINISTRADOR"))) && mascota.getNombre()!=null) {
 
             return new Response(error, 403, "No tienes permiso para asignar nombre a la mascota");
@@ -124,6 +121,12 @@ public class MascotaService {
         return new Response(error, 404, "Institucion no encontrada");
 
 
+    }
+
+
+
+    private String getRoleUsuario(){
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
     }
 
 

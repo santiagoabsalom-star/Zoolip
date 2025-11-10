@@ -11,22 +11,12 @@ public class ZoolipApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ZoolipApplication.class, args);
-        String gcName = ManagementFactory.getGarbageCollectorMXBeans()
+        System.out.println("Usando: "+ManagementFactory.getGarbageCollectorMXBeans()
                 .stream()
                 .map(GarbageCollectorMXBean::getName)
-                .reduce("", (a, b) -> a + " " + b);
+                .reduce("", (a, b) -> a + " " + b));
 
-        if (gcName.contains("G1")) {
-            System.out.println("Usando G1GC");
-        } else if (gcName.contains("ZGC")) {
-            System.out.println("Usando ZGC");
-        } else if (gcName.contains("Shenandoah")) {
-            System.out.println("Usando Shenandoah GC");
-        } else if (gcName.contains("PS")) {
-            System.out.println("Usando Parallel GC");
-        } else {
-            System.out.println("GC desconocido: " + gcName);
-        }
+
     }
 
 }

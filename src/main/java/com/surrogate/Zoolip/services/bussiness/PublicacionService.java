@@ -52,8 +52,8 @@ public class PublicacionService {
     }
 
     @Transactional
-    public List<PublicacionDTO> obtenerTodas() {
-        return publicacionRepository.findAllPublicacionesDTO();
+    public List<PublicacionDTO> obtenerTodasPaginacion(long id_publicacion) {
+        return publicacionRepository.findAllPublicacionesDTO(id_publicacion);
     }
 
     @Transactional

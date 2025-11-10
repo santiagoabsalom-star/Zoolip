@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PublicacionView extends FormLayout {
     private final PublicacionService publicacionService;
     private final UsuarioService usuarioService;
-
+    private final long id=10;
     private final Binder<Publicacion> binder = new Binder<>(Publicacion.class);
     private Publicacion current;
 
@@ -75,7 +75,7 @@ public class PublicacionView extends FormLayout {
 
         binder.forField(contenido)
                 .asRequired("Contenido requerido")
-                .withValidator(v -> v != null && v.trim().length() > 0, "Contenido requerido")
+                .withValidator(v -> v != null && !v.trim().isEmpty(), "Contenido requerido")
                 .bind(Publicacion::getContenido, Publicacion::setContenido);
 
         binder.forField(usuario)
@@ -196,7 +196,7 @@ public class PublicacionView extends FormLayout {
 
     private void refreshGrid() {
         try {
-            var items = publicacionService.obtenerTodas();
+            var items = publicacionService.obtenerTodasPaginacion(id);
             if (items != null) grid.setItems(items);
         } catch (Exception e) {
             log.error("Failed to refresh publicaciones", e);

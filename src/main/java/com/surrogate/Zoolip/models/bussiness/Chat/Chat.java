@@ -13,10 +13,10 @@ public class Chat {
     private Long id_chat;
     @Column(name="nombre_chat", nullable = false)
     private String nombreChat;
-    @JoinColumn(name="usuario", nullable = false)
+    @JoinColumn(name="id_usuario", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;
-    @JoinColumn(name="administrador", nullable = false)
+    @JoinColumn(name="id_administrador", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario administrador;
 

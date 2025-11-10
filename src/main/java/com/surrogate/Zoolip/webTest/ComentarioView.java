@@ -35,7 +35,7 @@ public class ComentarioView extends FormLayout {
     private final ComentarioService comentarioService;
     private final PublicacionService publicacionService;
     private final UsuarioService usuarioService;
-
+    private final long id=10;
     private final Binder<Comentario> binder = new Binder<>(Comentario.class);
     private Comentario current;
 
@@ -62,7 +62,7 @@ public class ComentarioView extends FormLayout {
         contenido.setWidthFull();
         contenido.setMaxLength(1000);
 
-        publicacion.setItems(publicacionService.obtenerTodas());
+        publicacion.setItems(publicacionService.obtenerTodasPaginacion(id));
         publicacion.setItemLabelGenerator(p -> p == null ? "" : (p.idPublicacion() + " - " + (p.topico() == null ? "" : p.topico())));
 
         usuario.setItemLabelGenerator(u -> u == null ? "" : u.nombre());
@@ -215,7 +215,7 @@ public class ComentarioView extends FormLayout {
             log.error("Failed to refresh comentarios", e);
         }
         try {
-            publicacion.setItems(publicacionService.obtenerTodas());
+            publicacion.setItems(publicacionService.obtenerTodasPaginacion(id));
         } catch (Exception ignored) {
         }
         try {

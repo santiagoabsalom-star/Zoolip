@@ -59,6 +59,10 @@ public class ComentarioService {
 
     }
 
+    public List<ComentarioDTO> buscarComentariosPorPublicacion(Long id_publicacion) {
+        return comentarioRepository.findComentarioDTOById_publicacion(id_publicacion);
+    }
+    @Transactional
     public ComentarioDTO buscarComentario(Long id_comentario) {
         return comentarioRepository.findComentarioDTOById(id_comentario);
     }
