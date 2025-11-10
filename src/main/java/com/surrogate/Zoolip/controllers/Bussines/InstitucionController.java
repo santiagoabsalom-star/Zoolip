@@ -3,6 +3,7 @@ package com.surrogate.Zoolip.controllers.Bussines;
 
 import com.surrogate.Zoolip.models.DTO.InstitucionDTO;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
+import com.surrogate.Zoolip.models.bussiness.Institucion.InstitucionSolicitud;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.bussiness.InstitucionService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class InstitucionController {
     @PostMapping("/agregar")
     public ResponseEntity<Response> agregarInstitucion(@RequestBody Institucion institucion) {
         Response response = institucionService.crear(institucion);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+    @PostMapping("/solicitudInstitucion")
+    public ResponseEntity<Response> solicitud(@RequestBody InstitucionSolicitud institucionSolicitud) {
+        Response response=institucionService.crearSolicitud(institucionSolicitud);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 

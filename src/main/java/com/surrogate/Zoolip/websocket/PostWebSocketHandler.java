@@ -39,7 +39,6 @@ public class PostWebSocketHandler extends TextWebSocketHandler {
         String mensaje = message.getPayload();
         List<PublicacionDTO> publicaciones = publicacionService.obtenerPublicacionesLike(mensaje);
         String publicacionesJson = mapper.writeValueAsString(publicaciones);
-
         sesiones.iterator().forEachRemaining(sesion -> {
             try {
                 if (sesion.isOpen() && session.getId().equals(sesion.getId())) {

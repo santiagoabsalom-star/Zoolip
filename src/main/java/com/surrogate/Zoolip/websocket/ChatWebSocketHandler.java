@@ -17,7 +17,6 @@ import java.util.Iterator;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-
 public class ChatWebSocketHandler extends TextWebSocketHandler {
         private final HashMap<String , String> chat_sesiones= new HashMap<>();
         private final HashSet<WebSocketSession> sesiones = new HashSet<>();

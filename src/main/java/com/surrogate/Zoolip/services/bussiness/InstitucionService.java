@@ -2,12 +2,15 @@ package com.surrogate.Zoolip.services.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.InstitucionDTO;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
+import com.surrogate.Zoolip.models.bussiness.Institucion.InstitucionSolicitud;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.repository.bussiness.InstitucionRepository;
+import com.surrogate.Zoolip.repository.bussiness.InstitucionSolicitudRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class InstitucionService {
     private final InstitucionRepository institucionRepository;
     private final UsuarioRepository usuarioRepository;
+    private final InstitucionSolicitudRepository institucionSolicitudRepository;
     private final String error;
     private final String success;
 
@@ -61,6 +65,29 @@ public class InstitucionService {
             return null;
         }
         return institucionRepository.findInstitucionDTOById_usuario(id_usuario);
+    }
+
+    public Response crearSolicitud(InstitucionSolicitud institucionSolicitud) {
+        if(institucionSolicitud.getNombre_institucion() == null || institucionSolicitud.getNombre_institucion().isEmpty()) {
+            return new Response(error, 400, "Nombre institucion no puede ser nulo");
+        }
+        if(institucionSolicitud.getRazon_solicitud() == null || institucionSolicitud.getRazon_solicitud().isEmpty()) {
+            return new Response(error, 400, "La razon solicitud no puede ser nula");
+        }
+        if(institucionSolicitud.getEmail_contacto() == null || institucionSolicitud.getEmail_contacto().isEmpty()) {
+            return new Response(error, 400, "Email contacto no puede ser nula");
+
+        }
+        if(institucionSolicitud.getTelefono_contacto() == null || institucionSolicitud.getTelefono_contacto().isEmpty()) {
+            return new Response(error, 400, "El telefono de contacto no puede ser nulo");
+
+        }try {
+            institucionSolicitudRepository.save(institucionSolicitud);
+
+        }catch (Exception e){
+            return new Response(error, 500, e.getMessage());
+        }
+        return new Response(success, 200, "Solicitud hecha con exito, quedas a la espera");
     }
     public List<InstitucionDTO> getInstituciones() {
         return institucionRepository.findAllDTO();
