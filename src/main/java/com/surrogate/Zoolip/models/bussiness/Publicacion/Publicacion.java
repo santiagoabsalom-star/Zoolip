@@ -20,7 +20,10 @@ public class Publicacion {
     private Usuario id_usuario;
     @Column(name = "topico")
     private String topico;
-
+    @Column(name="tipo")
+    private Tipo tipo;
+    @Column(name="imagen_url")
+    private String imagen_url;
     @Column(name = "contenido")
     private String contenido;
     @Column(name = "likes")

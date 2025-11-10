@@ -28,14 +28,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
         sesiones.add(session);
         String sesion_id = session.getId();
-        String nombre_usuario = (String) session.getAttributes().get("username");
 
         String nombre_chat= (String) session.getAttributes().get("chat_name");
-        if (nombre_usuario == null || nombre_chat == null) {
-            log.error("Faltan atributos en la sesión WebSocket: username o chat_name es nulo.");
-            session.close(CloseStatus.BAD_DATA);
-            return;
-        }
     chat_sesiones.put(nombre_chat, sesion_id );
     }
     @Override
@@ -47,7 +41,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 if(!sesion.getId().equals(session.getId())){
                     if(sesion.isOpen()){
                         if(chat_sesiones.containsKey(sesion.getAttributes().get("chat_name"))){
-
+                        log.info("Enviando mensaje al chat: {}", sesion.getAttributes().get("chat_name"));
                             sesion.sendMessage(message);
                         }
                     }

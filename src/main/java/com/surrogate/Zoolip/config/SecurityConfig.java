@@ -1,5 +1,7 @@
 package com.surrogate.Zoolip.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import lombok.RequiredArgsConstructor;
@@ -73,9 +75,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/institucion/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                         .requestMatchers("/api/mascotas/**").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO")
                         .requestMatchers("/api/auth/me").permitAll()
-                        .requestMatchers("api/publicacion/obtenerTodas").permitAll()
-                        .requestMatchers("api/publicacion/obtenerPorId").permitAll()
+                        .requestMatchers("api/publicacion/obtenerTodas").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO")
+                        .requestMatchers("api/publicacion/obtenerPublicacionesPublicas").permitAll()
+                        .requestMatchers("api/publicacion/obtenerPorId").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO")
                         .requestMatchers("/api/auth/logout").permitAll()
+                        .requestMatchers("/post/**").permitAll()
+                        .requestMatchers("/chat/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(endpoint -> endpoint.baseUri("/oauth2/authorization"))
@@ -168,5 +173,12 @@ public class SecurityConfig {
     @Bean
     public String error() {
         return "error";
+    }
+
+    @Bean
+    public ObjectMapper mapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
     }
 }

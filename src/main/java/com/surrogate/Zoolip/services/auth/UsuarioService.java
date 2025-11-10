@@ -61,4 +61,13 @@ public class UsuarioService {
     public Optional<Usuario> findById(Long uid) {
         return usuarioRepository.findById(uid);
     }
+    @Transactional
+    public Response eliminar(Long id_usuario) {
+        if (usuarioRepository.existsById(id_usuario)) {
+            usuarioRepository.deleteById(id_usuario);
+            return new Response("El usuario se ha eliminado correctamente", 200, "Success");
+        }
+        return new Response("El usuario no existe", 404, "Error");
+
+    }
 }

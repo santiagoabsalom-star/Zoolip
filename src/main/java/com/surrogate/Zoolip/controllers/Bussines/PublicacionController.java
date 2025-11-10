@@ -46,6 +46,14 @@ public class PublicacionController {
         return ResponseEntity.ok(publicaciones);
     }
 
+    @GetMapping("/obtenerPublicacionesPublicas")
+    public ResponseEntity<List<PublicacionDTO>> obtenerPublicacionesPublicas() {
+        List<PublicacionDTO> publicaciones = publicacionService.obtenerPublicacionesPublicas();
+        if (publicaciones == null || publicaciones.isEmpty()) {
+            return ResponseEntity.ofNullable(null);
+        }
+        return ResponseEntity.ok(publicaciones);
+    }
 
     @GetMapping("/obtenerPorId")
     public ResponseEntity<PublicacionDTO> obtenerPorId(@RequestParam Long id_publicacion) {
@@ -55,5 +63,24 @@ public class PublicacionController {
         }
         return ResponseEntity.ok(publicacion);
     }
+    @GetMapping("obtenerFavUsuario")
+    public ResponseEntity<List<PublicacionDTO>> obtenerFavUsuario(@RequestParam Long id_usuario) {
+        List<PublicacionDTO> publicaciones = publicacionService.obtenerTodasPorFavUsuario(id_usuario);
+        if (publicaciones == null || publicaciones.isEmpty()) {
+            return ResponseEntity.ofNullable(null);
+        }
+        return ResponseEntity.ok(publicaciones);
+    }
 
+    @PostMapping("/putPublicacionFav")
+    public ResponseEntity<Response> putPublicacionFav(@RequestParam Long id_publicacion, @RequestParam Long id_usuario) {
+        Response response = publicacionService.putPublicacionFav(id_publicacion, id_usuario);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+}
+
+    @DeleteMapping("/deletePublicacionFav")
+    public ResponseEntity<Response> deletePublicacionFav(@RequestParam Long id_publicacion, @RequestParam Long id_usuario) {
+        Response response = publicacionService.deletePublicacionFav(id_publicacion, id_usuario);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
 }

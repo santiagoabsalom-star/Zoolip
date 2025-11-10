@@ -2,8 +2,10 @@ package com.surrogate.Zoolip.services.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.PublicacionDTO;
 import com.surrogate.Zoolip.models.bussiness.Publicacion.Publicacion;
+import com.surrogate.Zoolip.models.bussiness.Publicacion.Tipo;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.peticiones.Response;
+import com.surrogate.Zoolip.repository.bussiness.PublicacionFavUsuarioRepository;
 import com.surrogate.Zoolip.repository.bussiness.PublicacionRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Queue;
 
 @Slf4j
 @Service
@@ -20,6 +23,7 @@ import java.util.List;
 public class PublicacionService {
     private final PublicacionRepository publicacionRepository;
     private final UsuarioRepository usuarioRepository;
+    private final PublicacionFavUsuarioRepository publicacionFavUsuarioRepository;
     private final String error;
     private final String success;
 
@@ -56,6 +60,9 @@ public class PublicacionService {
         return publicacionRepository.findAllPublicacionesDTO(id_publicacion);
     }
 
+    public List<PublicacionDTO> obtenerTodasPorFavUsuario(Long id_usuario) {
+        return publicacionRepository.findAllPublicacionesDTOByFavUsuario(id_usuario);
+    }
     @Transactional
     public PublicacionDTO obtenerPorId(Long id_publicacion) {
         return publicacionRepository.findPublicacionDTOById(id_publicacion);
@@ -74,6 +81,9 @@ public class PublicacionService {
         if (publicacion.getContenido() == null) {
             return new Response(error, 403, "El comentario no puede no tener contenido mongoloid");
         }
+        if(publicacion.getTipo() == Tipo.CONSULTA && publicacion.getImagen_url()!=null) {
+            return new Response(error, 403, "Una publicacion de tipo consulta no puede tener imagenes");
+        }
 
         int wordCount = publicacion.getContenido().trim().split("\\s+").length;
 
@@ -89,6 +99,35 @@ public class PublicacionService {
 
     }
 
+    public Response putPublicacionFav(Long idPublicacion, Long idUsuario) {
+        if (!publicacionRepository.existsById(idPublicacion)) {
+            return new Response(error, 404, "La publicacion no existe");
+        }
+        if (!usuarioRepository.existsById(idUsuario)) {
+            return new Response(error, 404, "El usuario no existe");
+        }
+        publicacionFavUsuarioRepository.addFavorite(idPublicacion, idUsuario);
+        return new Response(success, 200, "Publicacion añadida a favoritos");
+    }
+
+    public Response deletePublicacionFav(Long idPublicacion, Long idUsuario) {
+        if (!publicacionRepository.existsById(idPublicacion)) {
+            return new Response(error, 404, "La publicacion no existe");
+        }
+        if (!usuarioRepository.existsById(idUsuario)) {
+            return new Response(error, 404, "El usuario no existe");
+        }
+        publicacionFavUsuarioRepository.removeFavorite(idPublicacion, idUsuario);
+        return new Response(success, 200, "Publicacion eliminada de favoritos");
+    }
+
+    public List<PublicacionDTO> obtenerPublicacionesPublicas() {
+        return publicacionRepository.findPublicacionesPublicas();
+    }
+    public List<PublicacionDTO> obtenerPublicacionesLike(String contenido){
+        log.info("Buscando publicaciones con contenido similar a: {}", contenido);
+        return publicacionRepository.findPublicacionDTOByContenido(contenido);
+    }
 }
 
 
