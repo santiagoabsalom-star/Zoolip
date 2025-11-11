@@ -1,6 +1,8 @@
 package com.surrogate.Zoolip.websocket;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.surrogate.Zoolip.models.DTO.PublicacionDTO;
 import com.surrogate.Zoolip.services.bussiness.PublicacionService;
 
@@ -12,8 +14,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
@@ -23,9 +25,10 @@ import java.util.List;
 public class PostWebSocketHandler extends TextWebSocketHandler {
     private final PublicacionService publicacionService;
     private final HashSet<WebSocketSession> sesiones = new HashSet<>();
-    private final ObjectMapper mapper;
+    private final ObjectMapper mapper=getMapper();
+
     @Override
-    public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(@NotNull WebSocketSession session) {
 
         sesiones.add(session);
         String nombre_usuario = (String) session.getAttributes().get("username");
@@ -40,6 +43,7 @@ public class PostWebSocketHandler extends TextWebSocketHandler {
         String mensaje = message.getPayload();
         List<PublicacionDTO> publicaciones = publicacionService.obtenerPublicacionesLike(mensaje);
         String publicacionesJson = mapper.writeValueAsString(publicaciones);
+        log.info("Mensaje como bytes: {} ", Arrays.toString(message.asBytes()));
         sesiones.iterator().forEachRemaining(sesion -> {
             try {
                 if (sesion.isOpen() && session.getId().equals(sesion.getId())) {
@@ -53,10 +57,17 @@ public class PostWebSocketHandler extends TextWebSocketHandler {
 
     }
 @Override
-    public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull org.springframework.web.socket.CloseStatus status) throws Exception {
+    public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull org.springframework.web.socket.CloseStatus status) {
         sesiones.remove(session);
         String nombre_usuario = (String) session.getAttributes().get("username");
         log.info("Conexión WebSocket cerrada para el usuario: " + nombre_usuario + " con estado: " + status);
+    }
+private ObjectMapper getMapper() {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    mapper.setDateFormat(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    mapper.disable(MapperFeature.REQUIRE_HANDLERS_FOR_JAVA8_TIMES);
+    return mapper;
     }
 
 }

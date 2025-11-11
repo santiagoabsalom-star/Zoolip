@@ -1,7 +1,6 @@
 package com.surrogate.Zoolip.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import lombok.RequiredArgsConstructor;
@@ -182,10 +181,5 @@ public class SecurityConfig {
         return "error";
     }
 
-    @Bean
-    public ObjectMapper mapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        return mapper;
-    }
+
 }
