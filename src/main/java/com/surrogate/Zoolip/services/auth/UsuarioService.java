@@ -70,4 +70,8 @@ public class UsuarioService {
         return new Response("El usuario no existe", 404, "Error");
 
     }
+
+    public UsuarioDto findDTOById(Long idUsuario) {
+        return usuarioRepository.findDTOById(idUsuario);
+    }
 }

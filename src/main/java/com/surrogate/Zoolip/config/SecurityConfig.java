@@ -86,6 +86,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/publicacion/obtenerPorId").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO")
                         .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/post/**").permitAll()
+                        .requestMatchers("/api/usuario/getUsuarioById").permitAll()
                         .requestMatchers("/chat/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2

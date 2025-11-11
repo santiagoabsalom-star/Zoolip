@@ -1,6 +1,7 @@
 package com.surrogate.Zoolip.controllers.Bussines;
 
 
+import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.auth.UsuarioService;
@@ -24,8 +25,17 @@ public class UsuarioController {
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
     @DeleteMapping("/eliminar")
-    public ResponseEntity<Response> eliminarUsuario(@RequestBody Long id_usuario) {
+    public ResponseEntity<Response> eliminarUsuario(@RequestParam Long id_usuario) {
         Response response = usuarioService.eliminar(id_usuario);
         return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+    @GetMapping("/getUsuarioById")
+    public ResponseEntity<UsuarioDto> getUsuarioById(@RequestParam Long id_usuario) {
+        UsuarioDto usuarioDto= usuarioService.findDTOById(id_usuario);
+        if(usuarioDto == null) {
+            return ResponseEntity.notFound().build();
+
+        }
+        return  ResponseEntity.ok(usuarioDto);
     }
 }
