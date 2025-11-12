@@ -44,7 +44,7 @@ public class UsuarioService {
         if (token == null) {
             return Optional.empty();
         }
-        if(!jwtService.isTokenStored(token)) {
+        if(jwtService.isTokenStored(token)) {
             return Optional.of(403).map(m -> null);
         }
         return usuarioRepository.getUserById((long) jwtService.extractId(token));
@@ -73,5 +73,9 @@ public class UsuarioService {
 
     public UsuarioDto findDTOById(Long idUsuario) {
         return usuarioRepository.findDTOById(idUsuario);
+    }
+
+    public List<UsuarioDto> findAllWithLimit(Long idUsuario) {
+        return usuarioRepository.findAllDTosWithLimit(idUsuario);
     }
 }

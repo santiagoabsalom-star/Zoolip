@@ -37,5 +37,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     boolean existsByNombre(String nombre);
     boolean existsByEmail(String email);
     @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u where u.id=:id_usuario")
-    UsuarioDto findDTOById(Long id_usuario);
+    UsuarioDto findDTOById(long id_usuario);
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u where u.id >=:id_usuario ORDER BY u.id LIMIT 10  " )
+    List<UsuarioDto> findAllDTosWithLimit(long id_usuario);
+
 }

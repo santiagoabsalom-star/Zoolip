@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +31,15 @@ public class UsuarioController {
     public ResponseEntity<Response> eliminarUsuario(@RequestParam Long id_usuario) {
         Response response = usuarioService.eliminar(id_usuario);
         return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+
+    @GetMapping("/getUsuarios")
+    public ResponseEntity<List<UsuarioDto>> getUsuarios(@RequestParam Long id_usuario) {
+        List<UsuarioDto> usuarioDtos = usuarioService.findAllWithLimit(id_usuario);
+        if(usuarioDtos==null ||usuarioDtos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(usuarioDtos);
     }
     @GetMapping("/getUsuarioById")
     public ResponseEntity<UsuarioDto> getUsuarioById(@RequestParam Long id_usuario) {

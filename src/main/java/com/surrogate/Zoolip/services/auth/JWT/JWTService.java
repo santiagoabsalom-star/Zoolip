@@ -214,7 +214,7 @@ public class JWTService {
             log.info("Token con comillas detectado, eliminando comillas");
             token = token.trim().replace("\"", "");
         }
-        return tokens.contains(token);
+        return !tokens.contains(token);
     }
 
 

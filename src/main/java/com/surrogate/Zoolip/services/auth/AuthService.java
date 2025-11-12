@@ -74,7 +74,7 @@ public class   AuthService {
                         .map(GrantedAuthority::getAuthority)
                         .orElse("ROLE_USER");
                 long endTimeauth = System.currentTimeMillis();
-                log.info("Tiempo de espera de autenticacion: " + (endTimeauth - startTimeauth) + "ms");
+                log.info("Tiempo de espera de autenticacion: {}" ,     (endTimeauth - startTimeauth) + "ms");
 
                 String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId(), userDetails.getEmail());
                 jwtService.setIpToken(ip, token);
@@ -132,8 +132,8 @@ public class   AuthService {
             if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
                 return new RegisterResponse(error, 401, "El rol es requerido");
             }
-            if (!registerRequest.getRol().equals("ADMINISTRADOR")) {
-                return new RegisterResponse(error, 403, "El rol tiene que ser administrador");
+            if (!registerRequest.getRol().equals("ADMINISTRADOR") && !registerRequest.getRol().equals("SYSTEM")) {
+                return new RegisterResponse(error, 403, "El rol tiene que ser administrador o system");
             }
 
             if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
