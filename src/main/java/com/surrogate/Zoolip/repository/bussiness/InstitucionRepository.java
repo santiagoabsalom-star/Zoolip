@@ -39,7 +39,7 @@ public interface InstitucionRepository extends JpaRepository<Institucion, Long> 
             ", i.email as email" +
             ",i.horario_inicio as horario_Inicio" +
             ", i.horario_fin as horario_Fin FROM Institucion i where i.id_usuario.id = :id_usuario")
-    Optional<InstitucionDTO> findInstitucionDTOById_usuario(@Param("id_usuario") long id_usuario);
+    InstitucionDTO findInstitucionDTOById_usuario(@Param("id_usuario") long id_usuario);
 
     @Query("Select  i.nombre from Institucion i where i.id_usuario.id =:id_usuario ")
     String findByU(@Param("id_usuario") Long id_usuario);

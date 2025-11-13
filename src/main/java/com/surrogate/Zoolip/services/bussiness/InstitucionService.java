@@ -65,8 +65,7 @@ public class InstitucionService {
         if (!usuarioRepository.existsById(id_usuario)) {
             return null;
         }
-
-        return institucionRepository.findInstitucionDTOById_usuario(id_usuario).orElseThrow(() -> new RuntimeException("El usuario con id " + id_usuario +" no se encarga de ninguna institucion"));
+        return institucionRepository.findInstitucionDTOById_usuario(id_usuario);
     }
 
     public Response crearSolicitud(InstitucionSolicitud institucionSolicitud) {
