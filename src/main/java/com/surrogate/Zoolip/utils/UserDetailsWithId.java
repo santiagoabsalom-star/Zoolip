@@ -96,7 +96,7 @@ public interface UserDetailsWithId extends Serializable {
      */
     boolean isEnabled();
 
-    int getId();
+    long getId();
 
     String getEmail();
 }

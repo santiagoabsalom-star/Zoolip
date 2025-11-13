@@ -28,8 +28,8 @@ public record UserPrincipal(Usuario usuario) implements UserDetailsWithId {
     }
 
     @Override
-    public int getId() {
-        return Math.toIntExact(usuario.getId());
+    public long getId() {
+        return usuario.getId();
     }
 
     @Override

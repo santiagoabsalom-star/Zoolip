@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -29,21 +30,18 @@ public class PostWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) {
-
         sesiones.add(session);
-        String nombre_usuario = (String) session.getAttributes().get("username");
 
-        log.info("Nueva conexión WebSocket establecida para el usuario:{} ", nombre_usuario);
+
+        log.info("Nueva conexión WebSocket establecida con id :{} ", session.getId());
 
     }
     @Override
-    public void handleTextMessage(@NotNull WebSocketSession session, @NotNull org.springframework.web.socket.TextMessage message) throws Exception {
-        String nombre_usuario = (String) session.getAttributes().get("username");
-        log.info("Mensaje recibido del usuario {}: {}", nombre_usuario, message.getPayload());
+    public void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message) throws Exception {
         String mensaje = message.getPayload();
+
         List<PublicacionDTO> publicaciones = publicacionService.obtenerPublicacionesLike(mensaje);
         String publicacionesJson = mapper.writeValueAsString(publicaciones);
-        log.info("Mensaje como bytes: {} ", Arrays.toString(message.asBytes()));
         sesiones.iterator().forEachRemaining(sesion -> {
             try {
                 if (sesion.isOpen() && session.getId().equals(sesion.getId())) {
@@ -54,13 +52,12 @@ public class PostWebSocketHandler extends TextWebSocketHandler {
             }
         });
 
-
     }
 @Override
-    public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull org.springframework.web.socket.CloseStatus status) {
+    public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull CloseStatus status) {
         sesiones.remove(session);
-        String nombre_usuario = (String) session.getAttributes().get("username");
-        log.info("Conexión WebSocket cerrada para el usuario: " + nombre_usuario + " con estado: " + status);
+
+        log.info("Conexión WebSocket cerrada con estado {}", status);
     }
 private ObjectMapper getMapper() {
     ObjectMapper mapper = new ObjectMapper();

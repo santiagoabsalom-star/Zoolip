@@ -4,6 +4,7 @@ import com.surrogate.Zoolip.models.DTO.PublicacionDTO;
 import com.surrogate.Zoolip.models.bussiness.Publicacion.Publicacion;
 import com.surrogate.Zoolip.models.bussiness.Publicacion.Tipo;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
+import com.surrogate.Zoolip.models.login.UserPrincipal;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.repository.bussiness.PublicacionFavUsuarioRepository;
 import com.surrogate.Zoolip.repository.bussiness.PublicacionRepository;
@@ -12,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +29,11 @@ public class PublicacionService {
     private final String error;
     private final String success;
 
+
     public Response crear(Publicacion publicacion) {
-        publicacion.setId_usuario(verifyUser(publicacion.getId_usuario().getId()));
+        UserPrincipal user= (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        publicacion.setId_usuario(verifyUser(user.getId()));
         Response response = verifyPublicacion(publicacion);
         if (response.getHttpCode() == 200) {
             publicacionRepository.save(publicacion);

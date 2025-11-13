@@ -56,8 +56,7 @@ public class DonacionService {
     }
 
     public List<DonacionDTO> obtenerDonaciones() {
-        List<DonacionDTO> donaciones = donacionRepository.obtenerDonaciones();
-        return donaciones;
+        return donacionRepository.obtenerDonaciones();
     }
 
     public DonacionDTO obtenerDonacionById(long idDonacion) {

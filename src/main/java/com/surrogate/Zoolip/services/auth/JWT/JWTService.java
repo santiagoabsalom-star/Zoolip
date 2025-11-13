@@ -68,8 +68,10 @@ public class JWTService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Integer extractId(String token) {
-        return (Integer) extractClaim(token, Claims -> Claims.get("id_usuario"));
+    public Long extractId(String token) {
+
+            return extractClaim(token, claims -> claims.get("id_usuario", Long.class));
+
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -107,11 +109,12 @@ public class JWTService {
      * @param id_usuario
      * @return String token
      */
-    public String generateTokenWithId(String username, String role, Integer id_usuario, String email) {
+    public String generateTokenWithId(String username, String role, long id_usuario, String email) {
         claims.put("role", role);
         claims.put("email", email);
         claims.put("id_usuario", id_usuario);
         log.info("Claims: {}", claims);
+
         String token = createToken(claims, username);
         claims.clear();
         log.info(token);
@@ -153,8 +156,15 @@ public class JWTService {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+            if(claims.getExpiration().before(new Date())){
+               tokens.remove(token);
+               ipToken.remove(token);
 
-            return !claims.getExpiration().before(new Date());
+                return false;
+
+            }
+            return true;
+
         } catch (Exception e) {
             return false;
         }

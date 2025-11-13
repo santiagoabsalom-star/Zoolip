@@ -20,7 +20,7 @@ public class PublicacionController {
 
     @PostMapping("/crear")
     public ResponseEntity<Response> crearPublicacion(@RequestBody Publicacion publicacion) {
-        log.info("Id de usuario: {} ", publicacion.getId_usuario().getId());
+
         Response response = publicacionService.crear(publicacion);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }

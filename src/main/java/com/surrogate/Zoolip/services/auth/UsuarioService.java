@@ -47,7 +47,7 @@ public class UsuarioService {
         if(jwtService.isTokenStored(token)) {
             return Optional.of(403).map(m -> null);
         }
-        return usuarioRepository.getUserById((long) jwtService.extractId(token));
+        return usuarioRepository.getUserById(jwtService.extractId(token));
 
     }
     @Cacheable(cacheNames="usersByEmailCache", key="#token")
