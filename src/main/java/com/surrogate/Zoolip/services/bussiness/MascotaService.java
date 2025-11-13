@@ -1,10 +1,18 @@
 package com.surrogate.Zoolip.services.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.MascotaDTO;
+import com.surrogate.Zoolip.models.DTO.SolicitudAdopcionDTO;
+import com.surrogate.Zoolip.models.bussiness.Mascota.EstadoAdopcion;
 import com.surrogate.Zoolip.models.bussiness.Mascota.Mascota;
+import com.surrogate.Zoolip.models.bussiness.Mascota.SolicitudAdopcion.EstadoSolicitud;
+import com.surrogate.Zoolip.models.bussiness.Mascota.SolicitudAdopcion.SolicitudAdopcion;
+import com.surrogate.Zoolip.models.bussiness.Usuario;
+import com.surrogate.Zoolip.models.login.UserPrincipal;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.repository.bussiness.InstitucionRepository;
 import com.surrogate.Zoolip.repository.bussiness.MascotaRepository;
+import com.surrogate.Zoolip.repository.bussiness.SolicitudAdopcionRepository;
+import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,7 +20,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -24,6 +34,8 @@ public class MascotaService {
     private final InstitucionRepository institucionRepository;
     private final String error;
     private final String success;
+    private final UsuarioRepository usuarioRepository;
+    private final SolicitudAdopcionRepository solicitudAdopcionRepository;
 
 
     public Response agregarMascota(Mascota mascota) {
@@ -59,6 +71,83 @@ public class MascotaService {
         }
         return mascotaRepository.findMascotaDTO(id_mascota);
     }
+    public Response solicitudAdopcion(SolicitudAdopcion solicitudAdopcion){
+        if(usuarioRepository.existsById(getIdUsuario())){
+            solicitudAdopcion.setId_adoptante(usuarioRepository.findById(getIdUsuario()).orElse(null));
+
+        }
+        if(Objects.equals(getRoleUsuario(), "ROLE_SYSTEM") || Objects.equals(getRoleUsuario(), "ROLE_ADMIN") || Objects.equals(getRoleUsuario(), "ROLE_ADMINISTRADOR"))
+        {
+            return new Response(error, 409, "Solo usuarios comunes pueden solicitar adopcion");
+        }
+        if(solicitudAdopcion.getFecha_finalizado()!=null && solicitudAdopcion.getFecha_inicio()!=null){
+            return new Response(error, 409, "No puedes establecer fecha finalizada ni fecha inicio en la solicitud");
+        }
+        if(solicitudAdopcionRepository.existsByMascotaId(solicitudAdopcion.getMascota().getId())){
+            return new Response(error, 409, "La mascota ya ha sido solicitada");
+        }
+        solicitudAdopcion.setFecha_inicio(LocalDateTime.now());
+        if(!mascotaRepository.existsById(solicitudAdopcion.getMascota().getId())) {
+            return new Response(error, 404, "La mascota no existe");
+         }
+        solicitudAdopcion.setEstadoSolicitud(EstadoSolicitud.SOLICITADO);
+        Mascota mascota= mascotaRepository.findById(solicitudAdopcion.getMascota().getId()).orElse(null);
+        assert mascota != null;
+        mascota.setEstadoAdopcion(EstadoAdopcion.EN_PROCESO);
+
+        mascotaRepository.saveAndFlush(mascota);
+        solicitudAdopcionRepository.save(solicitudAdopcion);
+        return new Response(success, 200, "La mascota ha sido solicitada");
+    }
+    public Response completarAdopcion(SolicitudAdopcion solicitudAdopcion) {
+        if (!solicitudAdopcionRepository.existsById(solicitudAdopcion.getId_solicitud_adopcion())) {
+            return new Response(error, 404, "La solicitud no existe");
+
+        }
+        solicitudAdopcion = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
+
+        assert solicitudAdopcion != null;
+        if(!usuarioRepository.existsById(solicitudAdopcion.getId_adoptante().getId())) {
+            return new Response(error, 409, "El usuario no existe");
+        }
+
+
+        if (solicitudAdopcion.getFecha_finalizado() != null) {
+            return new Response(error, 409, "No puedes establecer fecha finalizada ni fecha inicio en la solicitud");
+        }
+        solicitudAdopcion.setFecha_finalizado(LocalDateTime.now());
+        if (!mascotaRepository.existsById(solicitudAdopcion.getMascota().getId())) {
+            return new Response(error, 404, "La mascota no existe");
+        }
+
+        Mascota mascota = mascotaRepository.findById(solicitudAdopcion.getMascota().getId()).orElse(null);
+        assert mascota != null;
+        if (solicitudAdopcion.getEstadoSolicitud() == EstadoSolicitud.APROBADO) {
+            mascota.setEstadoAdopcion(EstadoAdopcion.ADOPTADO);
+        }
+        mascota.setEstadoAdopcion(EstadoAdopcion.DISPONIBLE);
+        mascotaRepository.saveAndFlush(mascota);
+
+        Usuario usuario = usuarioRepository.findById(solicitudAdopcion.getId_adoptante().getId()).orElse(null);
+        assert usuario != null;
+        usuario.setRol("ADOPTANTE");
+        usuarioRepository.saveAndFlush(usuario);
+        solicitudAdopcionRepository.saveAndFlush(solicitudAdopcion);
+        return new Response(success, 200, "Proceso hecho con exito");
+
+
+    }
+
+
+    public List<SolicitudAdopcionDTO> getAllSolicitudes(){
+        return solicitudAdopcionRepository.findAllDTOs();
+    }
+public SolicitudAdopcionDTO getSolicitudAdopcionById(Long id) {
+        return solicitudAdopcionRepository.findDTOById(id);
+}
+
+
+
 
 
     @Cacheable(cacheNames = "mascotas", unless = "#result == null || #result.isEmpty()")
@@ -123,11 +212,19 @@ public class MascotaService {
 
     }
 
+    public List<MascotaDTO> buscarMisMascotasDTO() {
+        return mascotaRepository.findMisMascotasDTO(getIdUsuario());
 
+    }
+    private Long getIdUsuario(){
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.getId();
+    }
 
     private String getRoleUsuario(){
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
     }
+
 
 
 }
