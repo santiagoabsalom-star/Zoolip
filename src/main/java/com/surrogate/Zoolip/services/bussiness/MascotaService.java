@@ -109,10 +109,10 @@ public class MascotaService {
 
         }
         solicitudAdopcion = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
+        assert solicitudAdopcion != null;
         if(solicitudAdopcion.getEstadoSolicitud()==EstadoSolicitud.APROBADO || solicitudAdopcion.getEstadoSolicitud()== EstadoSolicitud.RECHAZADO){
             return new Response(error, 409, "Esta solicitud no se puede modificar");
         }
-        assert solicitudAdopcion != null;
         if(!usuarioRepository.existsById(solicitudAdopcion.getId_adoptante().getId())) {
             return new Response(error, 409, "El usuario no existe");
         }
