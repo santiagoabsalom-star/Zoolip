@@ -23,24 +23,25 @@ public class InterceptorJWT implements HandshakeInterceptor {
     //todo : implementar la validacion del token JWT en el beforeHandshake
     @Override
     public boolean beforeHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response, @NotNull WebSocketHandler wsHandler, @NotNull Map<String, Object> attributes) throws WebSocketHandshakeException {
-        String bearer= request.getHeaders().getFirst("Authorization");
-
-
-        if(bearer != null && bearer.startsWith("Bearer ")) {
-            bearer = bearer.substring(7);
-
-             if(jwtService.isTokenStored(bearer) && jwtService.isValidTokenFormat(bearer) && jwtService.isTokenFromIp(request.getLocalAddress().getHostName(), bearer)) {
-              response.setStatusCode(HttpStatusCode.valueOf(200));
-              return true;
-             }
-
-            response.setStatusCode(HttpStatusCode.valueOf(400));
-             return false;
-
-
-        }
-        response.setStatusCode(HttpStatusCode.valueOf(400));
-        return false;
+//        String bearer= request.getHeaders().getFirst("Authorization");
+//
+//
+//        if(bearer != null && bearer.startsWith("Bearer ")) {
+//            bearer = bearer.substring(7);
+//
+//             if(jwtService.isTokenStored(bearer) && jwtService.isValidTokenFormat(bearer) && jwtService.isTokenFromIp(request.getLocalAddress().getHostName(), bearer)) {
+//              response.setStatusCode(HttpStatusCode.valueOf(200));
+//              return true;
+//             }
+//
+//            response.setStatusCode(HttpStatusCode.valueOf(400));
+//             return false;
+//
+//
+//        }
+//        response.setStatusCode(HttpStatusCode.valueOf(400));
+//        return false;
+        return true;
 
     }
     @Override

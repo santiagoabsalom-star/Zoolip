@@ -16,6 +16,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
                                 p.id_usuario.imagenUrl,
+                                            p.id_usuario.id,
                     p.contenido,
                     p.topico,
                     p.id_usuario.nombre,
@@ -33,6 +34,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
                                 p.id_usuario.imagenUrl,
+                                            p.id_usuario.id,
                     p.contenido,
                     p.topico,
                     p.id_usuario.nombre,
@@ -50,6 +52,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
                                p.id_usuario.imagenUrl,
+                                          p.id_usuario.id,
                     p.contenido,
                     p.topico,
                     p.id_usuario.nombre,
@@ -67,6 +70,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
                                p.id_usuario.imagenUrl,
+                                          p.id_usuario.id,
                     p.contenido,
                     p.topico,
                     p.id_usuario.nombre,
@@ -83,6 +87,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
         p.id_publicacion,
         p.id_usuario.imagenUrl,
+        p.id_usuario.id,
         p.contenido,
         p.topico,
         p.id_usuario.nombre,
