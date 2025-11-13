@@ -77,11 +77,12 @@ public class InstitucionController {
         public ResponseEntity<InstitucionDTO> obtenerInstitucionPorIdUsuario (@RequestParam("id_usuario") long id_usuario){
             try {
                 InstitucionDTO institucionDTO = institucionService.getInstitucionById_Usuario(id_usuario);
-                if (institucionDTO == null) {
+                if (institucionDTO==null) {
                     return ResponseEntity.status(404).body(null);
                 }
                 return ResponseEntity.ok(institucionDTO);
             } catch (Exception e) {
+
                 return ResponseEntity.status(500).build();
             }
         }

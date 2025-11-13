@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InstitucionRepository extends JpaRepository<Institucion, Long> {
@@ -37,9 +38,10 @@ public interface InstitucionRepository extends JpaRepository<Institucion, Long> 
             ", i.descripcion as descripcion" +
             ", i.email as email" +
             ",i.horario_inicio as horario_Inicio" +
-            ", i.horario_fin as horario_Fin FROM Institucion i where i.id_usuario = :id_usuario")
-    InstitucionDTO findInstitucionDTOById_usuario(@Param("id_institucion") Long id_usuario);
-    @Query("Select  i.nombre from Institucion i where i.id_usuario.id = :id_usuario ")
+            ", i.horario_fin as horario_Fin FROM Institucion i where i.id_usuario.id = :id_usuario")
+    Optional<InstitucionDTO> findInstitucionDTOById_usuario(@Param("id_usuario") long id_usuario);
+
+    @Query("Select  i.nombre from Institucion i where i.id_usuario.id =:id_usuario ")
     String findByU(@Param("id_usuario") Long id_usuario);
 
     @Query("SELECT i FROM Institucion i LEFT JOIN FETCH i.id_usuario")
