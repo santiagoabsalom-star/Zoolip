@@ -76,6 +76,9 @@ public class MascotaService {
             solicitudAdopcion.setId_adoptante(usuarioRepository.findById(getIdUsuario()).orElse(null));
 
         }
+        if(solicitudAdopcion.getEstadoSolicitud()!=null){
+            return new Response(error, 409, "No puedes declarar un estado porque ya se hace automaticamente");
+        }
         if(Objects.equals(getRoleUsuario(), "ROLE_SYSTEM") || Objects.equals(getRoleUsuario(), "ROLE_ADMIN") || Objects.equals(getRoleUsuario(), "ROLE_ADMINISTRADOR"))
         {
             return new Response(error, 409, "Solo usuarios comunes pueden solicitar adopcion");
@@ -86,6 +89,7 @@ public class MascotaService {
         if(solicitudAdopcionRepository.existsByMascotaId(solicitudAdopcion.getMascota().getId())){
             return new Response(error, 409, "La mascota ya ha sido solicitada");
         }
+
         solicitudAdopcion.setFecha_inicio(LocalDateTime.now());
         if(!mascotaRepository.existsById(solicitudAdopcion.getMascota().getId())) {
             return new Response(error, 404, "La mascota no existe");
@@ -105,7 +109,9 @@ public class MascotaService {
 
         }
         solicitudAdopcion = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
-
+        if(solicitudAdopcion.getEstadoSolicitud()==EstadoSolicitud.APROBADO || solicitudAdopcion.getEstadoSolicitud()== EstadoSolicitud.RECHAZADO){
+            return new Response(error, 409, "Esta solicitud no se puede modificar");
+        }
         assert solicitudAdopcion != null;
         if(!usuarioRepository.existsById(solicitudAdopcion.getId_adoptante().getId())) {
             return new Response(error, 409, "El usuario no existe");
