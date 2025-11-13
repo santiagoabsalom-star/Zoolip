@@ -74,7 +74,7 @@ public class   AuthService {
                         .map(GrantedAuthority::getAuthority)
                         .orElse("ROLE_USER");
                 long endTimeauth = System.currentTimeMillis();
-                log.info("Tiempo de espera de autenticacion: {}" ,     (endTimeauth - startTimeauth) + "ms");
+                log.info("Tiempo de espera de autenticacion: {}", (endTimeauth - startTimeauth) + "ms");
 
                 String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId(), userDetails.getEmail());
                 jwtService.setIpToken(ip, token);
@@ -172,9 +172,7 @@ public class   AuthService {
         return error;
     }
 
-    public Usuario me(Long id) {
-        return usuarioRepository.findById(id).orElse(null);
-    }
+  
 
     private boolean isValidLoginRequest(LoginRequest request) {
         return request != null &&

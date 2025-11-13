@@ -30,7 +30,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         String nombre_chat= (String) session.getAttributes().get("chat_name");
     chat_sesiones.put(nombre_chat, sesion_id );
-    }
+        }
+
     @Override
     public void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message) throws Exception {
 
