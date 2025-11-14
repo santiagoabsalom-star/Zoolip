@@ -20,6 +20,8 @@ public class Comentario {
     private Publicacion id_publicacion;
     @Column(name = "contenido")
     private String contenido;
+    @Column(name="likes")
+    private Integer likes;
     @Column(name = "fecha_comentario")
     private LocalDateTime fecha_comentario;
     @JoinColumn(name = "id_usuario")
