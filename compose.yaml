@@ -12,10 +12,10 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p2007absalom" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+      interval: 100s
+      timeout: 100s
+      retries: 10
+      start_period: 100s
     restart: unless-stopped
     networks:
       - zoolip-net
