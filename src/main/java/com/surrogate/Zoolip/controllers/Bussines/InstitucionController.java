@@ -67,6 +67,7 @@ public class InstitucionController {
     @GetMapping("/obtenerPorId")
     public ResponseEntity<InstitucionDTO> obtenerInstitucionPorId(@RequestParam("id") long id) {
         try {
+
             return ResponseEntity.ok(institucionService.getInstitucion(id));
 
         } catch (Exception e) {

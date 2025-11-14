@@ -21,12 +21,12 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
 
-
     @PutMapping("/actualizar")
     public ResponseEntity<Response> actualizarUsuario(@RequestBody Usuario usuario) {
         Response response = usuarioService.actualizar(usuario);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
+
     @DeleteMapping("/eliminar")
     public ResponseEntity<Response> eliminarUsuario(@RequestParam Long id_usuario) {
         Response response = usuarioService.eliminar(id_usuario);
@@ -36,18 +36,29 @@ public class UsuarioController {
     @GetMapping("/getUsuarios")
     public ResponseEntity<List<UsuarioDto>> getUsuarios(@RequestParam Long id_usuario) {
         List<UsuarioDto> usuarioDtos = usuarioService.findAllWithLimit(id_usuario);
-        if(usuarioDtos==null ||usuarioDtos.isEmpty()) {
+        if (usuarioDtos == null || usuarioDtos.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(usuarioDtos);
     }
+
     @GetMapping("/getUsuarioById")
     public ResponseEntity<UsuarioDto> getUsuarioById(@RequestParam Long id_usuario) {
-        UsuarioDto usuarioDto= usuarioService.findDTOById(id_usuario);
-        if(usuarioDto == null) {
+        UsuarioDto usuarioDto = usuarioService.findDTOById(id_usuario);
+        if (usuarioDto == null) {
             return ResponseEntity.notFound().build();
 
         }
-        return  ResponseEntity.ok(usuarioDto);
+        return ResponseEntity.ok(usuarioDto);
+    }
+
+    @GetMapping("/get5Usuarios")
+    public ResponseEntity<List<UsuarioDto>> get5Usuarios() {
+        List<UsuarioDto> usuarioDtos = usuarioService.find5DTOS();
+        if (usuarioDtos == null) {
+            return ResponseEntity.notFound().build();
+
+        }
+        return ResponseEntity.ok(usuarioDtos);
     }
 }

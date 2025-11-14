@@ -9,6 +9,7 @@ import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.repository.bussiness.PublicacionFavUsuarioRepository;
 import com.surrogate.Zoolip.repository.bussiness.PublicacionRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
+import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class PublicacionService {
     private final PublicacionRepository publicacionRepository;
     private final UsuarioRepository usuarioRepository;
     private final Random random= new Random();
+    private final JWTService jwtService;
     private final PublicacionFavUsuarioRepository publicacionFavUsuarioRepository;
     private final String error;
     private final String success;
@@ -139,6 +141,11 @@ public class PublicacionService {
 
     public List<PublicacionDTO> obtenerPorUsuario(Long idUsuario) {
         return publicacionRepository.findPublicacionDTOByIdUsuario(idUsuario);
+    }
+
+    public List<PublicacionDTO> obtenerPorUsuarioCurrent(String token) {
+
+        return publicacionRepository.findPublicacionDTOByIdUsuario(jwtService.extractId(token));
     }
 }
 

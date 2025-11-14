@@ -18,7 +18,7 @@ public record UserPrincipal(Usuario usuario) implements UserDetailsWithId {
 
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()));
+        return List.of(new SimpleGrantedAuthority(usuario.getRol()));
     }
 
     @Override

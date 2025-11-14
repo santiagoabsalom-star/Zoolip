@@ -4,12 +4,15 @@ import com.surrogate.Zoolip.models.DTO.PublicacionDTO;
 import com.surrogate.Zoolip.models.bussiness.Publicacion.Publicacion;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.bussiness.PublicacionService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -79,6 +82,15 @@ public ResponseEntity<List<PublicacionDTO>> obtenerPorUsuario(@RequestParam Long
     }
     return ResponseEntity.ok(publicaciones);
 }
+    @GetMapping("/obtenerPorUsuarioCurrent")
+    public ResponseEntity<List<PublicacionDTO>> obtenerPorUsuarioCurrent(HttpServletRequest request) {
+        String token=getTokenFromRequest(request);
+        List<PublicacionDTO> publicaciones = publicacionService.obtenerPorUsuarioCurrent(token);
+        if (publicaciones == null || publicaciones.isEmpty()) {
+            return ResponseEntity.ofNullable(null);
+        }
+        return ResponseEntity.ok(publicaciones);
+    }
     @PostMapping("/putPublicacionFav")
     public ResponseEntity<Response> putPublicacionFav(@RequestParam Long id_publicacion, @RequestParam Long id_usuario) {
         Response response = publicacionService.putPublicacionFav(id_publicacion, id_usuario);
@@ -89,5 +101,13 @@ public ResponseEntity<List<PublicacionDTO>> obtenerPorUsuario(@RequestParam Long
     public ResponseEntity<Response> deletePublicacionFav(@RequestParam Long id_publicacion, @RequestParam Long id_usuario) {
         Response response = publicacionService.deletePublicacionFav(id_publicacion, id_usuario);
         return ResponseEntity.status(response.getHttpCode()).body(response);
+    }
+    private String getTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() == null || request.getCookies().length == 0) {
+
+            return null;
+        }
+
+        return Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
     }
 }

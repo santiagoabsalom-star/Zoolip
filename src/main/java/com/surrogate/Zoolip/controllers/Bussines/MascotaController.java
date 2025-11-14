@@ -6,12 +6,15 @@ import com.surrogate.Zoolip.models.bussiness.Mascota.Mascota;
 import com.surrogate.Zoolip.models.bussiness.Mascota.SolicitudAdopcion.SolicitudAdopcion;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.bussiness.MascotaService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
@@ -57,6 +60,18 @@ public class MascotaController {
             }
             return ResponseEntity.ok(mascotas);
     }
+@GetMapping("/obtenerSolicitudCurrentUser")
+public ResponseEntity<List<SolicitudAdopcionDTO>> getSolicitudAdopcion() {
+
+    List<SolicitudAdopcionDTO> solicitud= mascotaService.getSolicitudAdopcionCurrent();
+    if(solicitud == null) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+    return new ResponseEntity<>(solicitud, HttpStatus.OK);
+}
+
+
 
     @GetMapping("/obtenerPorId")
     public ResponseEntity<MascotaDTO> getMascotaById(@RequestParam Long id) {

@@ -4,6 +4,6 @@ import com.surrogate.Zoolip.models.bussiness.Mascota.SolicitudAdopcion.EstadoSol
 
 import java.time.LocalDateTime;
 
-public record SolicitudAdopcionDTO(Long idSolicitudAdopcion, String nombreSolicitante, Long idMascota,
+public record SolicitudAdopcionDTO(Long idSolicitudAdopcion, String nombreSolicitante,String razon, Long idMascota,
                                    EstadoSolicitud estadoSolicitud, LocalDateTime fecha_inicio, LocalDateTime fecha_finalizado) {
 }

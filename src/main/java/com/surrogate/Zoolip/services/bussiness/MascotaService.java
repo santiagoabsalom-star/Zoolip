@@ -76,6 +76,7 @@ public class MascotaService {
             solicitudAdopcion.setId_adoptante(usuarioRepository.findById(getIdUsuario()).orElse(null));
 
         }
+
         if(solicitudAdopcion.getEstadoSolicitud()!=null){
             return new Response(error, 409, "No puedes declarar un estado porque ya se hace automaticamente");
         }
@@ -86,17 +87,20 @@ public class MascotaService {
         if(solicitudAdopcion.getFecha_finalizado()!=null && solicitudAdopcion.getFecha_inicio()!=null){
             return new Response(error, 409, "No puedes establecer fecha finalizada ni fecha inicio en la solicitud");
         }
-        if(solicitudAdopcionRepository.existsByMascotaId(solicitudAdopcion.getMascota().getId())){
-            return new Response(error, 409, "La mascota ya ha sido solicitada");
-        }
+
 
         solicitudAdopcion.setFecha_inicio(LocalDateTime.now());
         if(!mascotaRepository.existsById(solicitudAdopcion.getMascota().getId())) {
             return new Response(error, 404, "La mascota no existe");
          }
+
         solicitudAdopcion.setEstadoSolicitud(EstadoSolicitud.SOLICITADO);
         Mascota mascota= mascotaRepository.findById(solicitudAdopcion.getMascota().getId()).orElse(null);
         assert mascota != null;
+        if(mascota.getEstadoAdopcion()==EstadoAdopcion.EN_PROCESO|| mascota.getEstadoAdopcion()==EstadoAdopcion.ADOPTADO){
+            return new Response(error, 409, "La mascota esta solicitada");
+        }
+
         mascota.setEstadoAdopcion(EstadoAdopcion.EN_PROCESO);
 
         mascotaRepository.saveAndFlush(mascota);
@@ -112,6 +116,10 @@ public class MascotaService {
         if(isSolicitudCompleted(solicitudAdopcion.getId_solicitud_adopcion())){
             return new Response(error, 409, "La solicitud ya esta completada");
         }
+        if(solicitudAdopcion.getRazon()==null){
+            return new Response(error, 404, "Razon no puede ser nula");
+
+        }
 
 
 
@@ -125,7 +133,7 @@ public class MascotaService {
         SolicitudAdopcion solicitudAdopcionCompletada = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
         assert solicitudAdopcionCompletada != null;
         solicitudAdopcionCompletada.setEstadoSolicitud(solicitudAdopcion.getEstadoSolicitud());
-
+        solicitudAdopcionCompletada.setRazon(solicitudAdopcion.getRazon());
         if(!usuarioRepository.existsById(solicitudAdopcionCompletada.getId_adoptante().getId())) {
             return new Response(error, 409, "El usuario no existe");
         }
@@ -136,17 +144,20 @@ public class MascotaService {
 
         Mascota mascota = mascotaRepository.findById(solicitudAdopcionCompletada.getMascota().getId()).orElse(null);
         assert mascota != null;
-
+        Usuario usuario = usuarioRepository.findById(solicitudAdopcionCompletada.getId_adoptante().getId()).orElse(null);
+        assert usuario != null;
         if (solicitudAdopcionCompletada.getEstadoSolicitud() == EstadoSolicitud.APROBADO) {
             mascota.setEstadoAdopcion(EstadoAdopcion.ADOPTADO);
+
+
+            usuario.setRol("ROLE_ADOPTANTE");
         }
         mascota.setEstadoAdopcion(EstadoAdopcion.DISPONIBLE);
         mascotaRepository.saveAndFlush(mascota);
 
-        Usuario usuario = usuarioRepository.findById(solicitudAdopcionCompletada.getId_adoptante().getId()).orElse(null);
-        assert usuario != null;
-        usuario.setRol("ADOPTANTE");
+
         solicitudAdopcionCompletada.setFecha_finalizado(LocalDateTime.now());
+
         usuarioRepository.saveAndFlush(usuario);
         solicitudAdopcionRepository.saveAndFlush(solicitudAdopcionCompletada);
         return new Response(success, 200, "Proceso hecho con exito");
@@ -253,5 +264,8 @@ public SolicitudAdopcionDTO getSolicitudAdopcionById(Long id) {
     }
 
 
+    public List<SolicitudAdopcionDTO> getSolicitudAdopcionCurrent() {
 
+        return solicitudAdopcionRepository.findDTOByIdUsuario(getIdUsuario());
+    }
 }

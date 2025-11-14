@@ -76,4 +76,8 @@ public class UsuarioService {
     public List<UsuarioDto> findAllWithLimit(Long idUsuario) {
         return usuarioRepository.findAllDTosWithLimit(idUsuario);
     }
+
+    public List<UsuarioDto> find5DTOS() {
+        return usuarioRepository.find5DTOs();
+    }
 }
