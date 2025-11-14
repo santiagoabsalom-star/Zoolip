@@ -48,6 +48,14 @@ public class MascotaController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }   @GetMapping("/obtenerByIdInstitucion")
+    public ResponseEntity<List<MascotaDTO>> getMascotasByInstitucionId(@RequestParam long id_institucion) {
+            List<MascotaDTO> mascotas=mascotaService.buscarMascotaByInstitucionId(id_institucion);
+            if(mascotas==null || mascotas.isEmpty()){
+                return ResponseEntity.ofNullable(null);
+
+            }
+            return ResponseEntity.ok(mascotas);
     }
 
     @GetMapping("/obtenerPorId")
@@ -90,6 +98,7 @@ public class MascotaController {
         return new ResponseEntity<>(solicitudes, HttpStatus.OK);
 
     }
+
     @GetMapping("/getSolicitudById")
     public ResponseEntity<SolicitudAdopcionDTO> getSolicitudById(@RequestParam Long id) {
         SolicitudAdopcionDTO solicitud= mascotaService.getSolicitudAdopcionById(id);

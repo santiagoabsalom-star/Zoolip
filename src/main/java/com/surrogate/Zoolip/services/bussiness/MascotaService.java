@@ -226,7 +226,9 @@ public SolicitudAdopcionDTO getSolicitudAdopcionById(Long id) {
 
 
     }
-
+    public List<MascotaDTO> buscarMascotaByInstitucionId(Long id_institucion){
+        return mascotaRepository.findMascotasByInstitucionId(id_institucion);
+    }
     public List<MascotaDTO> buscarMisMascotasDTO() {
         return mascotaRepository.findMisMascotasDTO(getIdUsuario());
 
