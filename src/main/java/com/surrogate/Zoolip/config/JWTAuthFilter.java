@@ -81,7 +81,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             final Cookie[] authCookie = request.getCookies();
             String authTokenFromCookie = authCookie != null ? authCookie[0].getValue() : null;
 
-
+            log.info(authTokenFromCookie);
             if (authTokenFromCookie == null) {
 
                 sendError(response, "El header tiene que venir con el token malparido", HttpServletResponse.SC_UNAUTHORIZED);

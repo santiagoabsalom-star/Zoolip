@@ -38,7 +38,7 @@ public class SecurityConfig {
     private final JWTAuthFilter jwtAuthFilter;
     private final LoggingFilter loggingFilter;
     private final UserDetailsServiceWithId userDetailsService;
-    private final CustomOAuth2LoginSuccessHandler loginSuccessHandler;
+//    private final CustomOAuth2LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -126,6 +126,7 @@ public class SecurityConfig {
                 "http://127.0.0.1:5173",
                 "http://192.168.0.45:5173",
                 "http://localhost:5174",
+                "http:/192,168.0.45",
                 "null",
                 "http://172.18.0.1:5173",
                 "http://172.18.0.1:3000",
