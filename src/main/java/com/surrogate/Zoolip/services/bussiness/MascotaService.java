@@ -107,10 +107,7 @@ public class MascotaService {
         if (!solicitudAdopcionRepository.existsById(solicitudAdopcion.getId_solicitud_adopcion())) {
             return new Response(error, 404, "La solicitud no existe");
 
-        }
-        solicitudAdopcion = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
-        assert solicitudAdopcion != null;
-        if(solicitudAdopcion.getEstadoSolicitud()==EstadoSolicitud.APROBADO || solicitudAdopcion.getEstadoSolicitud()== EstadoSolicitud.RECHAZADO){
+        }if(solicitudAdopcion.getEstadoSolicitud()==EstadoSolicitud.APROBADO || solicitudAdopcion.getEstadoSolicitud()== EstadoSolicitud.RECHAZADO){
             return new Response(error, 409, "Esta solicitud no se puede modificar");
         }
         if(!usuarioRepository.existsById(solicitudAdopcion.getId_adoptante().getId())) {
@@ -125,6 +122,9 @@ public class MascotaService {
         if (!mascotaRepository.existsById(solicitudAdopcion.getMascota().getId())) {
             return new Response(error, 404, "La mascota no existe");
         }
+        solicitudAdopcion = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
+        assert solicitudAdopcion != null;
+
 
         Mascota mascota = mascotaRepository.findById(solicitudAdopcion.getMascota().getId()).orElse(null);
         assert mascota != null;
