@@ -79,7 +79,11 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             }
             final String authHeader = request.getHeader("Authorization");
             final Cookie[] authCookie = request.getCookies();
-            String authTokenFromCookie = authCookie != null ? authCookie[0].getValue() : null;
+            for(Cookie cookie : authCookie) {
+                log.info(cookie.getName());
+                log.info(cookie.getValue());
+            }
+            String authTokenFromCookie = authCookie[0].getValue();
 
             log.info(authTokenFromCookie);
             if (authTokenFromCookie == null) {
