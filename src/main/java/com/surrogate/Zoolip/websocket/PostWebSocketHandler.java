@@ -15,9 +15,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
@@ -25,12 +24,12 @@ import java.util.List;
 
 public class PostWebSocketHandler extends TextWebSocketHandler {
     private final PublicacionService publicacionService;
-    private final HashSet<WebSocketSession> sesiones = new HashSet<>();
+    private final ConcurrentHashMap<String, WebSocketSession> sesiones = new ConcurrentHashMap<>();
     private final ObjectMapper mapper=getMapper();
 
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) {
-        sesiones.add(session);
+        sesiones.put(session.getId(),session);
 
 
         log.info("Nueva conexión WebSocket establecida con id :{} ", session.getId());
@@ -42,20 +41,19 @@ public class PostWebSocketHandler extends TextWebSocketHandler {
 
         List<PublicacionDTO> publicaciones = publicacionService.obtenerPublicacionesLike(mensaje);
         String publicacionesJson = mapper.writeValueAsString(publicaciones);
-        sesiones.iterator().forEachRemaining(sesion -> {
-            try {
-                if (sesion.isOpen() && session.getId().equals(sesion.getId())) {
-                    sesion.sendMessage(new TextMessage(publicacionesJson));
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+        WebSocketSession sesion = sesiones.get(session.getId());
 
-    }
+        if (sesion != null && sesion.isOpen()) {
+            sesion.sendMessage(new TextMessage(publicacionesJson));
+        }
+
+        }
+
+
+
 @Override
     public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull CloseStatus status) {
-        sesiones.remove(session);
+        sesiones.remove(session.getId());
 
         log.info("Conexión WebSocket cerrada con estado {}", status);
     }

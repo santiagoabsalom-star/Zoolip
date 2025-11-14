@@ -86,5 +86,10 @@ public class InstitucionController {
                 return ResponseEntity.status(500).build();
             }
         }
+        @PostMapping("/respuestaSolicitud")
+    public ResponseEntity<Response> respuestaSolicitud(@RequestBody InstitucionSolicitud solicitud) {
+        Response response = institucionService.responseSolicitud(solicitud);
+        return ResponseEntity.status(response.getHttpCode()).body(response);
+        }
     }
 

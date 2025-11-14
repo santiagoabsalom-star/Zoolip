@@ -2,12 +2,14 @@ package com.surrogate.Zoolip.services.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.ComentarioDTO;
 import com.surrogate.Zoolip.models.bussiness.Publicacion.Comentario;
+import com.surrogate.Zoolip.models.login.UserPrincipal;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.repository.bussiness.ComentarioRepository;
 import com.surrogate.Zoolip.repository.bussiness.PublicacionRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ public class ComentarioService {
 
     public Response comentar(Comentario comentario) {
         Response response = verificarComentario(comentario);
+
         if (response.getHttpCode() == 200) {
             comentario.setFecha_comentario(LocalDateTime.now());
             comentarioRepository.save(comentario);
@@ -68,12 +71,15 @@ public class ComentarioService {
     }
 
     public Response verificarComentario(Comentario comentario) {
-        if (!verifyUsuario(comentario.getId_usuario().getId()))
-            return new Response(error, 404, "Usuario no encontrado");
+        if (!verifyUsuario(getIdUsuario())){
+
+            return new Response(error, 404, "Usuario no encontrado");}
+
         if (!verifyPublicacion(comentario.getId_publicacion().getId_publicacion()))
             return new Response(error, 404, "Publicacion no encontrada");
         if (comentario.getContenido() == null)
             return new Response(error, 403, "El contenido del mensaje no puede ser nulo");
+        comentario.setId_usuario(usuarioRepository.findById(getIdUsuario()).orElse(null));
         return new Response(success, 200, "Operacion hecha con exito");
     }
 
@@ -83,6 +89,10 @@ public class ComentarioService {
 
     public boolean verifyUsuario(Long id_usuario) {
         return usuarioRepository.existsById(id_usuario);
+    }
+    private Long getIdUsuario(){
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.getId();
     }
 
 }

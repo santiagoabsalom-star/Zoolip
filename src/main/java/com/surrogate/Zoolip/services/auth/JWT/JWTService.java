@@ -69,7 +69,7 @@ public class JWTService {
     }
 
     public Long extractId(String token) {
-
+        log.info("Token: {} ", token);
             return extractClaim(token, claims -> claims.get("id_usuario", Long.class));
 
     }

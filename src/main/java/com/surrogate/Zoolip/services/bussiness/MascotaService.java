@@ -146,6 +146,7 @@ public class MascotaService {
         Usuario usuario = usuarioRepository.findById(solicitudAdopcionCompletada.getId_adoptante().getId()).orElse(null);
         assert usuario != null;
         usuario.setRol("ADOPTANTE");
+        solicitudAdopcionCompletada.setFecha_finalizado(LocalDateTime.now());
         usuarioRepository.saveAndFlush(usuario);
         solicitudAdopcionRepository.saveAndFlush(solicitudAdopcionCompletada);
         return new Response(success, 200, "Proceso hecho con exito");

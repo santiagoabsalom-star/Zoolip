@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -25,6 +26,7 @@ import java.util.Queue;
 public class PublicacionService {
     private final PublicacionRepository publicacionRepository;
     private final UsuarioRepository usuarioRepository;
+    private final Random random= new Random();
     private final PublicacionFavUsuarioRepository publicacionFavUsuarioRepository;
     private final String error;
     private final String success;
@@ -127,7 +129,8 @@ public class PublicacionService {
     }
 
     public List<PublicacionDTO> obtenerPublicacionesPublicas() {
-        return publicacionRepository.findPublicacionesPublicas();
+
+        return publicacionRepository.findPublicacionesPublicas(random.nextLong(0, (publicacionRepository.count()-10)));
     }
     public List<PublicacionDTO> obtenerPublicacionesLike(String contenido){
         log.info("Buscando publicaciones con contenido similar a: {}", contenido);

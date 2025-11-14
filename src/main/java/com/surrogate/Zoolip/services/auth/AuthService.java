@@ -187,7 +187,6 @@ public class   AuthService {
                 request.getUsername().matches(USERNAME_PATTERN) &&
                 StringUtils.hasText(request.getPassword()) &&
                 request.getPassword().length() >= MIN_PASSWORD_LENGTH;
-    }
-
+ }
 
 }

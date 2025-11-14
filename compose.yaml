@@ -2,6 +2,8 @@ services:
   db:
     image: mysql:8.0-debian
     container_name: zoolip-db
+    cap_add:
+      - SYS_NICE
     ports:
       - "3306:3306"
     environment:

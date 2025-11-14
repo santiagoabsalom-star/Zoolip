@@ -2,6 +2,7 @@ package com.surrogate.Zoolip.services.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.InstitucionDTO;
 import com.surrogate.Zoolip.models.DTO.InstitucionSolicitudDTO;
+import com.surrogate.Zoolip.models.bussiness.Institucion.Estado;
 import com.surrogate.Zoolip.models.bussiness.Institucion.Institucion;
 import com.surrogate.Zoolip.models.bussiness.Institucion.InstitucionSolicitud;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
@@ -11,7 +12,6 @@ import com.surrogate.Zoolip.repository.bussiness.InstitucionSolicitudRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,6 +88,21 @@ public class InstitucionService {
 
         return new Response(success, 200, "Solicitud hecha con exito, quedas a la espera");
     }
+    public Response responseSolicitud(InstitucionSolicitud institucionSolicitud) {
+        if(!institucionSolicitudRepository.existsById(institucionSolicitud.getId_institucion_solicitud())) {
+            return new Response(error, 404, "La solicitud no existe");
+        }
+        if(isSolicitudCompleted(institucionSolicitud.getId_institucion_solicitud())){
+            return new Response(error, 409, "La solicitud ya esta completada");
+        }
+        InstitucionSolicitud solicitud= institucionSolicitudRepository.findById(institucionSolicitud.getId_institucion_solicitud()).orElse(null);
+        assert solicitud != null;
+        solicitud.setEstado(institucionSolicitud.getEstado());
+
+
+        institucionSolicitudRepository.save(solicitud);
+        return new Response(success, 200, "Proceso hecho con exito");
+    }
     public List<InstitucionDTO> getInstituciones() {
         return institucionRepository.findAllDTO();
 
@@ -151,5 +166,10 @@ public class InstitucionService {
 
     public List<InstitucionSolicitudDTO> findAllSolicitudes() {
         return institucionSolicitudRepository.findAllInstitucionSolicitud();
+    }
+    private boolean isSolicitudCompleted(long id_institucionSolicitud){
+            InstitucionSolicitud institucionSolicitud= institucionSolicitudRepository.findById(id_institucionSolicitud).orElse(null);
+        assert institucionSolicitud != null;
+        return (institucionSolicitud.getEstado() == Estado.ACEPTADA || institucionSolicitud.getEstado() == Estado.RECHAZADA);
     }
 }

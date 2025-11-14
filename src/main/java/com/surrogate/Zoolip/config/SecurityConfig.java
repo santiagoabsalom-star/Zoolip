@@ -1,7 +1,6 @@
 package com.surrogate.Zoolip.config;
 
 
-import com.surrogate.Zoolip.models.login.UserPrincipal;
 import com.surrogate.Zoolip.utils.DaoAuthenticationProviderWithId;
 import com.surrogate.Zoolip.utils.UserDetailsServiceWithId;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -17,8 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,6 +39,7 @@ public class SecurityConfig {
 //    private final CustomOAuth2LoginSuccessHandler loginSuccessHandler;
 
     @Bean
+    @Order(0)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -69,29 +68,29 @@ public class SecurityConfig {
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/login/**").permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/v3/api-docs.yaml").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/api/institucion/obtenerSolicitudes").hasAnyRole("SYSTEM")
-                        .requestMatchers("/api/institucion/obtenerPorId").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
-                        .requestMatchers("api/institucion/obtenerTodas").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
+                        .requestMatchers("/api/institucion/obtenerPorId").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM", "USUARIO","USER")
+                        .requestMatchers("/api/institucion/obtenerTodas").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM","USUARIO","USER")
                         .requestMatchers("/api/institucion/actualizar").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
                         .requestMatchers("/api/institucion/solicitudInstitucion").permitAll()
                         .requestMatchers("/api/institucion/agregar").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
                         .requestMatchers("/api/institucion/eliminar").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
-                        .requestMatchers("/api/institucion/obtenerPorIdUsuario").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
+                        .requestMatchers("/api/institucion/obtenerPorIdUsuario").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM","USUARIO","USER")
                         .requestMatchers("/api/mascotas/obtenerTodas").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO", "SYSTEM")
-                        .requestMatchers("/api/auth/me").permitAll()
+                        .requestMatchers("/api/auth/me").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO","SYSTEM","USER")
                         .requestMatchers("/api/mascotas/misMascotas").hasAnyRole("ADOPTANTE","SYSTEM","ADMIN")
                         .requestMatchers("/api/mascotas/getAllSolicitudes").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
-                        .requestMatchers("/api/mascotas/completarAdopciones").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
+                        .requestMatchers("/api/mascotas/completarAdopcion").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM")
                         .requestMatchers("/api/publicacion/obtenerTodas").hasAnyRole("SYSTEM","ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO")
                         .requestMatchers("/api/publicacion/obtenerPublicacionesPublicas").permitAll()
+                        .requestMatchers("/api/publicacion/crear").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM","USUARIO")
                         .requestMatchers("/api/publicacion/obtenerPorId").hasAnyRole("ADMIN", "ADMINISTRADOR","ADOPTANTE","USUARIO","SYSTEM")
                         .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/post/**").permitAll()
+                        .requestMatchers("/api/auth/accounts").hasAnyRole("ADMIN", "ADMINISTRADOR", "SYSTEM","USUARIO","ADOPTANTE","USER")
                         .requestMatchers("/api/usuario/getUsuarioById").permitAll()
                         .requestMatchers("/chat/**").permitAll()
                         .anyRequest().authenticated())
@@ -111,7 +110,9 @@ public class SecurityConfig {
                                         "font-src 'self' data:;"
                         ))))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class)
+
+                .addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
 

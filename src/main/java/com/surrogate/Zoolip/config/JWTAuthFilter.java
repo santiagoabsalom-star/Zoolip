@@ -45,7 +45,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/api/auth/") ||
+        return
+                path.startsWith("/api/auth/login") ||
+                        path.startsWith("/api/publicacion/obtenerPublicacionesPublicas")||
+                        path.startsWith("/api/auth/register")||
                 path.startsWith("/api/public/") ||
                 path.startsWith("/public/") ||
                 path.startsWith("/chat/") ||
@@ -68,26 +71,27 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
             String path = request.getServletPath();
             log.info("Path requested: {}", path);
-            if (path.startsWith("/swagger-ui") || path.contains("getUsuarioById") || path.contains("solicitudInstitucion") ||path.startsWith("/post/") || path.startsWith("/web") || path.startsWith("/v3/api-docs") || path.startsWith("/VAADIN/") || path.startsWith("/frontend/") || path.startsWith("/webjars/") || path.startsWith("/public/") || path.startsWith("/chat/")) {
+            if (path.startsWith("/swagger-ui") || path.contains("getUsuarioById") || path.contains("solicitudInstitucion") ||path.startsWith("/post/") || path.startsWith("/web") || path.startsWith("/v3/api-docs") || path.startsWith("/VAADIN/") || path.startsWith("/frontend/") || path.startsWith("/webjars/") || path.startsWith("/public/") || path.startsWith("/chat/") || path.startsWith("/api/publicacion/obtenerPublicacionesPublicas")) {
+
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            if (path.startsWith("/favicon.ico") || path.startsWith("/actuator") || path.startsWith("/favicon") || path.startsWith("/web/**") || path.startsWith("/api/auth")) {
+            if (path.startsWith("/favicon.ico") || path.startsWith("/actuator") || path.startsWith("/favicon") || path.startsWith("/web/**")) {
+
                 filterChain.doFilter(request, response);
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
             final Cookie[] authCookie = request.getCookies();
-            for(Cookie cookie : authCookie) {
-                log.info(cookie.getName());
-                log.info(cookie.getValue());
-            }
-            String authTokenFromCookie = authCookie[0].getValue();
+
+
+
+            String authTokenFromCookie = authCookie != null ? authCookie[0].getValue() : null;
 
             log.info(authTokenFromCookie);
             if (authTokenFromCookie == null) {
-
+                
                 sendError(response, "El header tiene que venir con el token malparido", HttpServletResponse.SC_UNAUTHORIZED);
 
                 return;
@@ -154,6 +158,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 null,
                 userDetails.getAuthorities()
         );
+        log.info(userDetails.getAuthorities().toString());
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authToken);

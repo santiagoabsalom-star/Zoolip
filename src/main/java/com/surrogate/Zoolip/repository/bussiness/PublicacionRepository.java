@@ -49,7 +49,6 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
             """)
     PublicacionDTO findPublicacionDTOById(Long id_publicacion);
 
-
    @Query("""
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
@@ -83,10 +82,10 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
                     p.fecha_pregunta,
                     p.fecha_edicion
                 )
-                FROM Publicacion p
+                FROM Publicacion p where p.id_publicacion>=:id_publicacion
                 ORDER BY p.id_publicacion LIMIT 10
            """)
-    List<PublicacionDTO> findPublicacionesPublicas();
+    List<PublicacionDTO> findPublicacionesPublicas(long id_publicacion);
     @Query("""
     SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
         p.id_publicacion,

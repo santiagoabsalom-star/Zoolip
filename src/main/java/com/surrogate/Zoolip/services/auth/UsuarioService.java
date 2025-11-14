@@ -39,18 +39,16 @@ public class UsuarioService {
         return usuarioRepository.findAvailableUserDtos();
     }
 
-    @Cacheable(cacheNames="meCache", key="#token")
     public Optional<UsuarioDto> me(String token) {
+        log.info("Token: {} ", token);
         if (token == null) {
             return Optional.empty();
         }
-        if(jwtService.isTokenStored(token)) {
-            return Optional.of(403).map(m -> null);
-        }
+
         return usuarioRepository.getUserById(jwtService.extractId(token));
 
     }
-    @Cacheable(cacheNames="usersByEmailCache", key="#token")
+
     public List<UsuarioDto> findAllByEmail(String token) {
         if (token == null) {
             return null;

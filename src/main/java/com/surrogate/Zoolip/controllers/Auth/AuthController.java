@@ -10,6 +10,7 @@ import com.surrogate.Zoolip.services.auth.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
@@ -154,6 +156,8 @@ public class AuthController {
     public ResponseEntity<Optional<UsuarioDto>> me(HttpServletRequest request) {
 
         String token = getTokenFromRequest(request);
+
+
         if (token == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -164,9 +168,7 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT) ;
 
         }
-        if(usuarioDto.equals(Optional.of(403).map(e->null))){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+
         return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
     }
 
@@ -196,7 +198,6 @@ public class AuthController {
         }
 
         return Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
-
     }
 }
 
