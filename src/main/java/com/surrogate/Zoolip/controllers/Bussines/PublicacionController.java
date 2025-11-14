@@ -71,7 +71,14 @@ public class PublicacionController {
         }
         return ResponseEntity.ok(publicaciones);
     }
-
+@GetMapping("/obtenerPorUsuario")
+public ResponseEntity<List<PublicacionDTO>> obtenerPorUsuario(@RequestParam Long id_usuario) {
+    List<PublicacionDTO> publicaciones = publicacionService.obtenerPorUsuario(id_usuario);
+    if (publicaciones == null || publicaciones.isEmpty()) {
+        return ResponseEntity.ofNullable(null);
+    }
+    return ResponseEntity.ok(publicaciones);
+}
     @PostMapping("/putPublicacionFav")
     public ResponseEntity<Response> putPublicacionFav(@RequestParam Long id_publicacion, @RequestParam Long id_usuario) {
         Response response = publicacionService.putPublicacionFav(id_publicacion, id_usuario);

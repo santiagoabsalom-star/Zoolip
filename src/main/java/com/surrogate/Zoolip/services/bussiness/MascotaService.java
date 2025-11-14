@@ -105,40 +105,49 @@ public class MascotaService {
     }
     public Response completarAdopcion(SolicitudAdopcion solicitudAdopcion) {
         if (!solicitudAdopcionRepository.existsById(solicitudAdopcion.getId_solicitud_adopcion())) {
+
             return new Response(error, 404, "La solicitud no existe");
 
-        }if(solicitudAdopcion.getEstadoSolicitud()==EstadoSolicitud.APROBADO || solicitudAdopcion.getEstadoSolicitud()== EstadoSolicitud.RECHAZADO){
-            return new Response(error, 409, "Esta solicitud no se puede modificar");
         }
-        if(!usuarioRepository.existsById(solicitudAdopcion.getId_adoptante().getId())) {
-            return new Response(error, 409, "El usuario no existe");
+        if(isSolicitudCompleted(solicitudAdopcion.getId_solicitud_adopcion())){
+            return new Response(error, 409, "La solicitud ya esta completada");
         }
+
+
+
 
 
         if (solicitudAdopcion.getFecha_finalizado() != null) {
             return new Response(error, 409, "No puedes establecer fecha finalizada ni fecha inicio en la solicitud");
         }
         solicitudAdopcion.setFecha_finalizado(LocalDateTime.now());
-        if (!mascotaRepository.existsById(solicitudAdopcion.getMascota().getId())) {
+
+        SolicitudAdopcion solicitudAdopcionCompletada = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
+        assert solicitudAdopcionCompletada != null;
+        solicitudAdopcionCompletada.setEstadoSolicitud(solicitudAdopcion.getEstadoSolicitud());
+
+        if(!usuarioRepository.existsById(solicitudAdopcionCompletada.getId_adoptante().getId())) {
+            return new Response(error, 409, "El usuario no existe");
+        }
+        if (!mascotaRepository.existsById(solicitudAdopcionCompletada.getMascota().getId())) {
             return new Response(error, 404, "La mascota no existe");
         }
-        solicitudAdopcion = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
-        assert solicitudAdopcion != null;
 
 
-        Mascota mascota = mascotaRepository.findById(solicitudAdopcion.getMascota().getId()).orElse(null);
+        Mascota mascota = mascotaRepository.findById(solicitudAdopcionCompletada.getMascota().getId()).orElse(null);
         assert mascota != null;
-        if (solicitudAdopcion.getEstadoSolicitud() == EstadoSolicitud.APROBADO) {
+
+        if (solicitudAdopcionCompletada.getEstadoSolicitud() == EstadoSolicitud.APROBADO) {
             mascota.setEstadoAdopcion(EstadoAdopcion.ADOPTADO);
         }
         mascota.setEstadoAdopcion(EstadoAdopcion.DISPONIBLE);
         mascotaRepository.saveAndFlush(mascota);
 
-        Usuario usuario = usuarioRepository.findById(solicitudAdopcion.getId_adoptante().getId()).orElse(null);
+        Usuario usuario = usuarioRepository.findById(solicitudAdopcionCompletada.getId_adoptante().getId()).orElse(null);
         assert usuario != null;
         usuario.setRol("ADOPTANTE");
         usuarioRepository.saveAndFlush(usuario);
-        solicitudAdopcionRepository.saveAndFlush(solicitudAdopcion);
+        solicitudAdopcionRepository.saveAndFlush(solicitudAdopcionCompletada);
         return new Response(success, 200, "Proceso hecho con exito");
 
 
@@ -229,6 +238,15 @@ public SolicitudAdopcionDTO getSolicitudAdopcionById(Long id) {
 
     private String getRoleUsuario(){
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
+    }
+    private boolean isSolicitudCompleted(long id_solicitud){
+        SolicitudAdopcion solicitudAdopcion= solicitudAdopcionRepository.findById(id_solicitud).orElse(null);
+        assert solicitudAdopcion != null;
+
+            return solicitudAdopcion.getEstadoSolicitud() == EstadoSolicitud.APROBADO || solicitudAdopcion.getEstadoSolicitud() == EstadoSolicitud.RECHAZADO;
+
+
+
     }
 
 

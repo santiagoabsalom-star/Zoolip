@@ -133,6 +133,10 @@ public class PublicacionService {
         log.info("Buscando publicaciones con contenido similar a: {}", contenido);
         return publicacionRepository.findPublicacionDTOByContenido(contenido);
     }
+
+    public List<PublicacionDTO> obtenerPorUsuario(Long idUsuario) {
+        return publicacionRepository.findPublicacionDTOByIdUsuario(idUsuario);
+    }
 }
 
 

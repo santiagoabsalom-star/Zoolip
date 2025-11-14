@@ -101,6 +101,22 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
 """)
     List<PublicacionDTO> findPublicacionDTOByContenido(@Param("contenido") String contenido);
 
-
+    @Query("""
+    SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
+        p.id_publicacion,
+        p.id_usuario.imagenUrl,
+        p.id_usuario.id,
+        p.contenido,
+        p.topico,
+        p.id_usuario.nombre,
+        p.likes,
+        p.fecha_duda_resuelta,
+        p.fecha_pregunta,
+        p.fecha_edicion
+    )
+    FROM Publicacion p
+    WHERE p.id_usuario.id=:idUsuario
+""")
+    List<PublicacionDTO> findPublicacionDTOByIdUsuario(Long idUsuario);
 }
 
