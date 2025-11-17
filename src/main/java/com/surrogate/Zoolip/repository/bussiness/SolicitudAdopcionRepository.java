@@ -17,6 +17,6 @@ SolicitudAdopcionDTO findDTOById(Long id_solicitud_adopcion);
     boolean existsByMascotaId(@NotNull Long mascotaId);
     @Query("select new com.surrogate.Zoolip.models.DTO.SolicitudAdopcionDTO(sp.id_solicitud_adopcion, sp.id_adoptante.nombre,sp.razon_solicitud,sp.motivo_decision, sp.mascota.id, sp.estadoSolicitud, sp.fecha_inicio, sp.fecha_finalizado) from SolicitudAdopcion sp where sp.id_adoptante.id = :id_usuario ")
     List<SolicitudAdopcionDTO> findDTOByIdUsuario(Long id_usuario);
-    @Query("select new com.surrogate.Zoolip.models.DTO.SolicitudAdopcionDTO(sp.id_solicitud_adopcion, sp.id_adoptante.nombre,sp.razon_solicitud, sp.motivo_decision,sp.mascota.id, sp.estadoSolicitud, sp.fecha_inicio, sp.fecha_finalizado) from SolicitudAdopcion sp where sp.mascota.id_institucion.id_institucion = :id_admin ")
+    @Query("select new com.surrogate.Zoolip.models.DTO.SolicitudAdopcionDTO(sp.id_solicitud_adopcion, sp.id_adoptante.nombre,sp.razon_solicitud, sp.motivo_decision,sp.mascota.id, sp.estadoSolicitud, sp.fecha_inicio, sp.fecha_finalizado) from SolicitudAdopcion sp where sp.mascota.id_institucion.id_usuario.id = :id_admin ")
     List<SolicitudAdopcionDTO> findAllSolicitudesByIdAdmin(Long id_admin);
 }
