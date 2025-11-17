@@ -26,6 +26,8 @@ public class Mascota {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_salud", nullable = false)
     private EstadoSalud estadoSalud;
+    @Column(name="imagen_url")
+    private String imagenUrl;
     @Column(name = "edad", nullable = false)
     private Integer edad;
     @Column(name = "raza", nullable = false)

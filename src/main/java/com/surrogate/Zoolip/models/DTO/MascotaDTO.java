@@ -8,7 +8,7 @@ public interface MascotaDTO {
     String getEspecie();
 
     String getRaza();
-
+    String getImagenUrl();
     Integer getEdad();
 
     String getEstadoAdopcion();
