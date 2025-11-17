@@ -13,16 +13,21 @@ public class RegisterRequest extends Request {
 
     private String rol;
     private String username;
-
+    private String imagen_url;
+    private String biografia;
     private String password;
     private String email;
     @JsonCreator
     public RegisterRequest(@JsonProperty("username") String username,
                            @JsonProperty("password") String password,
                            @JsonProperty("rol") String rol,
+                           @JsonProperty("imagen_url") String imagen_url,
+                           @JsonProperty("biografia") String biografia,
                            @JsonProperty("email") String email
     ) {
         this.email = email;
+        this.imagen_url=imagen_url;
+        this.biografia=biografia;
         this.username = username;
         this.password = password;
         this.rol = rol;

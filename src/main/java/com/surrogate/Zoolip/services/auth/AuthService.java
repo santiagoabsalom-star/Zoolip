@@ -99,7 +99,7 @@ public class   AuthService {
             if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
                 return new RegisterResponse(error, 401, "El rol es requerido");
             }
-            if (registerRequest.getRol().equals("ADMINISTRADOR")) {
+            if (registerRequest.getRol().equals("ROLE_ADMINISTRADOR")) {
                 return new RegisterResponse(error, 403, "El rol no puede ser administrador");
             }
             if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
@@ -108,16 +108,17 @@ public class   AuthService {
 
             }
 
-
+            log.info(registerRequest.getImagen_url());
             Usuario newUsuario = new Usuario();
             newUsuario.setNombre(registerRequest.getUsername());
             newUsuario.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
             newUsuario.setEmail(registerRequest.getEmail());
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
-
+            newUsuario.setImagenUrl(registerRequest.getImagen_url() != null ? registerRequest.getImagen_url() : null);
+            newUsuario.setBiografia(registerRequest.getBiografia()!= null ? registerRequest.getBiografia() : null);
             usuarioRepository.save(newUsuario);
 
-            return new RegisterResponse(success, "Registro exitoso");
+            return new RegisterResponse(success, 200,"Registro exitoso");
         } catch (Exception e) {
             return new RegisterResponse(error, 200, "Error en el registro: " + e.getMessage());
         }
@@ -132,7 +133,7 @@ public class   AuthService {
             if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
                 return new RegisterResponse(error, 401, "El rol es requerido");
             }
-            if (!registerRequest.getRol().equals("ADMINISTRADOR") && !registerRequest.getRol().equals("SYSTEM")) {
+            if (!registerRequest.getRol().equals("ROLE_ADMINISTRADOR") && !registerRequest.getRol().equals("ROLE_SYSTEM")) {
                 return new RegisterResponse(error, 403, "El rol tiene que ser administrador o system");
             }
 
@@ -148,9 +149,10 @@ public class   AuthService {
             newUsuario.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
 
             newUsuario.setRol(registerRequest.getRol() != null ? registerRequest.getRol() : "USER");
+            newUsuario.setImagenUrl(registerRequest.getImagen_url() != null ? registerRequest.getImagen_url() : null);
+            newUsuario.setBiografia(registerRequest.getBiografia()!= null ? registerRequest.getBiografia() : null);
             newUsuario.setEmail(registerRequest.getEmail());
             usuarioRepository.save(newUsuario);
-            usuarioNotifier.publish(new UsuarioCreado(newUsuario));
             return new RegisterResponse(success, 200, "Registro exitoso");
         } catch (Exception e) {
             return new RegisterResponse(error, 500, "Error en el registro: " + e.getMessage());
@@ -182,11 +184,11 @@ public class   AuthService {
 
 
     private boolean isValidRegisterRequest(RegisterRequest request) {
-        return request != null &&
-                StringUtils.hasText(request.getUsername()) &&
-                request.getUsername().matches(USERNAME_PATTERN) &&
-                StringUtils.hasText(request.getPassword()) &&
-                request.getPassword().length() >= MIN_PASSWORD_LENGTH;
- }
-
+        if (request == null) return false;
+        String username = request.getUsername();
+        String password = request.getPassword();
+        if (!StringUtils.hasText(username) || !username.matches(USERNAME_PATTERN)) return false;
+        if (!StringUtils.hasText(password) || password.length() < MIN_PASSWORD_LENGTH) return false;
+        return true;
+    }
 }

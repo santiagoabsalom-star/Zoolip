@@ -9,6 +9,7 @@ import lombok.Data;
 
 public class Chat {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_chat", nullable = false, unique = true)
     private Long id_chat;
     @Column(name="nombre_chat", nullable = false)

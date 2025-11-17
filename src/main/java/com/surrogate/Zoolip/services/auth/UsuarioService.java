@@ -21,17 +21,11 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final JWTService jwtService;
+    private final String success;
+    private final String error;
 
 
-    @Transactional
-    public Response actualizar(Usuario usuario) {
-        if (usuarioRepository.existsById(usuario.getId())) {
-            usuarioRepository.saveAndFlush(usuario);
-            return new Response("Usuario actualizado correctamente", 200, "Success");
-        } else {
-            return new Response("El usuario no existe", 404, "Error");
-        }
-    }
+
 
     @Transactional(readOnly = true)
     public List<UsuarioDto> findAvailableUsersInitialized() {
@@ -79,5 +73,40 @@ public class UsuarioService {
 
     public List<UsuarioDto> find5DTOS() {
         return usuarioRepository.find5DTOs();
+    }
+
+    public Response updateCurrentUser(String token, Usuario usuario) {
+
+        Long idUsuario = jwtService.extractId(token);
+        if(!(idUsuario.equals(usuario.getId()))){
+            return new Response(error, 403, "No puedes modificar otro usuario");
+        }
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+
+        if (usuarioOpt.isEmpty()) {
+            return new Response(error, 404,"Usuario no encontrado" );
+        }
+        Usuario usuarioExistente = usuarioOpt.get();
+
+
+        if (usuario.getNombre() != null) {
+            usuarioExistente.setNombre(usuario.getNombre());
+        }
+        if (usuario.getEmail() != null) {
+            usuarioExistente.setEmail(usuario.getEmail());
+        }
+        if (usuario.getRol() != null) {
+            usuarioExistente.setRol(usuario.getRol());
+        }
+        if(usuario.getBiografia() != null){
+            usuarioExistente.setBiografia(usuario.getBiografia());
+        }
+        if(usuario.getImagenUrl() != null){
+            usuarioExistente.setImagenUrl(usuario.getImagenUrl());
+        }
+
+        usuarioRepository.save(usuarioExistente);
+        return new Response(success, 200, "Usuario actualizado correctamente");
     }
 }

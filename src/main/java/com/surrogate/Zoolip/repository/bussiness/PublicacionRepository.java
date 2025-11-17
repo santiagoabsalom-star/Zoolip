@@ -112,7 +112,6 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
         p.id_usuario.id,
         p.tipo,
         p.contenido,
-       
         p.topico,
         p.id_usuario.nombre,
         p.likes,

@@ -58,7 +58,7 @@ public class PublicacionController {
         return ResponseEntity.ok(publicaciones);
     }
 
-    @GetMapping("/obtenerPorId")
+    @GetMapping("/obtenerPor   Id")
     public ResponseEntity<PublicacionDTO> obtenerPorId(@RequestParam Long id_publicacion) {
         PublicacionDTO publicacion = publicacionService.obtenerPorId(id_publicacion);
         if (publicacion == null) {

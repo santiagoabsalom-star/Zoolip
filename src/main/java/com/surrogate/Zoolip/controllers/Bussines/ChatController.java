@@ -5,12 +5,15 @@ import com.surrogate.Zoolip.models.DTO.MensajeDTO;
 import com.surrogate.Zoolip.models.bussiness.Chat.Chat;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.bussiness.ChatService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -41,6 +44,16 @@ public class ChatController {
         }
         return ResponseEntity.ok(chats);
     }
+    @GetMapping("/obtenerChatsPorUsuarioCurrent")
+    public ResponseEntity<List<ChatDTO>> obtenerChatsPorUsuarioCurrent(HttpServletRequest request) {
+
+        String token = getTokenFromRequest(request);
+        List<ChatDTO> chats = chatService.obtenerChatsDeUsuarioCurrent(token);
+        if (chats == null || chats.isEmpty()) {
+            return ResponseEntity.ofNullable(null);
+        }
+        return ResponseEntity.ok(chats);
+    }
     @GetMapping("/obtenerMensajesPorChat")
     public ResponseEntity<List<MensajeDTO>> obtenerMensajesPorChat(@RequestParam Long id_chat) {
         List<MensajeDTO> mensajes = chatService.obtenerMensajesDeChat(id_chat);
@@ -48,6 +61,14 @@ public class ChatController {
             return ResponseEntity.ofNullable(null);
         }
         return ResponseEntity.ok(mensajes);
+    }
+    private String getTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() == null || request.getCookies().length == 0) {
+
+            return null;
+        }
+
+        return Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
     }
 
 

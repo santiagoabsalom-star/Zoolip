@@ -3,10 +3,12 @@ package com.surrogate.Zoolip.services.bussiness;
 import com.surrogate.Zoolip.models.DTO.ChatDTO;
 import com.surrogate.Zoolip.models.DTO.MensajeDTO;
 import com.surrogate.Zoolip.models.bussiness.Chat.Chat;
+import com.surrogate.Zoolip.models.bussiness.Chat.Mensaje;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.repository.bussiness.ChatRepository;
 import com.surrogate.Zoolip.repository.bussiness.MensajeRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
+import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class ChatService {
     private final MensajeRepository mensajeRepository;
     private final String success;
     private final String error;
+    private final JWTService jwtService;
     private final UsuarioRepository usuarioRepository;
 
     public Response crearChat(Chat chat){
@@ -30,11 +33,12 @@ public class ChatService {
             return response;
         }
         chat.setNombreChat(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre());
+
         chatRepository.save(chat);
         return response;
     }
     public Response verificarChat(Chat chat){
-        if( Thread.currentThread().getStackTrace()[1].getMethodName().equals("crearChat") && chatRepository.existByNombre(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre())){
+        if( Thread.currentThread().getStackTrace()[1].getMethodName().equals("crearChat") && chatRepository.existsByNombreChat(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre())){
         return new Response(error, 409, "El chat ya existe");
 
     }
@@ -63,7 +67,7 @@ public class ChatService {
 
     }
     public Response eliminarChat(Chat chat){
-        if(!chatRepository.existByNombre(chat.getNombreChat())){
+        if(!chatRepository.existsByNombreChat(chat.getNombreChat())){
             return new Response(error, 404, "El chat no existe");
 
         }
@@ -81,6 +85,15 @@ public class ChatService {
         return new Response(success, 200, "Chat eliminado correctamente");
     }
 
+    public Response guardarMensaje(Mensaje mensaje){
+        if(!chatRepository.existsById(mensaje.getId_chat().getId_chat())){
+            return new Response(error, 404, "El chat no existe");
+
+        }
+        mensajeRepository.save(mensaje);
+        return new Response(success, 200, "Mensaje guardado correctamente");
+    }
+
     public List<MensajeDTO>obtenerMensajesDeChat(Long idChat){
         if(!chatRepository.existsById(idChat)){
             return null;
@@ -88,6 +101,15 @@ public class ChatService {
         return mensajeRepository.findAllByChatId(idChat);
     }
     public List<ChatDTO> obtenerChatsDeUsuario(Long idUsuario){
+        if(!usuarioRepository.existsById(idUsuario)){
+            return null;
+        }
+        return chatRepository.findAllByIdUsuario(idUsuario);
+
+
+    }
+    public List<ChatDTO> obtenerChatsDeUsuarioCurrent(String token){
+        Long idUsuario = jwtService.extractId(token);
         if(!usuarioRepository.existsById(idUsuario)){
             return null;
         }

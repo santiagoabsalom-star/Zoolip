@@ -5,13 +5,17 @@ import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.services.auth.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -20,10 +24,14 @@ import java.util.List;
 public class UsuarioController {
     private final UsuarioService usuarioService;
 
+    @PostMapping("/updateCurrentUser")
+    public ResponseEntity<Response> updateCurrentUser(HttpServletRequest request, Usuario usuario) {
 
-    @PutMapping("/actualizar")
-    public ResponseEntity<Response> actualizarUsuario(@RequestBody Usuario usuario) {
-        Response response = usuarioService.actualizar(usuario);
+        String token = getTokenFromRequest(request);
+        if (token == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Response response = usuarioService.updateCurrentUser(token, usuario);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
 
@@ -60,5 +68,15 @@ public class UsuarioController {
 
         }
         return ResponseEntity.ok(usuarioDtos);
+
+
+    }
+    private String getTokenFromRequest(HttpServletRequest request) {
+        if (request.getCookies() == null || request.getCookies().length == 0) {
+
+            return null;
+        }
+
+        return Objects.requireNonNull(Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("AUTH_TOKEN")).findFirst().orElse(null)).getValue();
     }
 }

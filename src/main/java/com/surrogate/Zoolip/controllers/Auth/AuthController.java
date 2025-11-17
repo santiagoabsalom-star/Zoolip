@@ -1,8 +1,10 @@
 package com.surrogate.Zoolip.controllers.Auth;
 
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
+import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
+import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.models.register.RegisterRequest;
 import com.surrogate.Zoolip.models.register.RegisterResponse;
 import com.surrogate.Zoolip.services.auth.AuthService;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -68,23 +71,11 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            RegisterResponse response = authService.register(registerRequest);
-            if ("success".equals(response.getStatus())) {
-                return ResponseEntity.status(HttpStatus.CREATED)
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
 
-            } else {
-                return ResponseEntity.status(response.getHttpCode())
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
-            }
+            RegisterResponse response = authService.register(registerRequest);
+            return getRegisterResponseResponseEntity(response);
         } catch (Exception e) {
 
             return ResponseEntity.status(500)
@@ -94,28 +85,33 @@ public class AuthController {
     }
 
     @PostMapping(value = "/admin/register", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<RegisterResponse> registerAdmin(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponse> registerAdmin(@RequestBody RegisterRequest registerRequest) {
         try {
             RegisterResponse response = authService.registerAdmin(registerRequest);
-            if (200 == (response.getHttpCode())) {
-                return ResponseEntity.status(HttpStatus.CREATED)
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
-
-            } else {
-                return ResponseEntity.status(response.getHttpCode())
-                        .header("X-Content-Type-Options", "nosniff")
-                        .header("X-Frame-Options", "DENY")
-                        .header("X-XSS-Protection", "1; mode=block")
-                        .body(response);
-            }
+            return getRegisterResponseResponseEntity(response);
         } catch (Exception e) {
 
             return ResponseEntity.status(500)
                     .body(new RegisterResponse(error, "Error interno del servidor" + e.getMessage()));
 
+        }
+    }
+
+    @NotNull
+    private ResponseEntity<RegisterResponse> getRegisterResponseResponseEntity(RegisterResponse response) {
+        if (200 == (response.getHttpCode())) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header("X-Content-Type-Options", "nosniff")
+                    .header("X-Frame-Options", "DENY")
+                    .header("X-XSS-Protection", "1; mode=block")
+                    .body(response);
+
+        } else {
+            return ResponseEntity.status(response.getHttpCode())
+                    .header("X-Content-Type-Options", "nosniff")
+                    .header("X-Frame-Options", "DENY")
+                    .header("X-XSS-Protection", "1; mode=block")
+                    .body(response);
         }
     }
 
@@ -188,8 +184,16 @@ public class AuthController {
         }
         return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
     }
+    @PostMapping("/updateCurrentUser")
+    public ResponseEntity<Response> updateCurrentUser(HttpServletRequest request, Usuario usuario) {
 
-
+            String token = getTokenFromRequest(request);
+            if (token == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            Response response = usuarioService.updateCurrentUser(token, usuario);
+            return ResponseEntity.status(response.getHttpCode()).body(response);
+        }
 
     private String getTokenFromRequest(HttpServletRequest request) {
         if (request.getCookies() == null || request.getCookies().length == 0) {

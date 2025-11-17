@@ -15,6 +15,8 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.net.http.WebSocketHandshakeException;
 import java.util.Map;
+import java.util.Objects;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -23,24 +25,10 @@ public class InterceptorJWT implements HandshakeInterceptor {
     //todo : implementar la validacion del token JWT en el beforeHandshake
     @Override
     public boolean beforeHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response, @NotNull WebSocketHandler wsHandler, @NotNull Map<String, Object> attributes) throws WebSocketHandshakeException {
-//        String bearer= request.getHeaders().getFirst("Authorization");
-//
-//
-//        if(bearer != null && bearer.startsWith("Bearer ")) {
-//            bearer = bearer.substring(7);
-//
-//             if(jwtService.isTokenStored(bearer) && jwtService.isValidTokenFormat(bearer) && jwtService.isTokenFromIp(request.getLocalAddress().getHostName(), bearer)) {
-//              response.setStatusCode(HttpStatusCode.valueOf(200));
-//              return true;
-//             }
-//
-//            response.setStatusCode(HttpStatusCode.valueOf(400));
-//             return false;
-//
-//
-//        }
-//        response.setStatusCode(HttpStatusCode.valueOf(400));
-//        return false;
+        String nombreChat= Objects.requireNonNull(request.getHeaders().getFirst("Nombre_Chat"));
+        String nombreUsuario= Objects.requireNonNull(request.getHeaders().getFirst("Nombre"));
+        attributes.put("NombreChat", nombreChat);
+        attributes.put("Nombre", nombreUsuario);
         return true;
 
     }

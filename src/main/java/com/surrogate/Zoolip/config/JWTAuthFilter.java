@@ -51,7 +51,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                         path.startsWith("/api/auth/register")||
                 path.startsWith("/api/public/") ||
                 path.startsWith("/public/") ||
-                path.startsWith("/chat/") ||
+                path.startsWith("/chat") ||
+                        path.startsWith("/post")||
                 path.startsWith("/ws/") ||
                 path.contains("swagger") ||
                 path.contains("api-docs");
@@ -71,7 +72,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
             String path = request.getServletPath();
             log.info("Path requested: {}", path);
-            if (path.startsWith("/swagger-ui") || path.contains("getUsuarioById") || path.contains("solicitudInstitucion") ||path.startsWith("/post/") || path.startsWith("/web") || path.startsWith("/v3/api-docs") || path.startsWith("/VAADIN/") || path.startsWith("/frontend/") || path.startsWith("/webjars/") || path.startsWith("/public/") || path.startsWith("/chat/") || path.startsWith("/api/publicacion/obtenerPublicacionesPublicas")) {
+            if (path.startsWith("/swagger-ui") || path.contains("getUsuarioById") || path.contains("solicitudInstitucion") ||path.startsWith("/post/") || path.startsWith("/web") || path.startsWith("/v3/api-docs") || path.startsWith("/VAADIN/") || path.startsWith("/frontend/") || path.startsWith("/webjars/") || path.startsWith("/public/") || path.startsWith("/chat") || path.startsWith("/api/publicacion/obtenerPublicacionesPublicas")) {
 
                 filterChain.doFilter(request, response);
                 return;

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Mensaje {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_mensaje", nullable = false, unique = true)
     private Long id_mensaje;
     @ManyToOne(fetch = FetchType.LAZY)
