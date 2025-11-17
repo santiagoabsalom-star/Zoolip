@@ -7,7 +7,7 @@ import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,30 +74,29 @@ public class UsuarioService {
     public List<UsuarioDto> find5DTOS() {
         return usuarioRepository.find5DTOs();
     }
-
+    @Transactional
     public Response updateCurrentUser(String token, Usuario usuario) {
 
         Long idUsuario = jwtService.extractId(token);
-        if(!(idUsuario.equals(usuario.getId()))){
-            return new Response(error, 403, "No puedes modificar otro usuario");
-        }
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
 
-        if (usuarioOpt.isEmpty()) {
+       Usuario usuarioExistente = usuarioRepository.findById(idUsuario).orElse(null);
+
+        if (usuarioExistente==null) {
             return new Response(error, 404,"Usuario no encontrado" );
         }
-        Usuario usuarioExistente = usuarioOpt.get();
 
-
+        log.info(usuario.getNombre());
         if (usuario.getNombre() != null) {
             usuarioExistente.setNombre(usuario.getNombre());
+            jwtService.InvalidateToken(token);
         }
+
         if (usuario.getEmail() != null) {
             usuarioExistente.setEmail(usuario.getEmail());
         }
         if (usuario.getRol() != null) {
-            usuarioExistente.setRol(usuario.getRol());
+           return new Response(error, 403, "No puedes camibiar el rol del usuario");
         }
         if(usuario.getBiografia() != null){
             usuarioExistente.setBiografia(usuario.getBiografia());
@@ -106,7 +105,11 @@ public class UsuarioService {
             usuarioExistente.setImagenUrl(usuario.getImagenUrl());
         }
 
-        usuarioRepository.save(usuarioExistente);
+
+
+       usuarioRepository.actualizarUsuarioCurrent(usuarioExistente);
+
+
         return new Response(success, 200, "Usuario actualizado correctamente");
     }
 }

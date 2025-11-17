@@ -3,9 +3,11 @@ package com.surrogate.Zoolip.repository.bussiness;
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,4 +44,17 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<UsuarioDto> findAllDTosWithLimit(long id_usuario);
     @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u ORDER BY u.id LIMIT 5 " )
     List<UsuarioDto> find5DTOs();
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+    UPDATE Usuario u 
+    SET u.nombre = :#{#usuario.nombre},
+        u.email = :#{#usuario.email},
+        u.biografia = :#{#usuario.biografia},
+        u.imagenUrl = :#{#usuario.imagenUrl}
+    WHERE u.id = :#{#usuario.id}
+""")
+    void actualizarUsuarioCurrent(@Param("usuario") Usuario usuario);
+
 }

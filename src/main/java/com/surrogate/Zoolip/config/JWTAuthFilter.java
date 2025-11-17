@@ -55,6 +55,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                         path.startsWith("/post")||
                 path.startsWith("/ws/") ||
                 path.contains("swagger") ||
+                        path.startsWith("/api/auth/admin/register") ||
                 path.contains("api-docs");
 
 

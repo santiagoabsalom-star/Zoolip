@@ -185,7 +185,7 @@ public class AuthController {
         return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
     }
     @PostMapping("/updateCurrentUser")
-    public ResponseEntity<Response> updateCurrentUser(HttpServletRequest request, Usuario usuario) {
+    public ResponseEntity<Response> updateCurrentUser(HttpServletRequest request, @RequestBody Usuario usuario) {
 
             String token = getTokenFromRequest(request);
             if (token == null) {

@@ -95,6 +95,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/accounts").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR", "ROLE_SYSTEM","ROLE_USUARIO","ROLE_ADOPTANTE","ROLE_USER")
                         .requestMatchers("/api/usuario/getUsuarioById").permitAll()
                         .requestMatchers("/chat/**").permitAll()
+
                         .requestMatchers("/api/publicacion/obtenerPorUsuarioCurrent").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR", "ROLE_SYSTEM","ROLE_USUARIO","ROLE_ADOPTANTE","ROLE_USER")
                         .requestMatchers("/api/usuario/eliminar").hasAnyAuthority("ROLE_SYSTEM")
                         .requestMatchers("/api/usuario/getUsuarios").hasAnyAuthority("ROLE_SYSTEM")
