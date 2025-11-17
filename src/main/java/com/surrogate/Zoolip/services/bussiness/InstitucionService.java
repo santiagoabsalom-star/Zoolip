@@ -156,8 +156,8 @@ public class InstitucionService {
             return new Response(error, 409, "La institucion ya existe");
 
         }
-        if (!institucion.getId_usuario().getRol().equals("ADMINISTRADOR")) {
-            log.info("El rol del usuario tiene que ser ADMINISTRADOR");
+        if (!institucion.getId_usuario().getRol().equals("ROLE_ADMINISTRADOR")) {
+            log.info("El rol del usuario tiene que ser ROLE_ADMINISTRADOR");
             return new Response(error, 409, "El rol del usuario tiene que ser administrador");
 
         }
