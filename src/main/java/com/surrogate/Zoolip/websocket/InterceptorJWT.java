@@ -25,10 +25,14 @@ public class InterceptorJWT implements HandshakeInterceptor {
     //todo : implementar la validacion del token JWT en el beforeHandshake
     @Override
     public boolean beforeHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response, @NotNull WebSocketHandler wsHandler, @NotNull Map<String, Object> attributes) throws WebSocketHandshakeException {
-        String nombreChat= Objects.requireNonNull(request.getHeaders().getFirst("Nombre_Chat"));
-        String nombreUsuario= Objects.requireNonNull(request.getHeaders().getFirst("Nombre"));
-        attributes.put("NombreChat", nombreChat);
-        attributes.put("Nombre", nombreUsuario);
+
+        String nombreChat=request.getHeaders().getFirst("Nombre_Chat") != null ? request.getHeaders().getFirst("Nombre_Chat") : null;
+        String nombreUsuario=request.getHeaders().getFirst("Nombre") != null ? request.getHeaders().getFirst("Nombre") : null;
+        if(nombreUsuario!=null && nombreChat!=null){
+            attributes.put("NombreChat", nombreChat);
+            attributes.put("Nombre", nombreUsuario);
+        }
+
         return true;
 
     }

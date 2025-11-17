@@ -83,7 +83,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/me").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR","ROLE_ADOPTANTE","ROLE_USUARIO","ROLE_SYSTEM","ROLE_USER")
                         .requestMatchers("/api/mascotas/misMascotas").hasAnyAuthority("ROLE_ADOPTANTE","ROLE_SYSTEM","ROLE_ADMIN","ROLE_USUARIO","ROLE_USER")
                         .requestMatchers("/api/mascotas/getAllSolicitudes").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR", "ROLE_SYSTEM","ROLE_USER")
-
+                        .requestMatchers("/api/mascotas/obtenerPorId").hasAnyAuthority("ROLE_SYSTEM","ROLE_ADMIN", "ROLE_ADMINISTRADOR","ROLE_ADOPTANTE","ROLE_USUARIO","ROLE_USER")
                         .requestMatchers("/api/mascotas/completarAdopcion").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR", "ROLE_SYSTEM","ROLE_USER")
                         .requestMatchers("/api/publicacion/obtenerTodas").hasAnyAuthority("ROLE_SYSTEM","ROLE_ADMIN", "ROLE_ADMINISTRADOR","ROLE_ADOPTANTE","ROLE_USUARIO","ROLE_USER")
                         .requestMatchers("/api/publicacion/obtenerPublicacionesPublicas").permitAll()
