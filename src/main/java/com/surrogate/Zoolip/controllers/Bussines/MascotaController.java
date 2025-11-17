@@ -104,9 +104,11 @@ public ResponseEntity<List<SolicitudAdopcionDTO>> getSolicitudAdopcion() {
         Response response = mascotaService.completarAdopcion( solicitudAdopcion );
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
-    @GetMapping("/getAllSolicitudes")
+    @GetMapping("/getAllCurrentSolicitudes")
     public ResponseEntity<List<SolicitudAdopcionDTO>> getAllSolicitudes() {
+
         List<SolicitudAdopcionDTO> solicitudes = mascotaService.getAllSolicitudes();
+
         if(solicitudes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -123,5 +125,6 @@ public ResponseEntity<List<SolicitudAdopcionDTO>> getSolicitudAdopcion() {
         }
         return new ResponseEntity<>(solicitud, HttpStatus.OK);
     }
+
 
 }

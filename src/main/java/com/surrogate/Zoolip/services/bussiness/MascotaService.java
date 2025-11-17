@@ -116,8 +116,8 @@ public class MascotaService {
         if(isSolicitudCompleted(solicitudAdopcion.getId_solicitud_adopcion())){
             return new Response(error, 409, "La solicitud ya esta completada");
         }
-        if(solicitudAdopcion.getRazon()==null){
-            return new Response(error, 404, "Razon no puede ser nula");
+        if(solicitudAdopcion.getMotivo_decision()==null){
+            return new Response(error, 404, "Motivo decision no puede ser nula");
 
         }
 
@@ -133,7 +133,7 @@ public class MascotaService {
         SolicitudAdopcion solicitudAdopcionCompletada = solicitudAdopcionRepository.findById(solicitudAdopcion.getId_solicitud_adopcion()).orElse(null);
         assert solicitudAdopcionCompletada != null;
         solicitudAdopcionCompletada.setEstadoSolicitud(solicitudAdopcion.getEstadoSolicitud());
-        solicitudAdopcionCompletada.setRazon(solicitudAdopcion.getRazon());
+        solicitudAdopcionCompletada.setMotivo_decision(solicitudAdopcion.getMotivo_decision());
         if(!usuarioRepository.existsById(solicitudAdopcionCompletada.getId_adoptante().getId())) {
             return new Response(error, 409, "El usuario no existe");
         }
@@ -167,7 +167,7 @@ public class MascotaService {
 
 
     public List<SolicitudAdopcionDTO> getAllSolicitudes(){
-        return solicitudAdopcionRepository.findAllDTOs();
+        return solicitudAdopcionRepository.findAllSolicitudesByIdAdmin(getIdUsuario());
     }
 public SolicitudAdopcionDTO getSolicitudAdopcionById(Long id) {
         return solicitudAdopcionRepository.findDTOById(id);

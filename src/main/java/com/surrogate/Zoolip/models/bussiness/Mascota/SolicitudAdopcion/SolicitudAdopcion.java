@@ -24,8 +24,10 @@ public class SolicitudAdopcion {
     @JoinColumn(name="id_mascota",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Mascota mascota;
-    @Column(name="razon")
-    private String razon;
+    @Column(name="motivo_decision")
+    private String motivo_decision;
+    @Column(name="razon_solicitud",nullable = false)
+    private String razon_solicitud;
     @Column(name = "estado_solicitud",nullable = false)
     private EstadoSolicitud estadoSolicitud;
     @Column(name="fecha_inicio")
