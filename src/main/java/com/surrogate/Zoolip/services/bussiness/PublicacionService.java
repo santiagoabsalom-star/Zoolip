@@ -18,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Queue;
+
 import java.util.Random;
 
 @Slf4j
@@ -132,7 +132,7 @@ public class PublicacionService {
 
     public List<PublicacionDTO> obtenerPublicacionesPublicas() {
 
-        return publicacionRepository.findPublicacionesPublicas(random.nextLong(0, (publicacionRepository.count()-10)));
+        return publicacionRepository.findPublicacionesPublicas(random.nextLong(0, (publicacionRepository.count())));
     }
     public List<PublicacionDTO> obtenerPublicacionesLike(String contenido){
         log.info("Buscando publicaciones con contenido similar a: {}", contenido);
