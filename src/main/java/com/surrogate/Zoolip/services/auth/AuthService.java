@@ -133,7 +133,7 @@ public class   AuthService {
             if (registerRequest.getRol() == null || registerRequest.getRol().isEmpty()) {
                 return new RegisterResponse(error, 401, "El rol es requerido");
             }
-            if (!registerRequest.getRol().equals("ROLE_ADMINISTRADOR") && !registerRequest.getRol().equals("ROLE_SYSTEM")) {
+            if (!registerRequest.getRol().equals("ROLE_ADMINISTRADOR") ) {
                 return new RegisterResponse(error, 403, "El rol tiene que ser administrador o system");
             }
 

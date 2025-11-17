@@ -79,11 +79,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             if(sesionReceptor!=null && sesionReceptor.isOpen()){sesionReceptor.sendMessage(message);
                 guardarMensaje(message, nombreChat, session.getAttributes().get("Nombre").toString(), receptor);
             log.info("Mensaje enviado al receptor: {}", receptor);
-
+            return;
             }
         guardarMensaje(message, nombreChat, session.getAttributes().get("Nombre").toString(), receptor);
-
-
 
 
 

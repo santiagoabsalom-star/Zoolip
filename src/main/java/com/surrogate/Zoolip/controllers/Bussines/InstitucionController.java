@@ -25,6 +25,7 @@ public class InstitucionController {
     @PostMapping("/agregar")
     public ResponseEntity<Response> agregarInstitucion(@RequestBody Institucion institucion) {
         Response response = institucionService.crear(institucion);
+
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
     @PostMapping("/solicitudInstitucion")
@@ -32,6 +33,7 @@ public class InstitucionController {
         Response response=institucionService.crearSolicitud(institucionSolicitud);
         return ResponseEntity.status(response.getHttpCode()).body(response);
     }
+
 
     @PostMapping("/actualizar")
     public ResponseEntity<Response> actualizarInstitucion(@RequestBody Institucion institucion) {
