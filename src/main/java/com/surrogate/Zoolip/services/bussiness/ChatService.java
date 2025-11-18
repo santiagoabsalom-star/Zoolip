@@ -12,6 +12,7 @@ import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,9 +27,12 @@ public class ChatService {
     private final String error;
     private final JWTService jwtService;
     private final UsuarioRepository usuarioRepository;
-
+@Transactional
     public Response crearChat(Chat chat){
         Response response = verificarChat(chat);
+        if(chatRepository.existsByNombreChat(chat.getNombreChat())){
+            return new Response(success, 409, "El chat ya existe");
+        }
         if(response.getHttpCode()!=200){
             return response;
         }
@@ -45,6 +49,9 @@ public class ChatService {
         if(chat.getAdministrador().getNombre().equals(chat.getUsuario().getNombre())){
             return new Response(error, 409, "No puedes crear un chat contigo mismo");
 
+        }
+        if(chatRepository.existsByNombreChat(chat.getUsuario().getNombre())){
+            return new Response(error, 409, "El chat ya existe");
         }
 
         if(Objects.equals(chat.getUsuario().getRol(), "ADMINISTRADOR") || Objects.equals(chat.getAdministrador().getRol(), "USUARIO")){

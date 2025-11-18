@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.View;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -43,6 +44,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String[] usuarios= nombreChat.split("_");
         String emisor= usuarios[0];
         String receptor= usuarios[1];
+        if(chatRepository.findBynombreChat(nombreChat)!=null){
+            log.info("Conexion WebSocket establecida para el chat existente: {} ", nombreChat);
+            sesiones.put(nombreUsuario, session);
+            return;
+        }
         if (!chatRepository.existsByNombreChat(nombreChat) && !(usuarioRepository.findByNombre(emisor).getRol().equals("ROLE_ADMINISTRADOR"))){
 
             Response response =creaChatIfNotExists(emisor, receptor);
@@ -132,8 +138,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         if(chatRepository.existsByNombreChat(emisor+"_"+receptor)){
             return new Response(error, 409, "El chat ya existe");
         }
-        chatService.crearChat(chat);
-        return new Response(success, 200, "Chat creado correctamente");
+        return chatService.crearChat(chat);
     }
 
 
