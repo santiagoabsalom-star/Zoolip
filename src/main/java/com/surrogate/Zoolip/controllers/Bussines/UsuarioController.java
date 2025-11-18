@@ -72,8 +72,8 @@ public class UsuarioController {
 
     }
     @GetMapping("/getUsuarioByIdInstitucion")
-    public ResponseEntity<UsuarioDto> getUsuarioByIdInstitucion(@RequestParam Long id_usuario) {
-        UsuarioDto usuarioDto = usuarioService.findDTOByIdInstitucion(id_usuario);
+    public ResponseEntity<UsuarioDto> getUsuarioByIdInstitucion(@RequestParam Long id_institucion) {
+        UsuarioDto usuarioDto = usuarioService.findDTOByIdInstitucion(id_institucion);
         if (usuarioDto == null) {
             return ResponseEntity.notFound().build();
 
