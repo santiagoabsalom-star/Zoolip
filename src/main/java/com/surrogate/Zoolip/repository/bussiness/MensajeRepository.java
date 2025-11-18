@@ -17,6 +17,6 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
     @Query("delete from Mensaje m where m.id_chat.id_chat= :idChat")
    @BatchSize(size =50)
     int deleteAllByIdChat(Long idChat);
-    @Query("Select new com.surrogate.Zoolip.models.DTO.MensajeDTO(m.id_mensaje, m.id_chat.id_chat, m.id_chat.nombreChat, m.emisor.nombre, m.receptor.nombre) from Mensaje m where m.id_chat.id_chat=:idChat")
+    @Query("Select new com.surrogate.Zoolip.models.DTO.MensajeDTO(m.id_mensaje, m.id_chat.id_chat, m.id_chat.nombreChat,m.contenido, m.emisor.nombre, m.receptor.nombre) from Mensaje m where m.id_chat.id_chat=:idChat")
     List<MensajeDTO> findAllByChatId(Long idChat);
 }
