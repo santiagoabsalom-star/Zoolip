@@ -11,6 +11,7 @@ import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,20 +28,27 @@ public class ChatService {
     private final String error;
     private final JWTService jwtService;
     private final UsuarioRepository usuarioRepository;
-@Transactional
-    public Response crearChat(Chat chat){
+
+
+    @Transactional
+    public Response crearChat(Chat chat) {
         Response response = verificarChat(chat);
-        if(chatRepository.existsByNombreChat(chat.getNombreChat())){
+        chat.setNombreChat(chat.getUsuario().getNombre() + "_" + chat.getAdministrador().getNombre());
+        if (chatRepository.existsByNombreChat(chat.getNombreChat())) {
             return new Response(success, 409, "El chat ya existe");
         }
-        if(response.getHttpCode()!=200){
+        if (response.getHttpCode() != 200) {
             return response;
         }
-        chat.setNombreChat(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre());
 
-        chatRepository.save(chat);
-        return response;
-    }
+        try {
+            chatRepository.save(chat);
+        } catch (DataIntegrityViolationException e) {
+            return new Response(success, 409, "El chat ya existe");
+        }
+
+        return new Response(success, 200,"Chat creado correctamente");
+}
     public Response verificarChat(Chat chat){
         if( Thread.currentThread().getStackTrace()[1].getMethodName().equals("crearChat") && chatRepository.existsByNombreChat(chat.getUsuario().getNombre()+"_"+chat.getAdministrador().getNombre())){
         return new Response(error, 409, "El chat ya existe");
