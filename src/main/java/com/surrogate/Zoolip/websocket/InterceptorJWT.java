@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import java.net.URI;
 import java.net.http.WebSocketHandshakeException;
 import java.util.Map;
 import java.util.Objects;
@@ -26,11 +27,22 @@ public class InterceptorJWT implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response, @NotNull WebSocketHandler wsHandler, @NotNull Map<String, Object> attributes) throws WebSocketHandshakeException {
 
-        String nombreChat=request.getHeaders().getFirst("Nombre_Chat") != null ? request.getHeaders().getFirst("Nombre_Chat") : null;
-        String nombreUsuario=request.getHeaders().getFirst("Nombre") != null ? request.getHeaders().getFirst("Nombre") : null;
-        if(nombreUsuario!=null && nombreChat!=null){
-            attributes.put("NombreChat", nombreChat);
-            attributes.put("Nombre", nombreUsuario);
+        if(request.getURI().getPath().contains("/post")) {return true;
+        }
+        request.getURI();
+        URI uri = request.getURI();
+
+        String[] atributos = uri.getQuery().split("&");
+
+        String nombreChatParam=atributos[0].split("=")[1] != null ? atributos[0].split("=")[1] : null;
+        String nombreUsuarioParam=atributos[1].split("=")[1] != null ? atributos[1].split("=")[1] : null;
+
+        log.info("Parametros recibidos en el handshake: NombreChat={}, NombreUsuario={}", nombreChatParam, nombreUsuarioParam);
+
+
+        if(nombreUsuarioParam!=null && nombreChatParam!=null){
+            attributes.put("NombreChat", nombreChatParam);
+            attributes.put("Nombre", nombreUsuarioParam);
         }
 
         return true;

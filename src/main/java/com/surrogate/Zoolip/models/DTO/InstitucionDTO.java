@@ -10,8 +10,9 @@ public interface InstitucionDTO {
     Long getId_institucion();
 
     String getNombre();
-
+    Long getIdAdministrador();
     Tipo getTipo();
+
 
     String getDescripcion();
 

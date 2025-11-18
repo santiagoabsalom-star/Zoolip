@@ -57,4 +57,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 """)
     void actualizarUsuarioCurrent(@Param("usuario") Usuario usuario);
 
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email,u.biografia,u.imagenUrl) from Usuario u join Institucion i on u.id=i.id_usuario.id where i.id_institucion= :idInstitucion")
+    UsuarioDto findDTOByInstitucionId(Long idInstitucion);
 }

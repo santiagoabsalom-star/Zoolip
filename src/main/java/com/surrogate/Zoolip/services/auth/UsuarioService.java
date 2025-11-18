@@ -112,4 +112,8 @@ public class UsuarioService {
 
         return new Response(success, 200, "Usuario actualizado correctamente");
     }
+
+    public UsuarioDto findDTOByIdInstitucion(Long id_institucion) {
+        return usuarioRepository.findDTOByInstitucionId(id_institucion);
+    }
 }

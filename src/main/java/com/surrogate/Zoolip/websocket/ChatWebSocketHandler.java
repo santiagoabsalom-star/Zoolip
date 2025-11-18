@@ -51,11 +51,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 session.close(CloseStatus.BAD_DATA);
                 log.error("Conexion cerrada por error al crear el chat");
             }
+            log.info("Nueva conexión WebSocket establecida para el chat: {} ", nombreChat);
+
         }
-        log.info("Nueva conexión WebSocket establecida para el chat: {} ", nombreChat);
-        sesiones.put(nombreUsuario, session);
+            sesiones.put(nombreUsuario, session);
 
     }
+
 
     @Override
     public void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message) throws Exception {
@@ -86,6 +88,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
 
     }
+
+
+
 
     private void guardarMensaje(@NotNull TextMessage message, String nombreChat, String emisor, String receptor) {
         if(!chatRepository.existsByNombreChat(nombreChat)){

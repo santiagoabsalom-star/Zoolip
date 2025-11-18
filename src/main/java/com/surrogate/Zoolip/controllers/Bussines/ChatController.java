@@ -35,6 +35,7 @@ public class ChatController {
 
 
     }
+
     @GetMapping("/obtenerChatsPorUsuario")
     public ResponseEntity<List<ChatDTO>> obtenerChatsPorUsuario(@RequestParam Long id_usuario) {
 

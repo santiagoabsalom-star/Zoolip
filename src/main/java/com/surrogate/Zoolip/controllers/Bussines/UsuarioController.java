@@ -71,6 +71,15 @@ public class UsuarioController {
 
 
     }
+    @GetMapping("/getUsuarioByIdInstitucion")
+    public ResponseEntity<UsuarioDto> getUsuarioByIdInstitucion(@RequestParam Long id_usuario) {
+        UsuarioDto usuarioDto = usuarioService.findDTOByIdInstitucion(id_usuario);
+        if (usuarioDto == null) {
+            return ResponseEntity.notFound().build();
+
+        }
+        return ResponseEntity.ok(usuarioDto);
+    }
     private String getTokenFromRequest(HttpServletRequest request) {
         if (request.getCookies() == null || request.getCookies().length == 0) {
 

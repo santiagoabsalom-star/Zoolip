@@ -107,6 +107,9 @@ public class   AuthService {
                 return new RegisterResponse(error, 409, "El nombre ya existe");
 
             }
+            if(registerRequest.getUsername().contains("_")){
+                return new RegisterResponse(error, 409, "El nombre no puede tener barra baja");
+            }
 
             log.info(registerRequest.getImagen_url());
             Usuario newUsuario = new Usuario();
@@ -136,7 +139,9 @@ public class   AuthService {
             if (!registerRequest.getRol().equals("ROLE_ADMINISTRADOR") ) {
                 return new RegisterResponse(error, 403, "El rol tiene que ser administrador o system");
             }
-
+            if(registerRequest.getUsername().contains("_")){
+                return new RegisterResponse(error, 409, "El nombre no puede tener barra baja");
+            }
             if (usuarioRepository.existsByNombre(registerRequest.getUsername())) {
 
                 return new RegisterResponse(error, 409, "El nombre ya existe");
