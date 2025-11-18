@@ -10,7 +10,7 @@ import java.util.List;
 public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     
-    @Query("Select new com.surrogate.Zoolip.models.DTO.ChatDTO(c.id_chat, c.nombreChat, c.usuario.nombre, c.administrador.nombre) from Chat c where c.usuario.id=:idUsuario")
+    @Query("Select new com.surrogate.Zoolip.models.DTO.ChatDTO(c.id_chat, c.nombreChat, c.usuario.nombre, c.administrador.nombre) from Chat c where c.usuario.id=:idUsuario or c.administrador.id= :idUsuario" )
     List<ChatDTO> findAllByIdUsuario(Long idUsuario);
 
     @Query("Select count(*) > 0 from Chat c where c.nombreChat = :nombreChat")
