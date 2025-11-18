@@ -91,6 +91,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/publicacion/crear").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR", "ROLE_SYSTEM","ROLE_USUARIO","ROLE_USER","ROLE_ADOPTANTE")
                         .requestMatchers("/api/publicacion/obtenerPorId").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR","ROLE_ADOPTANTE","ROLE_USUARIO","ROLE_SYSTEM","ROLE_USER")
                         .requestMatchers("/api/auth/logout").permitAll()
+                        .requestMatchers("/api/usuario/getUsuarioByIdInstitucion").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR","ROLE_ADOPTANTE","ROLE_USUARIO","ROLE_SYSTEM","ROLE_USER")
                         .requestMatchers("/post/**").permitAll()
                         .requestMatchers("/api/auth/accounts").hasAnyAuthority("ROLE_ADMIN", "ROLE_ADMINISTRADOR", "ROLE_SYSTEM","ROLE_USUARIO","ROLE_ADOPTANTE","ROLE_USER")
                         .requestMatchers("/api/usuario/getUsuarioById").permitAll()
