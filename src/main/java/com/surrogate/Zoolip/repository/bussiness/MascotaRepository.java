@@ -23,7 +23,7 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
 
     @Query("Select m from Mascota m LEFT JOIN FETCH m.id_institucion")
     @NotNull List<Mascota> buscarMascotas();
-    @Query("select m.id as id_Mascota, m.estadoAdopcion as estadoAdopcion, m.tamanio as tamanio,m.imagenUrl as imagenUrl, m.estadoSalud as estadoSalud, m.especie as especie, m.raza as raza, m.edad as edad, m.id_institucion.nombre as nombreInstitucion  from Mascota m join SolicitudAdopcion sp where m.id=sp.mascota.id and sp.id_adoptante.id=:id_usuario")
+    @Query("select m.id as id_Mascota, m.estadoAdopcion as estadoAdopcion, m.tamanio as tamanio,m.imagenUrl as imagenUrl, m.estadoSalud as estadoSalud, m.especie as especie, m.raza as raza, m.edad as edad, m.id_institucion.nombre as nombreInstitucion  from Mascota m join SolicitudAdopcion sp on m.id=sp.mascota.id where m.id=sp.mascota.id  and sp.id_adoptante.id=:id_usuario")
     List<MascotaDTO> findMisMascotasDTO(Long id_usuario);
 
 }
