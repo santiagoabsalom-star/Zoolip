@@ -80,7 +80,7 @@ public class PublicacionView extends FormLayout {
 
         binder.forField(usuario)
                 .asRequired("Usuario requerido")
-                .bind(p -> p.getId_usuario() == null ? null : new UsuarioDto(p.getId_usuario().getId(), p.getId_usuario().getNombre(), p.getId_usuario().getRol(), "santiagoabsalom@gmail.com"),
+                .bind(p -> p.getId_usuario() == null ? null : new UsuarioDto(p.getId_usuario().getId(), p.getId_usuario().getNombre(), p.getId_usuario().getRol(), "santiagoabsalom@gmail.com","ERI","ERO"),
                         (p, u) -> {
                         });
 

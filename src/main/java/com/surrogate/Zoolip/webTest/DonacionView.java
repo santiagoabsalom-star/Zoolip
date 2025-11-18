@@ -103,7 +103,7 @@ public class DonacionView extends FormLayout {
 
         binder.forField(usuario)
                 .asRequired("Usuario requerido")
-                .bind(d -> d.getId_usuario() == null ? null : new UsuarioDto(d.getId_usuario().getId(), d.getId_usuario().getNombre(), d.getId_usuario().getRol(), "santiagoabsalom@gmail.com"),
+                .bind(d -> d.getId_usuario() == null ? null : new UsuarioDto(d.getId_usuario().getId(), d.getId_usuario().getNombre(), d.getId_usuario().getRol(), "santiagoabsalom@gmail.com", "ERO","ERP"),
                         (d, u) -> {
                         });
 

@@ -219,7 +219,7 @@ public class InstitucionView extends FormLayout {
                         .ifPresent(usuario::setValue);
 
                 if (usuario.getValue() == null) {
-                    usuarioService.findById(uid).ifPresent(u -> usuario.setValue(new UsuarioDto(u.getId(), u.getNombre(), u.getRol(), "santiagoabsalom@gmail.com")));
+                    usuarioService.findById(uid).ifPresent(u -> usuario.setValue(new UsuarioDto(u.getId(), u.getNombre(), u.getRol(), "santiagoabsalom@gmail.com","ERO","ERO")));
                 }
             } else {
                 usuario.clear();

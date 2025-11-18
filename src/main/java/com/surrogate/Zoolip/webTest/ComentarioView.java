@@ -87,7 +87,7 @@ public class ComentarioView extends FormLayout {
 
         binder.forField(usuario)
                 .asRequired("Usuario requerido")
-                .bind(c -> c.getId_usuario() == null ? null : new UsuarioDto(c.getId_usuario().getId(), c.getId_usuario().getNombre(), c.getId_usuario().getRol(), "santiagoabsalom@gmail.com"),
+                .bind(c -> c.getId_usuario() == null ? null : new UsuarioDto(c.getId_usuario().getId(), c.getId_usuario().getNombre(), c.getId_usuario().getRol(), "santiagoabsalom@gmail.com", "Er", "ERO"),
                         (c, u) -> {
                         });
 

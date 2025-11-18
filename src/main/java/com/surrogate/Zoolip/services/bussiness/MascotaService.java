@@ -151,8 +151,10 @@ public class MascotaService {
 
 
             usuario.setRol("ROLE_ADOPTANTE");
-        }
+        }else {
+
         mascota.setEstadoAdopcion(EstadoAdopcion.DISPONIBLE);
+        }
         mascotaRepository.saveAndFlush(mascota);
 
 

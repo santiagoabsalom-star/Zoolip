@@ -21,15 +21,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT u.id FROM Usuario u WHERE LOWER(u.nombre) = LOWER(:nombre)")
     Long getIdUsuario(@Param("nombre") String nombre);
 
-    @Query("SELECT new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol, u.email) " +
+    @Query("SELECT new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol, u.email,u.biografia,u.imagenUrl) " +
             "FROM Usuario u " +
             "WHERE NOT EXISTS (SELECT i FROM Institucion i WHERE i.id_usuario = u)")
     List<UsuarioDto> findAvailableUserDtos();
 
-    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol, u.email) from Usuario u where u.id =:id")
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id, u.nombre, u.rol, u.email,u.biografia,u.imagenUrl) from Usuario u where u.id =:id")
     Optional<UsuarioDto> getUserById(Long id);
 
-    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u where u.email=:email")
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email,u.biografia,u.imagenUrl) from Usuario u where u.email=:email")
     List<UsuarioDto> findAllByEmail(String email);
 
     Usuario getUsuarioById(Long idUsuario);
@@ -38,11 +38,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     boolean existsByNombre(String nombre);
     boolean existsByEmail(String email);
-    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u where u.id=:id_usuario")
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email,u.biografia,u.imagenUrl) from Usuario u where u.id=:id_usuario")
     UsuarioDto findDTOById(long id_usuario);
-    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u where u.id >=:id_usuario ORDER BY u.id LIMIT 10  " )
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email,u.biografia,u.imagenUrl) from Usuario u where u.id >=:id_usuario ORDER BY u.id LIMIT 10  " )
     List<UsuarioDto> findAllDTosWithLimit(long id_usuario);
-    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email) from Usuario u ORDER BY u.id LIMIT 5 " )
+    @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email,u.biografia,u.imagenUrl) from Usuario u ORDER BY u.id LIMIT 5 " )
     List<UsuarioDto> find5DTOs();
 
     @Transactional
