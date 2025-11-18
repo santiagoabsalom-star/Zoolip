@@ -122,10 +122,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 sendError(response, "Token invalidado", HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
-            if (!jwtService.isTokenFromIp(request.getRemoteAddr(), jwt)) {
-                jwtService.InvalidateToken(jwt);
-                sendError(response, "Distinta ip para token", HttpServletResponse.SC_UNAUTHORIZED);
-            }
+//            if (!jwtService.isTokenFromIp(request.getRemoteAddr(), jwt)) {
+//                jwtService.InvalidateToken(jwt);
+//                sendError(response, "Distinta ip para token", HttpServletResponse.SC_UNAUTHORIZED);
+//            }
 
             String username = jwtService.extractUsername(jwt);
             log.info("Username : {}", username);

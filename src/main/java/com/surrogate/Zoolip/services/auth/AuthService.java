@@ -1,6 +1,6 @@
 package com.surrogate.Zoolip.services.auth;
 
-import com.surrogate.Zoolip.events.UsuarioCreado;
+
 import com.surrogate.Zoolip.events.UsuarioNotifier;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
@@ -77,7 +77,7 @@ public class   AuthService {
                 log.info("Tiempo de espera de autenticacion: {}", (endTimeauth - startTimeauth) + "ms");
 
                 String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId(), userDetails.getEmail());
-                jwtService.setIpToken(ip, token);
+                //jwtService.setIpToken(ip, token);
 
                 return new LoginResponse(success, 200, token, userDetails.getUsername(), userDetails.getId());
             }

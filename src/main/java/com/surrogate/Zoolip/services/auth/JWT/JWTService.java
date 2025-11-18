@@ -21,7 +21,7 @@ import java.util.function.Function;
 @Service
 @NoArgsConstructor
 public class JWTService {
-    private final Map<String, String> ipToken = new HashMap<>();
+   // private final Map<String, String> ipToken = new HashMap<>();
     private final Map<String, Object> claims = new HashMap<>();
     private final HashSet<String> tokens = new HashSet<>();
     //private final HashSet<Integer> authtokens = new HashSet<>();
@@ -42,11 +42,11 @@ public class JWTService {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public void setIpToken(String ip, String token) {
-        log.info("Token: {} y ip: {} ", token, ip);
-        this.ipToken.put(ip, token);
-
-    }
+//    public void setIpToken(String ip, String token) {
+//        log.info("Token: {} y ip: {} ", token, ip);
+//        this.ipToken.put(ip, token);
+//
+//    }
 
     /**
      * Para implementar despues.
@@ -81,10 +81,10 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
-    public boolean isTokenFromIp(String ip, String token) {
-        log.info("el token asignado a la ip {} es {}", ip, ipToken.get(ip));
-        return ipToken.containsKey(ip) && ipToken.get(ip).equals(token);
-    }
+//    public boolean isTokenFromIp(String ip, String token) {
+//        log.info("el token asignado a la ip {} es {}", ip, ipToken.get(ip));
+//        return ipToken.containsKey(ip) && ipToken.get(ip).equals(token);
+//    }
 
     public String generateToken(String username, String role) {
 
@@ -158,7 +158,7 @@ public class JWTService {
                     .getPayload();
             if(claims.getExpiration().before(new Date())){
                tokens.remove(token);
-               ipToken.remove(token);
+//               ipToken.remove(token);
 
                 return false;
 
@@ -209,7 +209,7 @@ public class JWTService {
             log.info("Token no válido o no almacenado: {}", token);
             return "error";
         }
-        ipToken.remove(token);
+//        ipToken.remove(token);
 
         log.info("Invalidando token: [  {}  ]", token);
         tokens.remove(token);
