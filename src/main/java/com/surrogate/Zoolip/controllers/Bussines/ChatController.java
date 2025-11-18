@@ -55,6 +55,16 @@ public class ChatController {
         }
         return ResponseEntity.ok(chats);
     }
+    @GetMapping("/obtenerUltimoMensajePorChat")
+    public ResponseEntity<MensajeDTO> obtenerUltimoMensajePorChat(@RequestParam Long id_chat) {
+        MensajeDTO mensaje = chatService.ultimoMensaje(id_chat);
+        if (mensaje == null) {
+            return ResponseEntity.ofNullable(null);
+
+        }
+        return ResponseEntity.ok(mensaje);
+    }
+
     @GetMapping("/obtenerMensajesPorChat")
     public ResponseEntity<List<MensajeDTO>> obtenerMensajesPorChat(@RequestParam Long id_chat) {
         List<MensajeDTO> mensajes = chatService.obtenerMensajesDeChat(id_chat);

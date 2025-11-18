@@ -132,6 +132,13 @@ public class ChatService {
 
 
     }
+    public MensajeDTO ultimoMensaje(Long idChat){
+        if(!chatRepository.existsById(idChat)){
+            return null;
+        }
+return mensajeRepository.ultimoMensajeDeChat(idChat);
+
+    }
 
 
 
