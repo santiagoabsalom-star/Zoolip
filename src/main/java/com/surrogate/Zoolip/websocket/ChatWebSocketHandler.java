@@ -123,12 +123,15 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private Response creaChatIfNotExists(String emisor, String receptor) {
         Chat chat = new Chat();
         chat.setNombreChat(emisor + "_" + receptor);
+
         if (!usuarioRepository.existsByNombre(emisor) || !usuarioRepository.existsByNombre(receptor)) {
             return new Response(error, 404, "Uno de los usuarios no existe");
         }
         chat.setUsuario(usuarioRepository.findByNombre(emisor));
         chat.setAdministrador(usuarioRepository.findByNombre(receptor));
-
+        if(chatRepository.existsByNombreChat(emisor+"_"+receptor)){
+            return new Response(error, 409, "El chat ya existe");
+        }
         chatService.crearChat(chat);
         return new Response(success, 200, "Chat creado correctamente");
     }
