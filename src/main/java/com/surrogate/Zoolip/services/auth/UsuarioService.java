@@ -2,12 +2,14 @@ package com.surrogate.Zoolip.services.auth;
 
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
+import com.surrogate.Zoolip.models.login.UserPrincipal;
 import com.surrogate.Zoolip.models.peticiones.Response;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,11 +45,9 @@ public class UsuarioService {
 
     }
 
-    public List<UsuarioDto> findAllByEmail(String token) {
-        if (token == null) {
-            return null;
-        }
-        return usuarioRepository.findAllByEmail(jwtService.extractEmail(token));
+    public List<UsuarioDto> findAllByEmail() {
+
+        return usuarioRepository.findAllByEmail(getEmailFromSecurityContext());
     }
 
     public Optional<Usuario> findById(Long uid) {
@@ -77,10 +77,10 @@ public class UsuarioService {
     @Transactional
     public Response updateCurrentUser(String token, Usuario usuario) {
 
-        Long idUsuario = jwtService.extractId(token);
 
 
-       Usuario usuarioExistente = usuarioRepository.findById(idUsuario).orElse(null);
+
+       Usuario usuarioExistente = usuarioRepository.findById(getIdFromSecurityContext()).orElse(null);
 
         if (usuarioExistente==null) {
             return new Response(error, 404,"Usuario no encontrado" );
@@ -115,5 +115,16 @@ public class UsuarioService {
 
     public UsuarioDto findDTOByIdInstitucion(Long id_institucion) {
         return usuarioRepository.findDTOByInstitucionId(id_institucion);
+    }
+    private Long getIdFromSecurityContext(){
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return userPrincipal.getId();
+    }
+    private String getEmailFromSecurityContext(){
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info(userPrincipal.getEmail());
+        return userPrincipal.getEmail();
     }
 }

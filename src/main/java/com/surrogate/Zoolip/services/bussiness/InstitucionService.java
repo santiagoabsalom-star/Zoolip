@@ -124,7 +124,7 @@ public class InstitucionService {
         if (institucion.getId_usuario() != null) {
             if (!usuarioRepository.existsById(institucion.getId_usuario().getId())) {
                 log.info("Usuario no encontrado");
-                return new Response(error, "Usuario no encontrado");
+                return new Response(error,404, "Usuario no encontrado");
             }
 
 

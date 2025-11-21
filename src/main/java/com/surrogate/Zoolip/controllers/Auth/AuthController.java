@@ -169,14 +169,11 @@ public class AuthController {
     }
 
     @GetMapping("/accounts")
-    public ResponseEntity<List<UsuarioDto>> getAccounts(HttpServletRequest request) {
+    public ResponseEntity<List<UsuarioDto>> getAccounts() {
 
-       String token = getTokenFromRequest(request);
-        if (token == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
-        List<UsuarioDto> usuarioDto = usuarioService.findAllByEmail(token);
+
+        List<UsuarioDto> usuarioDto = usuarioService.findAllByEmail();
         if (usuarioDto == null) {
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
