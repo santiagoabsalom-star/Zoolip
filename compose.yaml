@@ -8,7 +8,6 @@ services:
       - "9010:9010"
     volumes:
       - .:/app
-      - /app/target
     depends_on:
       db:
         condition: service_healthy
@@ -17,7 +16,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=2007absalom
       - SPRING_DEVTOOLS_RESTART_ENABLED=true
-    command: mvn -Dspring-boot.run.fork=false -Pdevelopment spring-boot:run
+      - spring_devtools_restart_additional-paths=src/main/java
+    command: mvn -Dspring-boot.run.fork=false    spring-boot:run
     networks:
       - zoolip-net
   db:

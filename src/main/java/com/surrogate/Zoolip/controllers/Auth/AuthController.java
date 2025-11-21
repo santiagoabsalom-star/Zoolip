@@ -37,9 +37,9 @@ public class AuthController {
 
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
-            LoginResponse response = authService.login(loginRequest, request.getRemoteAddr());
+            LoginResponse response = authService.login(loginRequest);
 
             if (response.getHttpCode() == 200) {
                 ResponseCookie cookie = ResponseCookie.from("AUTH_TOKEN", response.getToken())

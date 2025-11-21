@@ -1,7 +1,6 @@
 package com.surrogate.Zoolip.services.auth;
 
 
-import com.surrogate.Zoolip.events.UsuarioNotifier;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.LoginRequest;
 import com.surrogate.Zoolip.models.login.LoginResponse;
@@ -12,6 +11,9 @@ import com.surrogate.Zoolip.services.auth.JWT.JWTService;
 import com.surrogate.Zoolip.utils.UserDetailsWithId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,13 +34,18 @@ public class   AuthService {
     private final JWTService jwtService;
     private final AuthenticationManager authManager;
     private final UsuarioRepository usuarioRepository;
-    private final UsuarioNotifier usuarioNotifier;
+
     private final String success;
     private final String error;
-
+    @Value("${system.password}")
+    private String systempassword;
     @Transactional
-    public LoginResponse login(LoginRequest loginRequest, String ip) {
+    public LoginResponse login(LoginRequest loginRequest) {
 
+
+
+        log.info("Login request: {}", loginRequest);
+        log.info("Login response: {}", loginRequest.getPassword());
         try {
             if (loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty()) {
                 return new LoginResponse(error, 422, "El nombre de usuario es requerido");
@@ -77,7 +84,7 @@ public class   AuthService {
                 log.info("Tiempo de espera de autenticacion: {}", (endTimeauth - startTimeauth) + "ms");
 
                 String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId(), userDetails.getEmail());
-                //jwtService.setIpToken(ip, token);
+
 
                 return new LoginResponse(success, 200, token, userDetails.getUsername(), userDetails.getId());
             }
@@ -196,4 +203,25 @@ public class   AuthService {
         if (!StringUtils.hasText(password) || password.length() < MIN_PASSWORD_LENGTH) return false;
         return true;
     }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void createSystemAdminIfNotExists(){
+
+
+        if(usuarioRepository.existsByNombre("SYSTEM")){
+            log.info("Usuario SYSTEM ya existe");
+            usuarioRepository.delete(usuarioRepository.findByNombre("SYSTEM"));
+
+        }
+        Usuario systemAdmin = new Usuario();
+        systemAdmin.setNombre("SYSTEM");
+        systemAdmin.setPasswordHash(passwordEncoder.encode(systempassword));
+        systemAdmin.setRol("ROLE_SYSTEM");
+        systemAdmin.setEmail("santiagoabsalom@gmail.com");
+        usuarioRepository.save(systemAdmin);
+        log.info("Usuario SYSTEM creado");
+
+
+    }
 }
+
