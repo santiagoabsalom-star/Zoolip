@@ -166,8 +166,8 @@ public class   AuthService {
 
 
     public String logout(String token) {
-        log.info("Este es el token del usuario: {}", token);
 
+        log.info(token);
         if (token == null || token.isEmpty()) {
             throw new IllegalArgumentException("Token no puede ser nulo o vacío");
         }

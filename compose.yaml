@@ -1,4 +1,25 @@
 services:
+  monolito-dev:
+    image: maven:4.0.0-rc-4-amazoncorretto-21-debian
+    container_name: zoolip-dev
+    working_dir: /app
+    ports:
+      - "3050:3050"
+      - "9010:9010"
+    volumes:
+      - .:/app
+      - /app/target
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/zoolip?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=2007absalom
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+    command: mvn -Dspring-boot.run.fork=false -Pdevelopment spring-boot:run
+    networks:
+      - zoolip-net
   db:
     image: mysql:8.0-debian
     container_name: zoolip-db

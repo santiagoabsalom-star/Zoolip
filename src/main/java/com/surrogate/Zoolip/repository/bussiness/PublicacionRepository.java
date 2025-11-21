@@ -15,7 +15,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     @Query("""
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
-                                p.id_usuario.imagenUrl,
+                                p.id_usuario.imagenUrl,p.imagen_url,
                                             p.id_usuario.id,
                                                         p.tipo,
                     p.contenido,
@@ -34,7 +34,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     @Query("""
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
-                                p.id_usuario.imagenUrl,
+                                p.id_usuario.imagenUrl,p.imagen_url,
                                             p.id_usuario.id,
                                                         p.tipo,
                     p.contenido,
@@ -52,7 +52,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
    @Query("""
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
-                               p.id_usuario.imagenUrl,
+                               p.id_usuario.imagenUrl,p.imagen_url,
                                           p.id_usuario.id,
                                                      p.tipo,
                     p.contenido,
@@ -71,7 +71,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     @Query("""
                 SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
                     p.id_publicacion,
-                               p.id_usuario.imagenUrl,
+                               p.id_usuario.imagenUrl,p.imagen_url,
                                           p.id_usuario.id,
                                                      p.tipo,
                     p.contenido,
@@ -89,7 +89,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     @Query("""
     SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
         p.id_publicacion,
-        p.id_usuario.imagenUrl,
+        p.id_usuario.imagenUrl,p.imagen_url,
         p.id_usuario.id,
         p.tipo,
         p.contenido,
@@ -108,7 +108,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     @Query("""
     SELECT new com.surrogate.Zoolip.models.DTO.PublicacionDTO(
         p.id_publicacion,
-        p.id_usuario.imagenUrl,
+        p.id_usuario.imagenUrl,p.imagen_url,
         p.id_usuario.id,
         p.tipo,
         p.contenido,

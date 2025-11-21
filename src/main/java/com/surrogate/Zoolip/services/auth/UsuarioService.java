@@ -36,7 +36,7 @@ public class UsuarioService {
     }
 
     public Optional<UsuarioDto> me(String token) {
-        log.info("Token: {} ", token);
+
         if (token == null) {
             return Optional.empty();
         }
@@ -124,7 +124,7 @@ public class UsuarioService {
     }
     private String getEmailFromSecurityContext(){
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info(userPrincipal.getEmail());
+
         return userPrincipal.getEmail();
     }
 }
