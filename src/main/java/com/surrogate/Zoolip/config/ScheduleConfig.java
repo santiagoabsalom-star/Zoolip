@@ -15,9 +15,7 @@ package com.surrogate.Zoolip.config;
  * @Async
  * @Scheduled(fixedRate = 100)
  * public void ChangeTokenAllowed() throws InterruptedException {
- * log.info(
- * "El token ha cambiado a {}k",  System.currentTimeMillis() / 1000);
- * Thread.sleep(100);
+
  * }
  * }
  **/

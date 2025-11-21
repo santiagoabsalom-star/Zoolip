@@ -27,10 +27,9 @@ public class MyUsrDtlsService implements UserDetailsServiceWithId {
     @Override
     @Cacheable(value = "userDetails", key = "#username")
     public UserDetailsWithId loadUserByUsername(String username) throws UsernameNotFoundException {
-        long startTime = System.currentTimeMillis();
+
         Usuario usuario = usuariorepository.findByNombre(username);
-        long endTime = System.currentTimeMillis();
-        log.info("Tiempo de busqueda de usuario: {} ms", (endTime - startTime) );
+
 
         // Si no se encuentra el usuario, lanzamos una fuckin excepción
 

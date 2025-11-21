@@ -44,8 +44,6 @@ public class   AuthService {
 
 
 
-        log.info("Login request: {}", loginRequest);
-        log.info("Login response: {}", loginRequest.getPassword());
         try {
             if (loginRequest.getUsername() == null || loginRequest.getUsername().isEmpty()) {
                 return new LoginResponse(error, 422, "El nombre de usuario es requerido");
@@ -63,7 +61,6 @@ public class   AuthService {
             }
 
 
-            long startTimeauth = System.currentTimeMillis();
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
@@ -80,8 +77,7 @@ public class   AuthService {
                         .findFirst()
                         .map(GrantedAuthority::getAuthority)
                         .orElse("ROLE_USER");
-                long endTimeauth = System.currentTimeMillis();
-                log.info("Tiempo de espera de autenticacion: {}", (endTimeauth - startTimeauth) + "ms");
+
 
                 String token = jwtService.generateTokenWithId(userDetails.getUsername(), role, userDetails.getId(), userDetails.getEmail());
 
@@ -204,13 +200,13 @@ public class   AuthService {
         return true;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+
     public void createSystemAdminIfNotExists(){
 
 
         if(usuarioRepository.existsByNombre("SYSTEM")){
             log.info("Usuario SYSTEM ya existe");
-            usuarioRepository.delete(usuarioRepository.findByNombre("SYSTEM"));
+        return ;
 
         }
         Usuario systemAdmin = new Usuario();

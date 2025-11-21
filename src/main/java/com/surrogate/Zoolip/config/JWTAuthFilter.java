@@ -91,7 +91,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
             String authTokenFromCookie = authCookie != null ? authCookie[0].getValue() : null;
 
-            log.info(authTokenFromCookie);
             if (authTokenFromCookie == null) {
                 
                 sendError(response, "El header tiene que venir con el token malparido", HttpServletResponse.SC_UNAUTHORIZED);
@@ -103,12 +102,12 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
                 if (authHeader == null) {
                     jwt = authTokenFromCookie;
-                    log.info("Bearer token from cookie: {}", jwt);
+
                 } else {
                     jwt = authHeader.substring(7);
                 }
             } catch (Exception e) {
-                log.info(e.getMessage());
+                log.error(e.getMessage());
             }
 
 
@@ -128,7 +127,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 //            }
 
             String username = jwtService.extractUsername(jwt);
-            log.info("Username : {}", username);
+
             if (username != null) {
                 UserDetailsWithId userDetails = userDetailsCache.getIfPresent(username);
                 if (userDetails == null) {
@@ -139,6 +138,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
                 if (!jwtService.validateToken(jwt, userDetails)) {
                     sendError(response, "Token expirado o invalidado", HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
                 }
 
                 setAuthentication(userDetails, request);
@@ -160,7 +160,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 null,
                 userDetails.getAuthorities()
         );
-        log.info(userDetails.getAuthorities().toString());
+
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authToken);

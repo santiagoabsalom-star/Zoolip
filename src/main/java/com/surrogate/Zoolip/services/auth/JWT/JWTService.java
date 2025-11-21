@@ -69,7 +69,7 @@ public class JWTService {
     }
 
     public Long extractId(String token) {
-        log.info("Token: {} ", token);
+
             return extractClaim(token, claims -> claims.get("id_usuario", Long.class));
 
     }
@@ -89,9 +89,9 @@ public class JWTService {
     public String generateToken(String username, String role) {
 
         claims.put("role", role);
-        log.info(claims.toString());
+
         String token = createToken(claims, username);
-        log.info("Claim=id_usuario: {}", extractId(token));
+
         claims.clear();
         try {
             tokens.add(token);
@@ -113,11 +113,10 @@ public class JWTService {
         claims.put("role", role);
         claims.put("email", email);
         claims.put("id_usuario", id_usuario);
-        log.info("Claims: {}", claims);
+
 
         String token = createToken(claims, username);
         claims.clear();
-        log.info(token);
 
         try {
             tokens.add(token);
@@ -130,7 +129,7 @@ public class JWTService {
 
     public boolean validateToken(String token, UserDetailsWithId userDetails) {
         if (tokens.contains(token)) {
-            log.info("Token encontrado");
+
             if (token == null || token.isEmpty()) {
                 throw new IllegalArgumentException("Token cannot be null or empty");
             }
@@ -141,7 +140,7 @@ public class JWTService {
 
         try {
             final String username = extractUsername(token);
-            log.info("Username extraído del token: {} ", username);
+
             return username.equals(userDetails.getUsername()) && isValidTokenFormat(token);
 
         } catch (Exception e) {
@@ -202,16 +201,16 @@ public class JWTService {
             throw new IllegalArgumentException("Token cannot be null or empty");
         }
         if (token.startsWith("\"") && token.endsWith("\"")) {
-            log.info("Token con comillas detectado, eliminando comillas...");
+
             token = token.trim().replace("\"", "");
         }
         if (!isValidTokenFormat(token)) {
-            log.info("Token no válido o no almacenado: {}", token);
+
             return "error";
         }
-//        ipToken.remove(token);
 
-        log.info("Invalidando token: [  {}  ]", token);
+
+
         tokens.remove(token);
         return "success";
     }
@@ -221,7 +220,7 @@ public class JWTService {
             throw new IllegalArgumentException("Token cannot be null or empty");
         }
         if (token.startsWith("\"") && token.endsWith("\"")) {
-            log.info("Token con comillas detectado, eliminando comillas");
+
             token = token.trim().replace("\"", "");
         }
         return !tokens.contains(token);
