@@ -15,8 +15,9 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     @Query("Select count(*) > 0 from Chat c where c.nombreChat = :nombreChat")
     boolean existsByNombreChat(String nombreChat);
-
+    @Query("Select count(*) > 0 from Chat c where c.nombreChat like :nombreLike")
+    boolean existByNombreLike(String nombreLike);
     Chat findBynombreChat(String nombreChat);
-
-
+    @Query("Select c from Chat c where c.nombreChat like %:nombreLike%")
+    List<Chat> findBynombreChatLike(String nombreLike);
 }

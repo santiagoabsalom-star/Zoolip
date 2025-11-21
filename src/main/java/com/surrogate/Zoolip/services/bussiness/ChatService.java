@@ -72,6 +72,7 @@ public class ChatService {
     }
     //Este metodo se va a usar para actualizar el nombre del chat en caso de que se cambie el nombre de algun usuario
     public Response actualizarChat(Chat chat){
+
         Response response = verificarChat(chat);
         if(response.getHttpCode()!=200){
             return response;

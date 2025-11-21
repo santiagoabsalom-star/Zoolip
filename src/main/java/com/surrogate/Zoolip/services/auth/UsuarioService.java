@@ -1,11 +1,14 @@
 package com.surrogate.Zoolip.services.auth;
 
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
+import com.surrogate.Zoolip.models.bussiness.Chat.Chat;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
 import com.surrogate.Zoolip.models.login.UserPrincipal;
 import com.surrogate.Zoolip.models.peticiones.Response;
+import com.surrogate.Zoolip.repository.bussiness.ChatRepository;
 import com.surrogate.Zoolip.repository.bussiness.UsuarioRepository;
 import com.surrogate.Zoolip.services.auth.JWT.JWTService;
+import com.surrogate.Zoolip.services.bussiness.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,8 +28,8 @@ public class UsuarioService {
     private final JWTService jwtService;
     private final String success;
     private final String error;
-
-
+    private final ChatRepository chatRepository;
+    private final ChatService chatService;
 
 
     @Transactional(readOnly = true)
@@ -86,11 +89,20 @@ public class UsuarioService {
             return new Response(error, 404,"Usuario no encontrado" );
         }
 
-        log.info(usuario.getNombre());
-        if (usuario.getNombre() != null) {
+
+
+
+
+            if(chatRepository.existByNombreLike(usuarioExistente.getNombre())){
+
+                log.info(usuarioExistente.getNombre());
+                log.info("El usuario tiene chats asociados, se cambiara el nombre en los chats");
+             cambiarNombreChat(usuarioExistente.getNombre(), usuario.getNombre());
+            }
+
             usuarioExistente.setNombre(usuario.getNombre());
             jwtService.InvalidateToken(token);
-        }
+
 
         if (usuario.getEmail() != null) {
             usuarioExistente.setEmail(usuario.getEmail());
@@ -104,7 +116,6 @@ public class UsuarioService {
         if(usuario.getImagenUrl() != null){
             usuarioExistente.setImagenUrl(usuario.getImagenUrl());
         }
-
 
 
        usuarioRepository.actualizarUsuarioCurrent(usuarioExistente);
@@ -126,5 +137,28 @@ public class UsuarioService {
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return userPrincipal.getEmail();
+    }
+    private void cambiarNombreChat(String nombreAntiguo, String nombreNuevo){
+        if(!chatRepository.existsByNombreChat(nombreAntiguo)){
+return;        }
+        if(chatRepository.existsByNombreChat(nombreNuevo)){
+return;        }
+
+        List<Chat> chats= chatRepository.findBynombreChatLike(nombreAntiguo);
+        if(chats.isEmpty()){return;}
+        for(Chat chat: chats){
+        String[] partes = nombreNuevo.split("_");
+        if(partes.length!=2){
+return;        }
+        if(!chat.getUsuario().getNombre().equals(partes[0]) || !chat.getAdministrador().getNombre().equals(partes[1])){
+return;        }
+        if(chat.getUsuario().getNombre().equals(partes[0])){
+            chat.setNombreChat(nombreNuevo+"_"+chat.getAdministrador().getNombre());
+        }
+        else{
+            chat.setNombreChat(chat.getUsuario().getNombre()+"_"+nombreNuevo);
+        }
+        chatRepository.save(chat);
+}
     }
 }
