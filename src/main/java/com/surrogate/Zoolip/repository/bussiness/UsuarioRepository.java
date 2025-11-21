@@ -2,6 +2,7 @@ package com.surrogate.Zoolip.repository.bussiness;
 
 import com.surrogate.Zoolip.models.DTO.UsuarioDto;
 import com.surrogate.Zoolip.models.bussiness.Usuario;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,7 +36,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Usuario getUsuarioById(Long idUsuario);
 
     Usuario findByNombre(String nombre);
-
+    @Cacheable(cacheNames = "existsByNombre", key = "#nombre")
     boolean existsByNombre(String nombre);
     boolean existsByEmail(String email);
     @Query("Select new com.surrogate.Zoolip.models.DTO.UsuarioDto(u.id,u.nombre,u.rol,u.email,u.biografia,u.imagenUrl) from Usuario u where u.id=:id_usuario")

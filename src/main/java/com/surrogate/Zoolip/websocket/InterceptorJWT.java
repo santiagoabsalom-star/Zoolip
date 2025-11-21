@@ -51,5 +51,6 @@ public class InterceptorJWT implements HandshakeInterceptor {
     @Override
     public void afterHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response, @NotNull WebSocketHandler wsHandler, Exception exception) {
 
+        log.info("Handshake hecho para la Ip: {}", request.getRemoteAddress().getHostName());
     }
 }

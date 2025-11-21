@@ -15,7 +15,6 @@ public class ZoolipApplication {
                 .stream()
                 .map(GarbageCollectorMXBean::getName)
                 .reduce("", (a, b) -> a + " " + b));
-
     }
 
 }

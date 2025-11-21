@@ -49,7 +49,15 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             sesiones.put(nombreUsuario, session);
             return;
         }
-        if (!chatRepository.existsByNombreChat(nombreChat) && !(usuarioRepository.findByNombre(emisor).getRol().equals("ROLE_ADMINISTRADOR"))){
+
+        if(!usuarioRepository.existsByNombre(emisor) || !usuarioRepository.existsByNombre(receptor)){
+            log.error("Uno de los usuarios no existe, cerrando la conexión WebSocket");
+            session.close(CloseStatus.BAD_DATA);
+            log.error("Conexion cerrada por usuario no existente");
+            return;
+        }
+
+        if (!chatRepository.existsByNombreChat(nombreChat)&&  !(usuarioRepository.findByNombre(emisor).getRol().equals("ROLE_ADMINISTRADOR"))){
 
             Response response =creaChatIfNotExists(emisor, receptor);
             if (response.getHttpCode() != 200) {
